@@ -3,8 +3,8 @@
 // internal
 #include "common.hpp"
 #include "salmon.hpp"
-#include "turtle.hpp"
-#include "fish.hpp"
+// #include "turtle.hpp"
+// #include "fish.hpp"
 #include "water.hpp"
 #include "pebbles.hpp"
 
@@ -41,10 +41,10 @@ public:
 
 private:
 	// Generates a new turtle
-	bool spawn_turtle();
+	// bool spawn_turtle();
 
 	// Generates a new fish
-	bool spawn_fish();
+	// bool spawn_fish();
 
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -68,13 +68,13 @@ private:
 
 	// Game entities
 	Salmon m_salmon;
-	std::vector<Turtle> m_turtles;
-	std::vector<Fish> m_fish;
+	// std::vector<Turtle> m_turtles;
+	// std::vector<Fish> m_fish;
 	Pebbles m_pebbles_emitter;
 
 	float m_current_speed;
-	float m_next_turtle_spawn;
-	float m_next_fish_spawn;
+	// float m_next_turtle_spawn;
+	// float m_next_fish_spawn;
 	
 	Mix_Music* m_background_music;
 	Mix_Chunk* m_salmon_dead_sound;
