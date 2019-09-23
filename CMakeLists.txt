@@ -35,7 +35,6 @@ set(SOURCE_FILES
 	src/common.cpp
 	src/fish.cpp
 	src/salmon.cpp
-	src/turtle.cpp
 	src/water.cpp
 	src/world.cpp
   src/pebbles.cpp
@@ -44,7 +43,6 @@ set(SOURCE_FILES
 	src/common.hpp
 	src/fish.hpp
 	src/salmon.hpp
-	src/turtle.hpp
 	src/water.hpp
 	src/world.hpp
   src/pebbles.hpp
