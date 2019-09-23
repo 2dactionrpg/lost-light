@@ -1,5 +1,6 @@
 .vscode
 salmon
+src/project_path.hpp
 
 # cmake
 CMakeLists.txt.user
