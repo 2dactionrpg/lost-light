@@ -4,7 +4,7 @@
 #include <vector>
 
 // class Turtle;
-class Fish;
+// class Fish;
 
 class Salmon : public Entity
 {
@@ -24,7 +24,7 @@ public:
 
 	// Collision routines for turtles and fish
 	// bool collides_with(const Turtle& turtle);
-	bool collides_with(const Fish& fish);
+	// bool collides_with(const Fish& fish);
 
 	// Returns the current salmon position
 	vec2 get_position() const;

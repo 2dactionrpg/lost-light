@@ -10,9 +10,9 @@
 namespace
 {
 	// const size_t MAX_TURTLES = 15;
-	const size_t MAX_FISH = 5;
+	// const size_t MAX_FISH = 5;
 	// const size_t TURTLE_DELAY_MS = 2000;
-	const size_t FISH_DELAY_MS = 5000;
+	// const size_t FISH_DELAY_MS = 5000;
 
 	namespace
 	{
@@ -24,9 +24,9 @@ namespace
 }
 
 World::World() : 
-m_points(0),
+m_points(0)
 // m_next_turtle_spawn(0.f),
-m_next_fish_spawn(0.f)
+// m_next_fish_spawn(0.f)
 {
 	// Seeding rng with random device
 	m_rng = std::default_random_engine(std::random_device()());
@@ -146,10 +146,10 @@ void World::destroy()
 	m_pebbles_emitter.destroy();
 	// for (auto& turtle : m_turtles)
 	// 	turtle.destroy();
-	for (auto& fish : m_fish)
-		fish.destroy();
+	// for (auto& fish : m_fish)
+	// 	fish.destroy();
 	// m_turtles.clear();
-	m_fish.clear();
+	// m_fish.clear();
 	glfwDestroyWindow(m_window);
 }
 
@@ -175,19 +175,19 @@ bool World::update(float elapsed_ms)
 	// }
 
 	// Checking Salmon - Fish collisions
-	auto fish_it = m_fish.begin();
-	while (fish_it != m_fish.end())
-	{
-		if (m_salmon.is_alive() && m_salmon.collides_with(*fish_it))
-		{
-			fish_it = m_fish.erase(fish_it);
-			m_salmon.light_up();
-			Mix_PlayChannel(-1, m_salmon_eat_sound, 0);
-			++m_points;
-		}
-		else
-			++fish_it;
-	}
+	// auto fish_it = m_fish.begin();
+	// while (fish_it != m_fish.end())
+	// {
+	// 	if (m_salmon.is_alive() && m_salmon.collides_with(*fish_it))
+	// 	{
+	// 		fish_it = m_fish.erase(fish_it);
+	// 		m_salmon.light_up();
+	// 		Mix_PlayChannel(-1, m_salmon_eat_sound, 0);
+	// 		++m_points;
+	// 	}
+	// 	else
+	// 		++fish_it;
+	// }
 
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE SALMON - WALL COLLISIONS HERE
@@ -206,8 +206,8 @@ bool World::update(float elapsed_ms)
 	m_salmon.update(elapsed_ms);
 	// for (auto& turtle : m_turtles)
 	// 	turtle.update(elapsed_ms * m_current_speed);
-	for (auto& fish : m_fish)
-		fish.update(elapsed_ms * m_current_speed);
+	// for (auto& fish : m_fish)
+	// 	fish.update(elapsed_ms * m_current_speed);
 
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE PEBBLE SPAWN/UPDATES HERE
@@ -229,18 +229,18 @@ bool World::update(float elapsed_ms)
 	// }
 
 	// Removing out of screen fish
-	fish_it = m_fish.begin();
-	while (fish_it != m_fish.end())
-	{
-		float w = fish_it->get_bounding_box().x / 2;
-		if (fish_it->get_position().x + w < 0.f)
-		{
-			fish_it = m_fish.erase(fish_it);
-			continue;
-		}
+	// fish_it = m_fish.begin();
+	// while (fish_it != m_fish.end())
+	// {
+	// 	float w = fish_it->get_bounding_box().x / 2;
+	// 	if (fish_it->get_position().x + w < 0.f)
+	// 	{
+	// 		fish_it = m_fish.erase(fish_it);
+	// 		continue;
+	// 	}
 
-		++fish_it;
-	}
+	// 	++fish_it;
+	// }
 
 	// Spawning new turtles
 	// m_next_turtle_spawn -= elapsed_ms * m_current_speed;
@@ -259,17 +259,17 @@ bool World::update(float elapsed_ms)
 	// }
 
 	// Spawning new fish
-	m_next_fish_spawn -= elapsed_ms * m_current_speed;
-	if (m_fish.size() <= MAX_FISH && m_next_fish_spawn < 0.f)
-	{
-		if (!spawn_fish())
-			return false;
-		Fish& new_fish = m_fish.back();
+	// m_next_fish_spawn -= elapsed_ms * m_current_speed;
+	// if (m_fish.size() <= MAX_FISH && m_next_fish_spawn < 0.f)
+	// {
+	// 	if (!spawn_fish())
+	// 		return false;
+	// 	Fish& new_fish = m_fish.back();
 
-		new_fish.set_position({ screen.x + 150, 50 + m_dist(m_rng) *  (screen.y - 100) });
+	// 	new_fish.set_position({ screen.x + 150, 50 + m_dist(m_rng) *  (screen.y - 100) });
 
-		m_next_fish_spawn = (FISH_DELAY_MS / 2) + m_dist(m_rng) * (FISH_DELAY_MS / 2);
-	}
+	// 	m_next_fish_spawn = (FISH_DELAY_MS / 2) + m_dist(m_rng) * (FISH_DELAY_MS / 2);
+	// }
 
 	// If salmon is dead, restart the game after the fading animation
 	if (!m_salmon.is_alive() &&
@@ -279,7 +279,7 @@ bool World::update(float elapsed_ms)
 		m_pebbles_emitter.destroy();
 		m_pebbles_emitter.init();
 		// m_turtles.clear();
-		m_fish.clear();
+		// m_fish.clear();
 		m_water.reset_salmon_dead_time();
 		m_current_speed = 1.f;
 	}
@@ -338,8 +338,8 @@ void World::draw()
 	// Drawing entities
 	// for (auto& turtle : m_turtles)
 	// 	turtle.draw(projection_2D);
-	for (auto& fish : m_fish)
-		fish.draw(projection_2D);
+	// for (auto& fish : m_fish)
+	// 	fish.draw(projection_2D);
 	m_salmon.draw(projection_2D);
 
 	/////////////////////
@@ -384,17 +384,17 @@ bool World::is_over() const
 // }
 
 // Creates a new fish and if successfull adds it to the list of fish
-bool World::spawn_fish()
-{
-	Fish fish;
-	if (fish.init())
-	{
-		m_fish.emplace_back(fish);
-		return true;
-	}
-	fprintf(stderr, "Failed to spawn fish");
-	return false;
-}
+// bool World::spawn_fish()
+// {
+// 	Fish fish;
+// 	if (fish.init())
+// 	{
+// 		m_fish.emplace_back(fish);
+// 		return true;
+// 	}
+// 	fprintf(stderr, "Failed to spawn fish");
+// 	return false;
+// }
 
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
@@ -415,7 +415,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_pebbles_emitter.destroy();
 		m_pebbles_emitter.init();
 		// m_turtles.clear();
-		m_fish.clear();
+		// m_fish.clear();
 		m_water.reset_salmon_dead_time();
 		m_current_speed = 1.f;
 	}
