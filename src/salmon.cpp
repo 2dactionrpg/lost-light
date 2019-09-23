@@ -3,7 +3,7 @@
 
 // internal
 // #include "turtle.hpp"
-#include "fish.hpp"
+// #include "fish.hpp"
 
 // stlib
 #include <string>
@@ -207,19 +207,19 @@ void Salmon::draw(const mat3& projection)
 // 	return false;
 // }
 
-bool Salmon::collides_with(const Fish& fish)
-{
-	float dx = motion.position.x - fish.get_position().x;
-	float dy = motion.position.y - fish.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(fish.get_bounding_box().x, fish.get_bounding_box().y);
-	float my_r = std::max(physics.scale.x, physics.scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
+// bool Salmon::collides_with(const Fish& fish)
+// {
+// 	float dx = motion.position.x - fish.get_position().x;
+// 	float dy = motion.position.y - fish.get_position().y;
+// 	float d_sq = dx * dx + dy * dy;
+// 	float other_r = std::max(fish.get_bounding_box().x, fish.get_bounding_box().y);
+// 	float my_r = std::max(physics.scale.x, physics.scale.y);
+// 	float r = std::max(other_r, my_r);
+// 	r *= 0.6f;
+// 	if (d_sq < r * r)
+// 		return true;
+// 	return false;
+// }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // HANDLE SALMON - WALL COLLISIONS HERE
