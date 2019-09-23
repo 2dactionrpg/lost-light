@@ -3,7 +3,7 @@
 #include "common.hpp"
 #include <vector>
 
-class Turtle;
+// class Turtle;
 class Fish;
 
 class Salmon : public Entity
@@ -23,7 +23,7 @@ public:
 	void draw(const mat3& projection)override;
 
 	// Collision routines for turtles and fish
-	bool collides_with(const Turtle& turtle);
+	// bool collides_with(const Turtle& turtle);
 	bool collides_with(const Fish& fish);
 
 	// Returns the current salmon position
