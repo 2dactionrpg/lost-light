@@ -32,6 +32,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 
 set(SOURCE_FILES
 	src/main.cpp
+	src/character.cpp
 	src/common.cpp
 	src/salmon.cpp
 	src/water.cpp
@@ -39,6 +40,7 @@ set(SOURCE_FILES
   src/pebbles.cpp
 
     src/project_path.hpp
+	src/character.hpp
 	src/common.hpp
 	src/salmon.hpp
 	src/water.hpp
