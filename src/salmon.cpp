@@ -2,7 +2,7 @@
 #include "salmon.hpp"
 
 // internal
-#include "turtle.hpp"
+// #include "turtle.hpp"
 #include "fish.hpp"
 
 // stlib
@@ -193,19 +193,19 @@ void Salmon::draw(const mat3& projection)
 // This is a SUPER APPROXIMATE check that puts a circle around the bounding boxes and sees
 // if the center point of either object is inside the other's bounding-box-circle. You don't
 // need to try to use this technique.
-bool Salmon::collides_with(const Turtle& turtle)
-{
-	float dx = motion.position.x - turtle.get_position().x;
-	float dy = motion.position.y - turtle.get_position().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(turtle.get_bounding_box().x, turtle.get_bounding_box().y);
-	float my_r = std::max(physics.scale.x, physics.scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
+// bool Salmon::collides_with(const Turtle& turtle)
+// {
+// 	float dx = motion.position.x - turtle.get_position().x;
+// 	float dy = motion.position.y - turtle.get_position().y;
+// 	float d_sq = dx * dx + dy * dy;
+// 	float other_r = std::max(turtle.get_bounding_box().x, turtle.get_bounding_box().y);
+// 	float my_r = std::max(physics.scale.x, physics.scale.y);
+// 	float r = std::max(other_r, my_r);
+// 	r *= 0.6f;
+// 	if (d_sq < r * r)
+// 		return true;
+// 	return false;
+// }
 
 bool Salmon::collides_with(const Fish& fish)
 {
