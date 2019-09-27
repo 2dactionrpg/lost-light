@@ -8,13 +8,12 @@
 // #include "turtle.hpp"
 // #include "fish.hpp"
 #include "pebbles.hpp"
+#include "projectile.hpp"
 #include "water.hpp"
-
 
 // stlib
 #include <random>
 #include <vector>
-
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -44,7 +43,7 @@ public:
 
 private:
     // Generates a new turtle
-    // bool spawn_turtle();
+    bool spawn_projectile();
 
     // Generates a new fish
     // bool spawn_fish();
@@ -73,10 +72,12 @@ private:
     Salmon m_salmon;
     Cherec m_cherec;
     // std::vector<Turtle> m_turtles;
+    std::vector<Projectile> m_projectiles;
     // std::vector<Fish> m_fish;
     Pebbles m_pebbles_emitter;
 
     float m_current_speed;
+    float m_next_projectile_spawn;
     // float m_next_turtle_spawn;
     // float m_next_fish_spawn;
 
