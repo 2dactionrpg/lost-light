@@ -6,12 +6,11 @@
 #include <sstream>
 #include <string.h>
 
-
 // Same as static in c, local to compilation unit
 namespace {
-// const size_t MAX_TURTLES = 15;
+const size_t MAX_TURTLES = 15;
 // const size_t MAX_FISH = 5;
-// const size_t TURTLE_DELAY_MS = 2000;
+const size_t TURTLE_DELAY_MS = 2000;
 // const size_t FISH_DELAY_MS = 5000;
 
 namespace {
@@ -24,6 +23,7 @@ namespace {
 
 World::World()
     : m_points(0)
+    , m_next_projectile_spawn(0.f)
 // m_next_turtle_spawn(0.f),
 // m_next_fish_spawn(0.f)
 {
@@ -139,6 +139,10 @@ void World::destroy()
     m_cherec.destroy();
     m_salmon.destroy();
     m_pebbles_emitter.destroy();
+    for (auto& projectile : m_projectiles)
+        projectile.destroy();
+    m_projectiles.clear();
+
     // for (auto& turtle : m_turtles)
     // 	turtle.destroy();
     // for (auto& fish : m_fish)
@@ -200,6 +204,8 @@ bool World::update(float elapsed_ms)
     // rather than by their class.
     m_cherec.update(elapsed_ms);
     m_salmon.update(elapsed_ms);
+    for (auto& projectile : m_projectiles)
+        projectile.update(elapsed_ms * m_current_speed);
     // for (auto& turtle : m_turtles)
     // 	turtle.update(elapsed_ms * m_current_speed);
     // for (auto& fish : m_fish)
@@ -238,6 +244,20 @@ bool World::update(float elapsed_ms)
     // 	++fish_it;
     // }
 
+    m_next_projectile_spawn -= elapsed_ms * m_current_speed;
+    if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
+        if (!spawn_projectile())
+            return false;
+
+        Projectile& new_projectile = m_projectiles.back();
+
+        // Setting random initial position
+        new_projectile.set_position({ screen.x + 150, 50 + m_dist(m_rng) * (screen.y - 100) });
+
+        // Next spawn
+        m_next_projectile_spawn = (TURTLE_DELAY_MS / 2) + m_dist(m_rng) * (TURTLE_DELAY_MS / 2);
+    }
+
     // Spawning new turtles
     // m_next_turtle_spawn -= elapsed_ms * m_current_speed;
     // if (m_turtles.size() <= MAX_TURTLES && m_next_turtle_spawn < 0.f)
@@ -273,6 +293,7 @@ bool World::update(float elapsed_ms)
         m_salmon.init();
         m_pebbles_emitter.destroy();
         m_pebbles_emitter.init();
+        m_projectiles.clear();
         // m_turtles.clear();
         // m_fish.clear();
         m_water.reset_salmon_dead_time();
@@ -331,12 +352,15 @@ void World::draw()
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // Drawing entities
+
     // for (auto& turtle : m_turtles)
     // 	turtle.draw(projection_2D);
     // for (auto& fish : m_fish)
     // 	fish.draw(projection_2D);
     m_cherec.draw(projection_2D);
     m_salmon.draw(projection_2D);
+    for (auto& projectile : m_projectiles)
+        projectile.draw(projection_2D);
 
     /////////////////////
     // Truely render to the screen
@@ -392,6 +416,18 @@ bool World::is_over() const
 // 	return false;
 // }
 
+// Creates a new projectiles and if successfull adds it to the list of projectiles
+bool World::spawn_projectile()
+{
+    Projectile projectile;
+    if (projectile.init()) {
+        m_projectiles.emplace_back(projectile);
+        return true;
+    }
+    fprintf(stderr, "Failed to spawn projectile");
+    return false;
+}
+
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
@@ -409,6 +445,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         m_salmon.init();
         m_pebbles_emitter.destroy();
         m_pebbles_emitter.init();
+        m_projectiles.clear();
         // m_turtles.clear();
         // m_fish.clear();
         m_water.reset_salmon_dead_time();
