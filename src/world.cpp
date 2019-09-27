@@ -125,7 +125,7 @@ bool World::init(vec2 screen)
 
 	m_current_speed = 1.f;
 
-	return m_salmon.init() && m_water.init() && m_pebbles_emitter.init();
+	return m_cherec.init() && m_salmon.init() && m_water.init() && m_pebbles_emitter.init();
 }
 
 // Releases all the associated resources
@@ -142,6 +142,7 @@ void World::destroy()
 
 	Mix_CloseAudio();
 
+	m_cherec.destroy();
 	m_salmon.destroy();
 	m_pebbles_emitter.destroy();
 	// for (auto& turtle : m_turtles)
@@ -203,6 +204,7 @@ bool World::update(float elapsed_ms)
 	// faster based on current.
 	// In a pure ECS engine we would classify entities by their bitmap tags during the update loop
 	// rather than by their class. 
+	m_cherec.update(elapsed_ms);
 	m_salmon.update(elapsed_ms);
 	// for (auto& turtle : m_turtles)
 	// 	turtle.update(elapsed_ms * m_current_speed);
@@ -340,6 +342,7 @@ void World::draw()
 	// 	turtle.draw(projection_2D);
 	// for (auto& fish : m_fish)
 	// 	fish.draw(projection_2D);
+	m_cherec.draw(projection_2D);
 	m_salmon.draw(projection_2D);
 
 	/////////////////////
@@ -425,8 +428,28 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_current_speed -= 0.1f;
 	if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
 		m_current_speed += 0.1f;
-	
-	m_current_speed = fmax(0.f, m_current_speed);
+
+	if (action == GLFW_PRESS && key == GLFW_KEY_UP)
+		m_cherec.upKeyPressed = true;
+	if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
+		m_cherec.upKeyPressed = false;
+
+	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
+		m_cherec.downKeyPressed = true;
+	if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
+		m_cherec.downKeyPressed = false;
+
+	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
+		m_cherec.leftKeyPressed = true;
+	if (action == GLFW_RELEASE && key == GLFW_KEY_LEFT)
+		m_cherec.leftKeyPressed = false;
+
+	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
+		m_cherec.rightKeyPressed = true;
+	if (action == GLFW_RELEASE && key == GLFW_KEY_RIGHT)
+		m_cherec.rightKeyPressed = false;
+
+        m_current_speed = fmax(0.f, m_current_speed);
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
