@@ -4,12 +4,13 @@
 // internal
 
 // stlib
-#include <string>
 #include <algorithm>
+#include <string>
+
 
 bool Character::init()
 {
-	return true;
+    return true;
 }
 
 // Releases all graphics resources
@@ -28,7 +29,7 @@ void Character::draw(const mat3& projection)
 
 vec2 Character::get_position() const
 {
-    return vec2 {0,0};
+    return vec2 { 0, 0 };
 }
 
 void Character::move(vec2 off)
@@ -41,7 +42,7 @@ void Character::set_rotation(float radians)
 
 bool Character::is_alive() const
 {
-	return true;
+    return true;
 }
 
 void Character::kill()
