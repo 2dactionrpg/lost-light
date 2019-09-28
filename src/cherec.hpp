@@ -5,8 +5,11 @@
 
 // class Turtle;
 // class Fish;
+class Projectile;
 
 class Cherec : public Entity {
+    static Texture character_texture;
+
 public:
     // Creates all the associated render resources and default transform
     bool init();
@@ -31,6 +34,8 @@ public:
     // Moves the salmon's position by the specified offset
     void move(vec2 off);
 
+    bool collides_with(const Projectile& Projectile);
+
     // Set salmon rotation in radians
     void set_rotation(float radians);
 
@@ -42,6 +47,10 @@ public:
 
     // Called when the salmon collides with a fish, starts lighting up the salmon
     void light_up();
+
+    vec2 get_bounding_box() const;
+
+    bool collides_with(Projectile&) const;
 
     bool upKeyPressed;
     bool downKeyPressed;

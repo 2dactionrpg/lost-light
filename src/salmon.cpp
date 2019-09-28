@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <string>
 
-
 bool Salmon::init()
 {
     m_vertices.clear();
