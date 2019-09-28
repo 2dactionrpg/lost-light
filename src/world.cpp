@@ -119,7 +119,7 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    return m_character.init() && m_water.init() && m_pebbles_emitter.init();
+    return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init();
 }
 
 // Releases all the associated resources
@@ -137,6 +137,7 @@ void World::destroy()
     Mix_CloseAudio();
 
     m_character.destroy();
+    m_shield.destroy();
     m_salmon.destroy();
     m_pebbles_emitter.destroy();
     for (auto& projectile : m_projectiles)
@@ -215,6 +216,8 @@ bool World::update(float elapsed_ms)
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
     m_character.update(elapsed_ms);
+    m_shield.set_position(m_character.get_position());
+    m_shield.update(elapsed_ms);
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -370,6 +373,7 @@ void World::draw()
     // for (auto& fish : m_fish)
     // 	fish.draw(projection_2D);
     m_character.draw(projection_2D);
+    m_shield.draw(projection_2D);
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
