@@ -69,7 +69,7 @@ bool Shield::init()
     motion.radians = 0.f;
     motion.speed = 200.f;
 
-    physics.scale = { -1.f, 1.f };
+    physics.scale = { -1.f, 0.2f };
 
     // m_is_alive = true;
     // m_light_up_countdown_ms = -1.f;
@@ -133,6 +133,7 @@ void Shield::draw(const mat3& projection)
     transform.begin();
     transform.translate(motion.position);
     transform.rotate(motion.radians);
+    transform.translate({ 0.f, 300.f });
     transform.scale(physics.scale);
     transform.end();
 
