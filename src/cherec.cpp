@@ -5,49 +5,42 @@
 // #include "turtle.hpp"
 // #include "fish.hpp"
 
+#include "projectile.hpp"
+
 // stlib
 #include <algorithm>
 #include <string>
 
+#include <cmath>
+
+Texture Cherec::character_texture;
+
 bool Cherec::init()
 {
-    m_vertices.clear();
-    m_indices.clear();
-
-    // Reads the cherec mesh from a file, which contains a list of vertices and
-    // indices
-    FILE* mesh_file = fopen(mesh_path("salmon.mesh"), "r");
-    if (mesh_file == nullptr)
-        return false;
-
-    // Reading vertices and colors
-    size_t num_vertices;
-    fscanf(mesh_file, "%zu\n", &num_vertices);
-    for (size_t i = 0; i < num_vertices; ++i) {
-        float x, y, z;
-        float _u[3]; // unused
-        int r, g, b;
-        fscanf(mesh_file, "%f %f %f %f %f %f %d %d %d\n", &x, &y, &z, _u, _u + 1,
-            _u + 2, &r, &g, &b);
-        Vertex vertex;
-        vertex.position = { x, y, -z };
-        vertex.color = { (float)r / 255, (float)g / 255, (float)b / 255 };
-        m_vertices.push_back(vertex);
+    // Load shared texture
+    if (!character_texture.is_valid()) {
+        if (!character_texture.load_from_file(textures_path("character.png"))) {
+            fprintf(stderr, "Failed to load projectile texture!");
+            return false;
+        }
     }
 
-    // Reading associated indices
-    size_t num_indices;
-    fscanf(mesh_file, "%zu\n", &num_indices);
-    for (size_t i = 0; i < num_indices; ++i) {
-        int idx[3];
-        fscanf(mesh_file, "%d %d %d\n", idx, idx + 1, idx + 2);
-        m_indices.push_back((uint16_t)idx[0]);
-        m_indices.push_back((uint16_t)idx[1]);
-        m_indices.push_back((uint16_t)idx[2]);
-    }
+    // The position corresponds to the center of the texture
+    float wr = character_texture.width * 0.5f;
+    float hr = character_texture.height * 0.5f;
 
-    // Done reading
-    fclose(mesh_file);
+    TexturedVertex vertices[4];
+    vertices[0].position = { -wr, +hr, -0.02f };
+    vertices[0].texcoord = { 0.f, 1.f };
+    vertices[1].position = { +wr, +hr, -0.02f };
+    vertices[1].texcoord = { 1.f, 1.f };
+    vertices[2].position = { +wr, -hr, -0.02f };
+    vertices[2].texcoord = { 1.f, 0.f };
+    vertices[3].position = { -wr, -hr, -0.02f };
+    vertices[3].texcoord = { 0.f, 0.f };
+
+    // Counterclockwise as it's the default opengl front winding direction
+    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
 
     // Clearing errors
     gl_flush_errors();
@@ -55,14 +48,12 @@ bool Cherec::init()
     // Vertex Buffer creation
     glGenBuffers(1, &mesh.vbo);
     glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(),
-        m_vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
 
     // Index Buffer creation
     glGenBuffers(1, &mesh.ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * m_indices.size(),
-        m_indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
 
     // Vertex Array (Container for Vertex + Index buffer)
     glGenVertexArrays(1, &mesh.vao);
@@ -70,8 +61,7 @@ bool Cherec::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("salmon.vs.glsl"),
-            shader_path("salmon.fs.glsl")))
+    if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
 
     // Setting initial values
@@ -79,7 +69,7 @@ bool Cherec::init()
     motion.radians = 20.f;
     motion.speed = 200.f;
 
-    physics.scale = { -35.f, 35.f };
+    physics.scale = { -1.f, 1.f };
 
     m_is_alive = true;
     m_light_up_countdown_ms = -1.f;
@@ -104,18 +94,28 @@ void Cherec::update(float ms)
 {
     float step = motion.speed * (ms / 1000);
     if (m_is_alive) {
-        if (upKeyPressed)
+        if (upKeyPressed) {
             move({ 0.f, -step });
-        if (downKeyPressed)
+            set_rotation(1.5f);
+        }
+        if (downKeyPressed) {
             move({ 0.f, step });
-        if (leftKeyPressed)
+            set_rotation(-1.5f);
+        }
+
+        if (leftKeyPressed) {
             move({ -step, 0.f });
-        if (rightKeyPressed)
+            set_rotation(0.f);
+        }
+
+        if (rightKeyPressed) {
             move({ step, 0.f });
+            set_rotation(3.14f);
+        }
     } else {
         // If dead we make it face upwards and sink deep down
-        set_rotation(3.1415f);
-        move({ 0.f, step });
+        // set_rotation(3.1415f);
+        // move({ 0.f, step });
     }
 
     if (m_light_up_countdown_ms > 0.f)
@@ -124,24 +124,12 @@ void Cherec::update(float ms)
 
 void Cherec::draw(const mat3& projection)
 {
+    // Transformation code, see Rendering and Transformation in the template specification for more info
+    // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // SALMON TRANSFORMATION CODE HERE
-
-    // see Transformations and Rendering in the specification pdf
-    // the following functions are available:
-    // translate()
-    // rotate()
-    // scale()
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // REMOVE THE FOLLOWING LINES BEFORE ADDING ANY TRANSFORMATION CODE
     transform.translate(motion.position);
     transform.rotate(motion.radians);
     transform.scale(physics.scale);
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     transform.end();
 
     // Setting shaders
@@ -150,13 +138,12 @@ void Cherec::draw(const mat3& projection)
     // Enabling alpha channel for textures
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
 
-    // Getting uniform locations
+    // Getting uniform locations for glUniform* calls
     GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
     GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
     GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-    GLint light_up_uloc = glGetUniformLocation(effect.program, "light_up");
 
     // Setting vertices and indices
     glBindVertexArray(mesh.vao);
@@ -165,37 +152,24 @@ void Cherec::draw(const mat3& projection)
 
     // Input data location as in the vertex buffer
     GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
-    GLint in_color_loc = glGetAttribLocation(effect.program, "in_color");
+    GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
-    glEnableVertexAttribArray(in_color_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        (void*)0);
-    glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        (void*)sizeof(vec3));
+    glEnableVertexAttribArray(in_texcoord_loc);
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+
+    // Enabling and binding texture to slot 0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, character_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
-
-    // !!! Cherec Color
     float color[] = { 1.f, 1.f, 1.f };
     glUniform3fv(color_uloc, 1, color);
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // HERE TO SET THE CORRECTLY LIGHT UP THE SALMON IF HE HAS EATEN RECENTLY
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int light_up = 0;
-    glUniform1iv(light_up_uloc, 1, &light_up);
-
-    // Get number of infices from buffer,
-    // we know our vbo contains both colour and position information, so...
-    GLint size = 0;
-    glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-    glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-    GLsizei num_indices = size / sizeof(uint16_t);
-
     // Drawing!
-    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
 // Simple bounding box collision check
@@ -264,4 +238,25 @@ void Cherec::kill()
 void Cherec::light_up()
 {
     m_light_up_countdown_ms = 1500.f;
+}
+
+vec2 Cherec::get_bounding_box() const
+{
+    // Returns the local bounding coordinates scaled by the current size of the projectile
+    // fabs is to avoid negative scale due to the facing direction.
+    return { std::fabs(physics.scale.x) * character_texture.width, std::fabs(physics.scale.y) * character_texture.height };
+}
+
+bool Cherec::collides_with(const Projectile& projectile)
+{
+    float dx = motion.position.x - projectile.get_position().x;
+    float dy = motion.position.y - projectile.get_position().y;
+    float d_sq = dx * dx + dy * dy;
+    float other_r = std::max(projectile.get_bounding_box().x, projectile.get_bounding_box().y);
+    float my_r = std::max(physics.scale.x, physics.scale.y);
+    float r = std::max(other_r, my_r);
+    r *= 0.6f;
+    if (d_sq < r * r)
+        return true;
+    return false;
 }
