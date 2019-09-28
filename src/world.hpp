@@ -1,7 +1,7 @@
 #pragma once
 
 // internal
-#include "cherec.hpp"
+#include "character.hpp"
 #include "common.hpp"
 #include "salmon.hpp"
 
@@ -70,7 +70,7 @@ private:
 
     // Game entities
     Salmon m_salmon;
-    Cherec m_cherec;
+    Character m_character;
     // std::vector<Turtle> m_turtles;
     std::vector<Projectile> m_projectiles;
     // std::vector<Fish> m_fish;
