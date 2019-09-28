@@ -472,24 +472,24 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
         m_current_speed += 0.1f;
 
-    if (action == GLFW_PRESS && key == GLFW_KEY_UP)
+    if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
         m_character.upKeyPressed = true;
-    if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
+    if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
         m_character.upKeyPressed = false;
 
-    if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
+    if (action == GLFW_PRESS && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
         m_character.downKeyPressed = true;
-    if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
+    if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
         m_character.downKeyPressed = false;
 
-    if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
+    if (action == GLFW_PRESS && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
         m_character.leftKeyPressed = true;
-    if (action == GLFW_RELEASE && key == GLFW_KEY_LEFT)
+    if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
         m_character.leftKeyPressed = false;
 
-    if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
+    if (action == GLFW_PRESS && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
         m_character.rightKeyPressed = true;
-    if (action == GLFW_RELEASE && key == GLFW_KEY_RIGHT)
+    if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
         m_character.rightKeyPressed = false;
 
     m_current_speed = fmax(0.f, m_current_speed);
