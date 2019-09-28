@@ -119,7 +119,7 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    return m_cherec.init() && m_water.init() && m_pebbles_emitter.init();
+    return m_character.init() && m_water.init() && m_pebbles_emitter.init();
 }
 
 // Releases all the associated resources
@@ -136,7 +136,7 @@ void World::destroy()
 
     Mix_CloseAudio();
 
-    m_cherec.destroy();
+    m_character.destroy();
     m_salmon.destroy();
     m_pebbles_emitter.destroy();
     for (auto& projectile : m_projectiles)
@@ -161,12 +161,12 @@ bool World::update(float elapsed_ms)
 
     // Checking Salmon - Turtle collisions
     for (const auto& projectile : m_projectiles) {
-        if (m_cherec.collides_with(projectile)) {
-            // if (m_cherec.is_alive()) {
+        if (m_character.collides_with(projectile)) {
+            // if (m_character.is_alive()) {
             // Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
             // m_water.set_salmon_dead();
             // }
-            m_cherec.kill();
+            m_character.kill();
             break;
         }
     }
@@ -214,7 +214,7 @@ bool World::update(float elapsed_ms)
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
-    m_cherec.update(elapsed_ms);
+    m_character.update(elapsed_ms);
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -369,7 +369,7 @@ void World::draw()
     // 	turtle.draw(projection_2D);
     // for (auto& fish : m_fish)
     // 	fish.draw(projection_2D);
-    m_cherec.draw(projection_2D);
+    m_character.draw(projection_2D);
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
@@ -455,8 +455,8 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         glfwGetWindowSize(m_window, &w, &h);
         // m_salmon.destroy();
         // m_salmon.init();
-        m_cherec.destroy();
-        m_cherec.init();
+        m_character.destroy();
+        m_character.init();
         m_pebbles_emitter.destroy();
         m_pebbles_emitter.init();
         m_projectiles.clear();
@@ -473,24 +473,24 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         m_current_speed += 0.1f;
 
     if (action == GLFW_PRESS && key == GLFW_KEY_UP)
-        m_cherec.upKeyPressed = true;
+        m_character.upKeyPressed = true;
     if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
-        m_cherec.upKeyPressed = false;
+        m_character.upKeyPressed = false;
 
     if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
-        m_cherec.downKeyPressed = true;
+        m_character.downKeyPressed = true;
     if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
-        m_cherec.downKeyPressed = false;
+        m_character.downKeyPressed = false;
 
     if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
-        m_cherec.leftKeyPressed = true;
+        m_character.leftKeyPressed = true;
     if (action == GLFW_RELEASE && key == GLFW_KEY_LEFT)
-        m_cherec.leftKeyPressed = false;
+        m_character.leftKeyPressed = false;
 
     if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
-        m_cherec.rightKeyPressed = true;
+        m_character.rightKeyPressed = true;
     if (action == GLFW_RELEASE && key == GLFW_KEY_RIGHT)
-        m_cherec.rightKeyPressed = false;
+        m_character.rightKeyPressed = false;
 
     m_current_speed = fmax(0.f, m_current_speed);
 }
