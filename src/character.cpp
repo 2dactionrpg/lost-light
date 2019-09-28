@@ -102,20 +102,24 @@ void Character::update(float ms)
             move({ 0.f, step });
             set_rotation(-1.5f);
         }
-
         if (leftKeyPressed) {
             move({ -step, 0.f });
             set_rotation(0.f);
         }
-
         if (rightKeyPressed) {
             move({ step, 0.f });
             set_rotation(3.14f);
         }
-    } else {
-        // If dead we make it face upwards and sink deep down
-        // set_rotation(3.1415f);
-        // move({ 0.f, step });
+
+        if (upKeyPressed && rightKeyPressed) {
+            set_rotation(2.25f);
+        } else if (rightKeyPressed && downKeyPressed) {
+            set_rotation(-2.25f);
+        } else if (downKeyPressed && leftKeyPressed) {
+            set_rotation(-0.75f);
+        } else if (leftKeyPressed && upKeyPressed) {
+            set_rotation(0.75f);
+        }
     }
 
     if (m_light_up_countdown_ms > 0.f)
