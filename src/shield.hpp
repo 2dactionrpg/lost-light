@@ -45,6 +45,12 @@ public:
 
     bool collides_with(Projectile&) const;
 
+    float triangleArea(vec2 p1, vec2 p2, vec2 p3);
+
+    float trianglesArea(vec2 p1, vec2 p2, vec2 p3, vec2 p4, vec2 projectileP);
+
+    float squareArea(vec2 p1, vec2 p2, vec2 p3);
+
 private:
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;
