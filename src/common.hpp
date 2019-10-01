@@ -110,6 +110,7 @@ protected:
     // All data relevant to the motion of the salmon.
     struct Motion {
         vec2 position;
+        vec2 direction;
         float radians;
         float speed;
     } motion;
