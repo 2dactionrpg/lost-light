@@ -22,6 +22,10 @@ public:
     // projection is the 2D orthographic projection matrix
     void draw(const mat3& projection) override;
 
+    vec2 getDirection();
+
+    void setDirection(vec2 direction);
+
     // Returns the current projectile position
     vec2 get_position() const;
 
