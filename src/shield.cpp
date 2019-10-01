@@ -198,6 +198,14 @@ void Shield::set_rotation(float radians)
     motion.radians = radians;
 }
 
+vec2 Shield::getDirection()
+{
+    vec2 direction = { sin(motion.radians), -cos(motion.radians) };
+    float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
+    direction = { direction.x / normal, direction.y / normal };
+    return direction;
+}
+
 vec2 Shield::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile

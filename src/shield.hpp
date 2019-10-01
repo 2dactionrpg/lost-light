@@ -41,6 +41,8 @@ public:
     // Set salmon rotation in radians
     void set_rotation(float radians);
 
+    vec2 getDirection();
+
     vec2 get_bounding_box() const;
 
     bool collides_with(Projectile&) const;
