@@ -36,8 +36,6 @@ public:
     // Moves the salmon's position by the specified offset
     void move(vec2 off);
 
-    bool collides_with(const Projectile& Projectile);
-
     // Set salmon rotation in radians
     void set_rotation(float radians);
 
@@ -45,7 +43,7 @@ public:
 
     vec2 get_bounding_box() const;
 
-    bool collides_with(Projectile&) const;
+    bool collides_with(const Projectile& projectile);
 
     float triangleArea(vec2 p1, vec2 p2, vec2 p3);
 
