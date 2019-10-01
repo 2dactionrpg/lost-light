@@ -207,10 +207,10 @@ vec2 Shield::get_bounding_box() const
 
 bool Shield::collides_with(const Projectile& projectile)
 {
-    vec3 tlMul = { 0 - shield_texture.width / 2, 0 - shield_texture.height / 2, 1.f };
-    vec3 trMul = { 0 + shield_texture.width / 2, 0 - shield_texture.height / 2, 1.f };
-    vec3 brMul = { 0 + shield_texture.width / 2, 0 + shield_texture.height / 2, 1.f };
-    vec3 blMul = { 0 - shield_texture.width / 2, 0 + shield_texture.height / 2, 1.f };
+    vec3 tlMul = { -shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
+    vec3 trMul = { +shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
+    vec3 brMul = { +shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
+    vec3 blMul = { -shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
 
     tlMul = mul(transform.out, tlMul);
     trMul = mul(transform.out, trMul);
