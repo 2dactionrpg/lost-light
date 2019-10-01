@@ -173,7 +173,7 @@ bool World::update(float elapsed_ms)
     }
 
     for (auto& projectile : m_projectiles) {
-        if (m_shield.collides_with(projectile) && !reflected) {
+        if (m_shield.collides_with(projectile)) {
             fprintf(stderr, "BOOM");
             vec2 shieldDirection = m_shield.getDirection();
             vec2 projectileDirection = projectile.getDirection();
