@@ -4,6 +4,7 @@
 #include "character.hpp"
 #include "common.hpp"
 #include "salmon.hpp"
+#include "shield.hpp"
 
 // #include "turtle.hpp"
 // #include "fish.hpp"
@@ -51,6 +52,8 @@ private:
     // !!! INPUT CALLBACK FUNCTIONS
     void on_key(GLFWwindow*, int key, int, int action, int mod);
     void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
+    // Calculates the length of a vec2 vector
+    float lengthVec2(vec2 v);
 
 private:
     // Window handle
@@ -71,6 +74,7 @@ private:
     // Game entities
     Salmon m_salmon;
     Character m_character;
+    Shield m_shield;
     // std::vector<Turtle> m_turtles;
     std::vector<Projectile> m_projectiles;
     // std::vector<Fish> m_fish;
