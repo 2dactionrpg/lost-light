@@ -200,7 +200,7 @@ void Shield::set_rotation(float radians)
 
 vec2 Shield::getDirection()
 {
-    vec2 direction = { sin(motion.radians), -cos(motion.radians) };
+    vec2 direction = { sinf(motion.radians), -cosf(motion.radians) };
     float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
     direction = { direction.x / normal, direction.y / normal };
     return direction;
