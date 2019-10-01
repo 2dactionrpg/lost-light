@@ -119,7 +119,7 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    return m_character.init() && m_water.init() && m_pebbles_emitter.init();
+    return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init();
 }
 
 // Releases all the associated resources
@@ -137,6 +137,7 @@ void World::destroy()
     Mix_CloseAudio();
 
     m_character.destroy();
+    m_shield.destroy();
     m_salmon.destroy();
     m_pebbles_emitter.destroy();
     for (auto& projectile : m_projectiles)
@@ -168,6 +169,21 @@ bool World::update(float elapsed_ms)
             // }
             m_character.kill();
             break;
+        }
+    }
+
+    for (auto& projectile : m_projectiles) {
+        if (m_shield.collides_with(projectile) && !reflected) {
+            fprintf(stderr, "BOOM");
+            vec2 shieldDirection = m_shield.getDirection();
+            vec2 projectileDirection = projectile.getDirection();
+
+            vec2 reflection = sub(
+                projectileDirection,
+                mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
+
+            projectile.setDirection(reflection);
+            continue;
         }
     }
 
@@ -215,6 +231,8 @@ bool World::update(float elapsed_ms)
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
     m_character.update(elapsed_ms);
+    m_shield.set_position(m_character.get_position());
+    m_shield.update(elapsed_ms);
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -227,6 +245,17 @@ bool World::update(float elapsed_ms)
     // HANDLE PEBBLE SPAWN/UPDATES HERE
     // DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 3
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    // Removing out of screen turtles
+    auto projectile_it = m_projectiles.begin();
+    while (projectile_it != m_projectiles.end()) {
+        float w = projectile_it->get_bounding_box().x / 2;
+        if (projectile_it->get_position().x + w < 0.f) {
+            projectile_it = m_projectiles.erase(projectile_it);
+            continue;
+        }
+        ++projectile_it;
+    }
 
     // Removing out of screen turtles
     // auto turtle_it = m_turtles.begin();
@@ -370,6 +399,7 @@ void World::draw()
     // for (auto& fish : m_fish)
     // 	fish.draw(projection_2D);
     m_character.draw(projection_2D);
+    m_shield.draw(projection_2D);
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
@@ -497,9 +527,23 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // HANDLE SALMON ROTATION HERE
-    // xpos and ypos are relative to the top-left of the window, the salmon's
-    // default facing direction is (1, 0)
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    vec2 shieldVec = { 0.f, 1.f };
+    vec2 mouseVec = {
+        (float)xpos - m_shield.get_position().x,
+        (float)ypos - m_shield.get_position().y
+    };
+
+    int factor = 1;
+    if (mouseVec.x > 0.f)
+        factor = -1;
+
+    float angle = acos(dot(mouseVec, shieldVec) / (lengthVec2(mouseVec) * lengthVec2(shieldVec)));
+
+    m_shield.set_rotation(factor * angle);
+}
+
+// Calculates the length of a vec2 vector
+float World::lengthVec2(vec2 v)
+{
+    return sqrt(pow(v.x, 2.f) + pow(v.y, 2.f));
 }
