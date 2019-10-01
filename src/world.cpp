@@ -10,7 +10,7 @@
 namespace {
 const size_t MAX_TURTLES = 15;
 // const size_t MAX_FISH = 5;
-const size_t TURTLE_DELAY_MS = 2000;
+const size_t TURTLE_DELAY_MS = 20000;
 // const size_t FISH_DELAY_MS = 5000;
 
 namespace {
@@ -172,6 +172,11 @@ bool World::update(float elapsed_ms)
         }
     }
 
+    for (const auto& projectile : m_projectiles) {
+        if (m_shield.collides_with(projectile)) {
+        }
+    }
+
     // Checking Salmon - Turtle collisions
     // for (const auto& turtle : m_turtles)
     // {
@@ -233,15 +238,13 @@ bool World::update(float elapsed_ms)
 
     // Removing out of screen turtles
     auto projectile_it = m_projectiles.begin();
-    while (projectile_it != m_projectiles.end())
-    {
-    	float w = projectile_it->get_bounding_box().x / 2;
-    	if (projectile_it->get_position().x + w < 0.f)
-    	{
-    		projectile_it = m_projectiles.erase(projectile_it);
-    		continue;
-    	}
-    	++projectile_it;
+    while (projectile_it != m_projectiles.end()) {
+        float w = projectile_it->get_bounding_box().x / 2;
+        if (projectile_it->get_position().x + w < 0.f) {
+            projectile_it = m_projectiles.erase(projectile_it);
+            continue;
+        }
+        ++projectile_it;
     }
 
     // Removing out of screen turtles

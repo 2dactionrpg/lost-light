@@ -67,9 +67,9 @@ bool Shield::init()
     // Setting initial values
     motion.position = { 0.f, 0.f };
     motion.radians = 0.f;
-    motion.speed = 200.f;
+    // motion.speed = 200.f;
 
-    physics.scale = { -1.f, 0.2f };
+    physics.scale = { 1.f, 1.f };
 
     // m_is_alive = true;
     // m_light_up_countdown_ms = -1.f;
@@ -92,6 +92,12 @@ void Shield::destroy()
 // Called on each frame by World::update()
 void Shield::update(float ms)
 {
+    transform.begin();
+    transform.translate(motion.position);
+    transform.rotate(motion.radians);
+    transform.translate({ 0.f, 300.f });
+    transform.scale(physics.scale);
+    transform.end();
     // float step = motion.speed * (ms / 1000);
     // if (m_is_alive) {
     //     if (upKeyPressed) {
@@ -130,12 +136,6 @@ void Shield::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
-    transform.begin();
-    transform.translate(motion.position);
-    transform.rotate(motion.radians);
-    transform.translate({ 0.f, 300.f });
-    transform.scale(physics.scale);
-    transform.end();
 
     // Setting shaders
     glUseProgram(effect.program);
@@ -207,14 +207,46 @@ vec2 Shield::get_bounding_box() const
 
 bool Shield::collides_with(const Projectile& projectile)
 {
-    float dx = motion.position.x - projectile.get_position().x;
-    float dy = motion.position.y - projectile.get_position().y;
-    float d_sq = dx * dx + dy * dy;
-    float other_r = std::max(projectile.get_bounding_box().x, projectile.get_bounding_box().y);
-    float my_r = std::max(physics.scale.x, physics.scale.y);
-    float r = std::max(other_r, my_r);
-    r *= 0.6f;
-    if (d_sq < r * r)
+    vec3 tlMul = { 0 - shield_texture.width / 2, 0 - shield_texture.height / 2, 1.f };
+    vec3 trMul = { 0 + shield_texture.width / 2, 0 - shield_texture.height / 2, 1.f };
+    vec3 brMul = { 0 + shield_texture.width / 2, 0 + shield_texture.height / 2, 1.f };
+    vec3 blMul = { 0 - shield_texture.width / 2, 0 + shield_texture.height / 2, 1.f };
+
+    tlMul = mul(transform.out, tlMul);
+    trMul = mul(transform.out, trMul);
+    brMul = mul(transform.out, brMul);
+    blMul = mul(transform.out, blMul);
+
+    vec2 tl = { tlMul.x, tlMul.y };
+    vec2 tr = { trMul.x, trMul.y };
+    vec2 br = { brMul.x, brMul.y };
+    vec2 bl = { blMul.x, blMul.y };
+
+    float area1 = squareArea(tl, tr, bl);
+    float area2 = trianglesArea(tl, tr, br, bl, projectile.get_position());
+    if (area1 == area2) {
         return true;
+    }
     return false;
+}
+
+float Shield::triangleArea(vec2 p1, vec2 p2, vec2 p3)
+{
+    return 0.5f * std::fabs((p1.y * (p2.x - p3.x) + p2.y * (p3.x - p1.x) + p3.y * (p1.x - p2.x)));
+}
+
+float Shield::trianglesArea(vec2 p1, vec2 p2, vec2 p3, vec2 p4, vec2 projectileP)
+{
+    float area1 = triangleArea(p1, p2, projectileP);
+    float area2 = triangleArea(p2, p3, projectileP);
+    float area3 = triangleArea(p3, p4, projectileP);
+    float area4 = triangleArea(p4, p1, projectileP);
+    return area1 + area2 + area3 + area4;
+}
+
+float Shield::squareArea(vec2 p1, vec2 p2, vec2 p3)
+{
+    float side1 = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+    float side2 = sqrt(pow(p1.x - p3.x, 2) + pow(p1.y - p3.y, 2));
+    return side1 * side2;
 }
