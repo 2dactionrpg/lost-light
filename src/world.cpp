@@ -232,6 +232,19 @@ bool World::update(float elapsed_ms)
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     // Removing out of screen turtles
+    auto projectile_it = m_projectiles.begin();
+    while (projectile_it != m_projectiles.end())
+    {
+    	float w = projectile_it->get_bounding_box().x / 2;
+    	if (projectile_it->get_position().x + w < 0.f)
+    	{
+    		projectile_it = m_projectiles.erase(projectile_it);
+    		continue;
+    	}
+    	++projectile_it;
+    }
+
+    // Removing out of screen turtles
     // auto turtle_it = m_turtles.begin();
     // while (turtle_it != m_turtles.end())
     // {
