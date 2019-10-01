@@ -10,7 +10,7 @@
 namespace {
 const size_t MAX_TURTLES = 15;
 // const size_t MAX_FISH = 5;
-const size_t TURTLE_DELAY_MS = 20000;
+const size_t TURTLE_DELAY_MS = 2000;
 // const size_t FISH_DELAY_MS = 5000;
 
 namespace {
@@ -172,8 +172,18 @@ bool World::update(float elapsed_ms)
         }
     }
 
-    for (const auto& projectile : m_projectiles) {
-        if (m_shield.collides_with(projectile)) {
+    for (auto& projectile : m_projectiles) {
+        if (m_shield.collides_with(projectile) && !reflected) {
+            fprintf(stderr, "BOOM");
+            vec2 shieldDirection = m_shield.getDirection();
+            vec2 projectileDirection = projectile.getDirection();
+
+            vec2 reflection = sub(
+                projectileDirection,
+                mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
+
+            projectile.setDirection(reflection);
+            continue;
         }
     }
 
