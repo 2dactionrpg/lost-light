@@ -162,6 +162,9 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
+    // set new target for enemie(s)
+    m_enemy.set_target(m_character.get_position());
+
     // Checking Salmon - Turtle collisions
     for (const auto& projectile : m_projectiles) {
         if (m_enemy.collides_with(projectile)) {
@@ -253,7 +256,7 @@ bool World::update(float elapsed_ms)
     // DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 3
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    // Removing out of screen turtles
+    // Removing out of screen projectiles
     auto projectile_it = m_projectiles.begin();
     while (projectile_it != m_projectiles.end()) {
         float w = projectile_it->get_bounding_box().x / 2;
@@ -297,7 +300,10 @@ bool World::update(float elapsed_ms)
     // }
 
     vec2 enemy_pos = m_enemy.get_position();
+    vec2 character_pos = m_character.get_position();
     vec2 enemy_bbox = m_enemy.get_bounding_box();
+    vec2 projectile_direction = {character_pos.x - enemy_pos.x, character_pos.y - enemy_pos.y};
+    
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
         if (!spawn_projectile() || !m_enemy.is_alive())
@@ -307,6 +313,7 @@ bool World::update(float elapsed_ms)
 
         // Setting random initial position
         new_projectile.set_position({ enemy_pos.x - enemy_bbox.x , enemy_pos.y});
+        new_projectile.setDirection(projectile_direction);
 
         // Next spawn
         m_next_projectile_spawn = (TURTLE_DELAY_MS / 2) + m_dist(m_rng) * (TURTLE_DELAY_MS / 2);

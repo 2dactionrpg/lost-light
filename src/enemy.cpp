@@ -72,6 +72,7 @@ bool Enemy::init()
     physics.scale = { -1.f, 1.f };
 
     direction = down;
+    target = { 50.f, 300.f };
 
     m_is_alive = true;
     m_remain_dead_countdown_ms  = -1.f;
@@ -110,6 +111,10 @@ void Enemy::update(float ms)
 
     if (!m_is_alive && m_remain_dead_countdown_ms <= 0.f)
         respawn();
+
+    // face the enemy to its target
+    float rad = atan2(target.x - motion.position.x, motion.position.y - target.y);
+    set_rotation(rad);
 }
 
 void Enemy::draw(const mat3& projection)
@@ -206,6 +211,11 @@ void Enemy::move(vec2 off)
 {
     motion.position.x += off.x;
     motion.position.y += off.y;
+}
+
+void Enemy::set_target(vec2 character_pos){
+    if (target.x != character_pos.x || target.y != character_pos.y)
+        target = character_pos;
 }
 
 void Enemy::set_rotation(float radians)
