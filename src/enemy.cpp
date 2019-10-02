@@ -73,8 +73,8 @@ bool Enemy::init()
 
     direction = down;
 
-    // m_is_alive = true;
-    // m_light_up_countdown_ms = -1.f;
+    m_is_alive = true;
+    m_remain_dead_countdown_ms  = -1.f;
 
     return true;
 }
@@ -105,7 +105,11 @@ void Enemy::update(float ms)
         if (motion.position.y < 0.f + enemy_texture.height * 0.5f)
             direction = down;
     
+    if (m_remain_dead_countdown_ms  > 0.f)
+        m_remain_dead_countdown_ms  -= ms;
 
+    if (!m_is_alive && m_remain_dead_countdown_ms <= 0.f)
+        respawn();
 }
 
 void Enemy::draw(const mat3& projection)
@@ -218,13 +222,21 @@ bool Enemy::is_alive() const
 void Enemy::kill()
 {
     m_is_alive = false;
+    m_remain_dead_countdown_ms = 2000.f;
+}
+
+void Enemy::respawn()
+{
+    m_is_alive = true;
+    motion.position = { 1000.f, 0.f };
+    direction = down;
 }
 
 // Called when the character collides with a fish
-void Enemy::light_up()
-{
-    m_light_up_countdown_ms = 1500.f;
-}
+// void Enemy::light_up()
+// {
+//     // m_light_up_countdown_ms = 1500.f;
+// }
 
 vec2 Enemy::get_bounding_box() const
 {
