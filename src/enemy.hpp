@@ -38,6 +38,8 @@ class Enemy : public Entity {
 
         bool collides_with(const Projectile& Projectile);
 
+        void set_target(vec2 character_pos);
+
         // Set salmon rotation in radians
         void set_rotation(float radians);
 
@@ -56,6 +58,8 @@ class Enemy : public Entity {
         bool collides_with(Projectile&) const;
 
         Direction direction;
+
+        vec2 target;
 
         
 
