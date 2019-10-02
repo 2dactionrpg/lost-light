@@ -288,6 +288,8 @@ bool World::update(float elapsed_ms)
     // 	++fish_it;
     // }
 
+    vec2 enemy_pos = m_enemy.get_position();
+    vec2 enemy_bbox = m_enemy.get_bounding_box();
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
         if (!spawn_projectile())
@@ -296,7 +298,7 @@ bool World::update(float elapsed_ms)
         Projectile& new_projectile = m_projectiles.back();
 
         // Setting random initial position
-        new_projectile.set_position({ screen.x + 150, 50 + m_dist(m_rng) * (screen.y - 100) });
+        new_projectile.set_position({ enemy_pos.x - enemy_bbox.x , enemy_pos.y});
 
         // Next spawn
         m_next_projectile_spawn = (TURTLE_DELAY_MS / 2) + m_dist(m_rng) * (TURTLE_DELAY_MS / 2);
