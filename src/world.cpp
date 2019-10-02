@@ -119,7 +119,8 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init();
+    printf("%s\n","here");
+    return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init() && m_enemy.init();
 }
 
 // Releases all the associated resources
@@ -137,6 +138,7 @@ void World::destroy()
     Mix_CloseAudio();
 
     m_character.destroy();
+    m_enemy.destroy();
     m_shield.destroy();
     m_salmon.destroy();
     m_pebbles_emitter.destroy();
@@ -160,8 +162,15 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
+    // set new target for enemie(s)
+    m_enemy.set_target(m_character.get_position());
+
     // Checking Salmon - Turtle collisions
     for (const auto& projectile : m_projectiles) {
+        if (m_enemy.collides_with(projectile)) {
+            fprintf(stderr, "enemy hit");
+            m_enemy.kill();
+        }
         if (m_character.collides_with(projectile)) {
             // if (m_character.is_alive()) {
             // Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
@@ -233,6 +242,7 @@ bool World::update(float elapsed_ms)
     m_character.update(elapsed_ms);
     m_shield.set_position(m_character.get_position());
     m_shield.update(elapsed_ms);
+    m_enemy.update(elapsed_ms);
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -246,11 +256,15 @@ bool World::update(float elapsed_ms)
     // DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 3
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    // Removing out of screen turtles
+    // Removing out of screen projectiles
     auto projectile_it = m_projectiles.begin();
     while (projectile_it != m_projectiles.end()) {
         float w = projectile_it->get_bounding_box().x / 2;
-        if (projectile_it->get_position().x + w < 0.f) {
+        float h = projectile_it->get_bounding_box().y / 2;
+        if (projectile_it->get_position().x + w < 0.f || 
+            projectile_it->get_position().x - w > 1200.f || 
+            projectile_it->get_position().y + h < 0.f ||
+            projectile_it->get_position().y - h > 850.f) {
             projectile_it = m_projectiles.erase(projectile_it);
             continue;
         }
@@ -285,15 +299,21 @@ bool World::update(float elapsed_ms)
     // 	++fish_it;
     // }
 
+    vec2 enemy_pos = m_enemy.get_position();
+    vec2 character_pos = m_character.get_position();
+    vec2 enemy_bbox = m_enemy.get_bounding_box();
+    vec2 projectile_direction = {character_pos.x - enemy_pos.x, character_pos.y - enemy_pos.y};
+    
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
-        if (!spawn_projectile())
+        if (!spawn_projectile() || !m_enemy.is_alive())
             return false;
 
         Projectile& new_projectile = m_projectiles.back();
 
         // Setting random initial position
-        new_projectile.set_position({ screen.x + 150, 50 + m_dist(m_rng) * (screen.y - 100) });
+        new_projectile.set_position({ enemy_pos.x - enemy_bbox.x , enemy_pos.y});
+        new_projectile.setDirection(projectile_direction);
 
         // Next spawn
         m_next_projectile_spawn = (TURTLE_DELAY_MS / 2) + m_dist(m_rng) * (TURTLE_DELAY_MS / 2);
@@ -400,6 +420,8 @@ void World::draw()
     // 	fish.draw(projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
+    if(m_enemy.is_alive())
+        m_enemy.draw(projection_2D);
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
@@ -461,7 +483,7 @@ bool World::is_over() const
 // Creates a new projectiles and if successfull adds it to the list of projectiles
 bool World::spawn_projectile()
 {
-    Projectile projectile;
+    Projectile projectile = m_enemy.shoot_projectile();
     if (projectile.init()) {
         m_projectiles.emplace_back(projectile);
         return true;
