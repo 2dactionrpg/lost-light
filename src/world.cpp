@@ -164,6 +164,10 @@ bool World::update(float elapsed_ms)
 
     // Checking Salmon - Turtle collisions
     for (const auto& projectile : m_projectiles) {
+        if (m_enemy.collides_with(projectile)) {
+            fprintf(stderr, "enemy hit");
+            m_enemy.kill();
+        }
         if (m_character.collides_with(projectile)) {
             // if (m_character.is_alive()) {
             // Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
@@ -296,7 +300,7 @@ bool World::update(float elapsed_ms)
     vec2 enemy_bbox = m_enemy.get_bounding_box();
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
-        if (!spawn_projectile())
+        if (!spawn_projectile() || !m_enemy.is_alive())
             return false;
 
         Projectile& new_projectile = m_projectiles.back();
@@ -409,7 +413,8 @@ void World::draw()
     // 	fish.draw(projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
-    m_enemy.draw(projection_2D);
+    if(m_enemy.is_alive())
+        m_enemy.draw(projection_2D);
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);

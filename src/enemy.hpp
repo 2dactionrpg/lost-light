@@ -46,6 +46,7 @@ class Enemy : public Entity {
 
         // Kills the salmon, changing its alive state and triggering on death events
         void kill();
+        void respawn();
 
         // Called when the salmon collides with a fish, starts lighting up the salmon
         void light_up();
@@ -59,7 +60,7 @@ class Enemy : public Entity {
         
 
     private:
-        float m_light_up_countdown_ms; // Used to keep track for how long the salmon should be lit up
+        float m_remain_dead_countdown_ms; // Used to keep track for how long the salmon should be lit up
         bool m_is_alive; // True if the salmon is alive=
 
         std::vector<Vertex> m_vertices;
