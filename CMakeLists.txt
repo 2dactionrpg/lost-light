@@ -40,6 +40,7 @@ set(SOURCE_FILES
   src/pebbles.cpp
   src/projectile.cpp
   src/shield.cpp
+  src/enemy.cpp
 
   src/project_path.hpp
 	src/character.hpp
@@ -50,6 +51,7 @@ set(SOURCE_FILES
   src/pebbles.hpp
   src/projectile.hpp
   src/shield.hpp
+  src/enemy.hpp
 	)
 
 if (IS_OS_MAC)

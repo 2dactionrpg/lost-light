@@ -7,8 +7,10 @@
 // class Fish;
 class Projectile;
 
-class Character : public Entity {
-    static Texture character_texture;
+enum Direction { up, down };
+
+class Enemy : public Entity {
+    static Texture enemy_texture;
 
     public:
         // Creates all the associated render resources and default transform
@@ -36,6 +38,8 @@ class Character : public Entity {
 
         bool collides_with(const Projectile& Projectile);
 
+        void set_target(vec2 character_pos);
+
         // Set salmon rotation in radians
         void set_rotation(float radians);
 
@@ -44,6 +48,7 @@ class Character : public Entity {
 
         // Kills the salmon, changing its alive state and triggering on death events
         void kill();
+        void respawn();
 
         // Called when the salmon collides with a fish, starts lighting up the salmon
         void light_up();
@@ -52,13 +57,14 @@ class Character : public Entity {
 
         bool collides_with(Projectile&) const;
 
-        bool upKeyPressed;
-        bool downKeyPressed;
-        bool leftKeyPressed;
-        bool rightKeyPressed;
+        Projectile shoot_projectile();
+
+        Direction direction;
+
+        vec2 target;
 
     private:
-        float m_light_up_countdown_ms; // Used to keep track for how long the salmon should be lit up
+        float m_remain_dead_countdown_ms; // Used to keep track for how long the salmon should be lit up
         bool m_is_alive; // True if the salmon is alive=
 
         std::vector<Vertex> m_vertices;
