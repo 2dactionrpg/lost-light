@@ -69,7 +69,7 @@ bool Shield::init()
     motion.radians = 0.f;
     // motion.speed = 200.f;
 
-    physics.scale = { 1.f, 1.f };
+    physics.scale = { 1.f, 0.1f };
 
     // m_is_alive = true;
     // m_light_up_countdown_ms = -1.f;
