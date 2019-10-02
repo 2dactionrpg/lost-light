@@ -483,7 +483,7 @@ bool World::is_over() const
 // Creates a new projectiles and if successfull adds it to the list of projectiles
 bool World::spawn_projectile()
 {
-    Projectile projectile;
+    Projectile projectile = m_enemy.shoot_projectile();
     if (projectile.init()) {
         m_projectiles.emplace_back(projectile);
         return true;

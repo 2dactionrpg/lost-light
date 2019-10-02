@@ -96,15 +96,10 @@ void Enemy::destroy()
 void Enemy::update(float ms)
 {
     float step = motion.speed * (ms / 1000);
-    if (direction == down){
-        move({ 0.f, step });
-        if (motion.position.y > 800.f - enemy_texture.height * 0.5f)
-            direction = up;
-    }
-    if (direction == up)
-        move({ 0.f, -step });
-        if (motion.position.y < 0.f + enemy_texture.height * 0.5f)
-            direction = down;
+
+    // Random movement
+    srand(time(NULL));
+    move({((rand()%3) - 1) * step, ((rand()%3) - 1) * step});
     
     if (m_remain_dead_countdown_ms  > 0.f)
         m_remain_dead_countdown_ms  -= ms;
@@ -242,11 +237,10 @@ void Enemy::respawn()
     direction = down;
 }
 
-// Called when the character collides with a fish
-// void Enemy::light_up()
-// {
-//     // m_light_up_countdown_ms = 1500.f;
-// }
+Projectile Enemy::shoot_projectile() {
+    Projectile projectlie;
+    return projectlie;
+}
 
 vec2 Enemy::get_bounding_box() const
 {
