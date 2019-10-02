@@ -7,8 +7,10 @@
 // class Fish;
 class Projectile;
 
-class Character : public Entity {
-    static Texture character_texture;
+enum Direction { up, down };
+
+class Enemy : public Entity {
+    static Texture enemy_texture;
 
     public:
         // Creates all the associated render resources and default transform
@@ -52,10 +54,9 @@ class Character : public Entity {
 
         bool collides_with(Projectile&) const;
 
-        bool upKeyPressed;
-        bool downKeyPressed;
-        bool leftKeyPressed;
-        bool rightKeyPressed;
+        Direction direction;
+
+        
 
     private:
         float m_light_up_countdown_ms; // Used to keep track for how long the salmon should be lit up

@@ -5,6 +5,7 @@
 #include "common.hpp"
 #include "salmon.hpp"
 #include "shield.hpp"
+#include "enemy.hpp"
 
 // #include "turtle.hpp"
 // #include "fish.hpp"
@@ -75,6 +76,7 @@ private:
     Salmon m_salmon;
     Character m_character;
     Shield m_shield;
+    Enemy m_enemy;
     // std::vector<Turtle> m_turtles;
     std::vector<Projectile> m_projectiles;
     // std::vector<Fish> m_fish;
