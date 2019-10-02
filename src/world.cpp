@@ -253,7 +253,11 @@ bool World::update(float elapsed_ms)
     auto projectile_it = m_projectiles.begin();
     while (projectile_it != m_projectiles.end()) {
         float w = projectile_it->get_bounding_box().x / 2;
-        if (projectile_it->get_position().x + w < 0.f) {
+        float h = projectile_it->get_bounding_box().y / 2;
+        if (projectile_it->get_position().x + w < 0.f || 
+            projectile_it->get_position().x - w > 1200.f || 
+            projectile_it->get_position().y + h < 0.f ||
+            projectile_it->get_position().y - h > 850.f) {
             projectile_it = m_projectiles.erase(projectile_it);
             continue;
         }
