@@ -57,11 +57,11 @@ class Enemy : public Entity {
 
         bool collides_with(Projectile&) const;
 
+        Projectile shoot_projectile();
+
         Direction direction;
 
         vec2 target;
-
-        
 
     private:
         float m_remain_dead_countdown_ms; // Used to keep track for how long the salmon should be lit up
