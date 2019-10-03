@@ -25,6 +25,7 @@ public:
     vec2 getDirection();
 
     void setDirection(vec2 direction);
+    void setRotation(float rad);
 
     // Returns the current projectile position
     vec2 get_position() const;
