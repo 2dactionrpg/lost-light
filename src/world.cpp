@@ -119,6 +119,8 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
+    makePlayer(registry);
+
     return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init();
 }
 
@@ -478,7 +480,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     // key is of 'type' GLFW_KEY_
     // action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+    inputSystem.update(registry, key, action, mod);
     // Resetting game
     if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
         int w, h;
