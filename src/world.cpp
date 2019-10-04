@@ -7,23 +7,24 @@
 #include <string.h>
 
 // Same as static in c, local to compilation unit
-namespace {
+namespace
+{
 const size_t MAX_TURTLES = 15;
 // const size_t MAX_FISH = 5;
 const size_t TURTLE_DELAY_MS = 2000;
 // const size_t FISH_DELAY_MS = 5000;
 
-namespace {
-    void glfw_err_cb(int error, const char* desc)
-    {
-        fprintf(stderr, "%d: %s", error, desc);
-    }
+namespace
+{
+void glfw_err_cb(int error, const char *desc)
+{
+    fprintf(stderr, "%d: %s", error, desc);
 }
-}
+} // namespace
+} // namespace
 
 World::World()
-    : m_points(0)
-    , m_next_projectile_spawn(0.f)
+    : m_points(0), m_next_projectile_spawn(0.f)
 // m_next_turtle_spawn(0.f),
 // m_next_fish_spawn(0.f)
 {
@@ -42,7 +43,8 @@ bool World::init(vec2 screen)
     // GLFW / OGL Initialization
     // Core Opengl 3.
     glfwSetErrorCallback(glfw_err_cb);
-    if (!glfwInit()) {
+    if (!glfwInit())
+    {
         fprintf(stderr, "Failed to initialize GLFW");
         return false;
     }
@@ -69,8 +71,8 @@ bool World::init(vec2 screen)
     // Input is handled using GLFW, for more info see
     // http://www.glfw.org/docs/latest/input_guide.html
     glfwSetWindowUserPointer(m_window, this);
-    auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
-    auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
+    auto key_redirect = [](GLFWwindow *wnd, int _0, int _1, int _2, int _3) { ((World *)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+    auto cursor_pos_redirect = [](GLFWwindow *wnd, double _0, double _1) { ((World *)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
     glfwSetKeyCallback(m_window, key_redirect);
     glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 
@@ -90,12 +92,14 @@ bool World::init(vec2 screen)
 
     //-------------------------------------------------------------------------
     // Loading music and sounds
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
         fprintf(stderr, "Failed to initialize SDL Audio");
         return false;
     }
 
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+    {
         fprintf(stderr, "Failed to open audio device");
         return false;
     }
@@ -104,11 +108,12 @@ bool World::init(vec2 screen)
     m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
     m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
 
-    if (m_background_music == nullptr || m_salmon_dead_sound == nullptr || m_salmon_eat_sound == nullptr) {
+    if (m_background_music == nullptr || m_salmon_dead_sound == nullptr || m_salmon_eat_sound == nullptr)
+    {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-            audio_path("music.wav"),
-            audio_path("salmon_dead.wav"),
-            audio_path("salmon_eat.wav"));
+                audio_path("music.wav"),
+                audio_path("salmon_dead.wav"),
+                audio_path("salmon_eat.wav"));
         return false;
     }
 
@@ -142,7 +147,7 @@ void World::destroy()
     m_shield.destroy();
     m_salmon.destroy();
     m_pebbles_emitter.destroy();
-    for (auto& projectile : m_projectiles)
+    for (auto &projectile : m_projectiles)
         projectile.destroy();
     m_projectiles.clear();
 
@@ -160,11 +165,13 @@ bool World::update(float elapsed_ms)
 {
     int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
-    vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
+    vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
 
     // Checking Salmon - Turtle collisions
-    for (const auto& projectile : m_projectiles) {
-        if (m_character.collides_with(projectile)) {
+    for (const auto &projectile : m_projectiles)
+    {
+        if (m_character.collides_with(projectile))
+        {
             // if (m_character.is_alive()) {
             // Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
             // m_water.set_salmon_dead();
@@ -174,8 +181,10 @@ bool World::update(float elapsed_ms)
         }
     }
 
-    for (auto& projectile : m_projectiles) {
-        if (m_shield.collides_with(projectile)) {
+    for (auto &projectile : m_projectiles)
+    {
+        if (m_shield.collides_with(projectile))
+        {
             fprintf(stderr, "BOOM");
             vec2 shieldDirection = m_shield.getDirection();
             vec2 projectileDirection = projectile.getDirection();
@@ -232,11 +241,12 @@ bool World::update(float elapsed_ms)
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
+    playerMovementSystem.update(registry, elapsed_ms);
     m_character.update(elapsed_ms);
     m_shield.set_position(m_character.get_position());
     m_shield.update(elapsed_ms);
     // m_salmon.update(elapsed_ms);
-    for (auto& projectile : m_projectiles)
+    for (auto &projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
     // for (auto& turtle : m_turtles)
     // 	turtle.update(elapsed_ms * m_current_speed);
@@ -250,9 +260,11 @@ bool World::update(float elapsed_ms)
 
     // Removing out of screen turtles
     auto projectile_it = m_projectiles.begin();
-    while (projectile_it != m_projectiles.end()) {
+    while (projectile_it != m_projectiles.end())
+    {
         float w = projectile_it->get_bounding_box().x / 2;
-        if (projectile_it->get_position().x + w < 0.f) {
+        if (projectile_it->get_position().x + w < 0.f)
+        {
             projectile_it = m_projectiles.erase(projectile_it);
             continue;
         }
@@ -288,14 +300,15 @@ bool World::update(float elapsed_ms)
     // }
 
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
-    if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
+    if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f)
+    {
         if (!spawn_projectile())
             return false;
 
-        Projectile& new_projectile = m_projectiles.back();
+        Projectile &new_projectile = m_projectiles.back();
 
         // Setting random initial position
-        new_projectile.set_position({ screen.x + 150, 50 + m_dist(m_rng) * (screen.y - 100) });
+        new_projectile.set_position({screen.x + 150, 50 + m_dist(m_rng) * (screen.y - 100)});
 
         // Next spawn
         m_next_projectile_spawn = (TURTLE_DELAY_MS / 2) + m_dist(m_rng) * (TURTLE_DELAY_MS / 2);
@@ -368,23 +381,23 @@ void World::draw()
     // Clearing backbuffer
     glViewport(0, 0, w, h);
     glDepthRange(0.00001, 10);
-    const float clear_color[3] = { 0.3f, 0.3f, 0.8f };
+    const float clear_color[3] = {0.3f, 0.3f, 0.8f};
     glClearColor(clear_color[0], clear_color[1], clear_color[2], 1.0);
     glClearDepth(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Fake projection matrix, scales with respect to window coordinates
     // PS: 1.f / w in [1][1] is correct.. do you know why ? (:
-    float left = 0.f; // *-0.5;
-    float top = 0.f; // (float)h * -0.5;
-    float right = (float)w / m_screen_scale; // *0.5;
+    float left = 0.f;                         // *-0.5;
+    float top = 0.f;                          // (float)h * -0.5;
+    float right = (float)w / m_screen_scale;  // *0.5;
     float bottom = (float)h / m_screen_scale; // *0.5;
 
     float sx = 2.f / (right - left);
     float sy = 2.f / (top - bottom);
     float tx = -(right + left) / (right - left);
     float ty = -(top + bottom) / (top - bottom);
-    mat3 projection_2D { { sx, 0.f, 0.f }, { 0.f, sy, 0.f }, { tx, ty, 1.f } };
+    mat3 projection_2D{{sx, 0.f, 0.f}, {0.f, sy, 0.f}, {tx, ty, 1.f}};
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // DRAW DEBUG INFO HERE
@@ -403,7 +416,7 @@ void World::draw()
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     // m_salmon.draw(projection_2D);
-    for (auto& projectile : m_projectiles)
+    for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);
 
     /////////////////////
@@ -464,7 +477,8 @@ bool World::is_over() const
 bool World::spawn_projectile()
 {
     Projectile projectile;
-    if (projectile.init()) {
+    if (projectile.init())
+    {
         m_projectiles.emplace_back(projectile);
         return true;
     }
@@ -473,7 +487,7 @@ bool World::spawn_projectile()
 }
 
 // On key callback
-void World::on_key(GLFWwindow*, int key, int, int action, int mod)
+void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 {
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // HANDLE SALMON MOVEMENT HERE
@@ -482,7 +496,8 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     inputSystem.update(registry, key, action, mod);
     // Resetting game
-    if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
+    if (action == GLFW_RELEASE && key == GLFW_KEY_R)
+    {
         int w, h;
         glfwGetWindowSize(m_window, &w, &h);
         // m_salmon.destroy();
@@ -504,36 +519,35 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
         m_current_speed += 0.1f;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
-        m_character.upKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
-        m_character.upKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
+    //     m_character.upKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
+    //     m_character.upKeyPressed = false;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
-        m_character.downKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
-        m_character.downKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
+    //     m_character.downKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
+    //     m_character.downKeyPressed = false;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
-        m_character.leftKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
-        m_character.leftKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
+    //     m_character.leftKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
+    //     m_character.leftKeyPressed = false;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
-        m_character.rightKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
-        m_character.rightKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
+    //     m_character.rightKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
+    //     m_character.rightKeyPressed = false;
 
     m_current_speed = fmax(0.f, m_current_speed);
 }
 
-void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
+void World::on_mouse_move(GLFWwindow *window, double xpos, double ypos)
 {
-    vec2 shieldVec = { 0.f, 1.f };
+    vec2 shieldVec = {0.f, 1.f};
     vec2 mouseVec = {
         (float)xpos - m_shield.get_position().x,
-        (float)ypos - m_shield.get_position().y
-    };
+        (float)ypos - m_shield.get_position().y};
 
     int factor = 1;
     if (mouseVec.x > 0.f)

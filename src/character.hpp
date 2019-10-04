@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include <vector>
+#include <entt/entity/registry.hpp>
 
 // class Turtle;
 // class Fish;
@@ -63,4 +64,5 @@ private:
 
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;
+    entt::registry registry;
 };

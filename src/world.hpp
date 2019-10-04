@@ -13,6 +13,7 @@
 #include "water.hpp"
 #include "factory.hpp"
 #include "./system/InputSystem.hpp"
+#include "./system/PlayerMovementSystem.hpp"
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -99,5 +100,6 @@ private:
     std::uniform_real_distribution<float> m_dist; // default 0..1
 
     InputSystem inputSystem;
+    PlayerMovementSystem playerMovementSystem;
     entt::registry registry;
 };
