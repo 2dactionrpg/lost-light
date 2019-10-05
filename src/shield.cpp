@@ -101,7 +101,7 @@ void Shield::draw(const mat3& projection)
     transform.begin();
     transform.translate(motion.position);
     transform.rotate(motion.radians);
-    transform.translate({ 0.f, 150.f });
+    transform.translate({ 0.f, 80.f });
     transform.scale(physics.scale);
     transform.end();
 

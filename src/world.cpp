@@ -561,19 +561,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-    vec2 shieldVec = { 0.f, 1.f };
-    vec2 mouseVec = {
-        (float)xpos - m_shield.get_position().x,
-        (float)ypos - m_shield.get_position().y
-    };
-
-    int factor = 1;
-    if (mouseVec.x > 0.f)
-        factor = -1;
-
-    float angle = acos(dot(mouseVec, shieldVec) / (lengthVec2(mouseVec) * lengthVec2(shieldVec)));
-
-    m_shield.set_rotation(factor * angle);
+    inputSystem.on_mouse(registry, xpos, ypos);
 }
 
 // Calculates the length of a vec2 vector
