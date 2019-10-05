@@ -14,6 +14,10 @@
 #include <cmath>
 
 Texture Character::character_texture;
+float C_FRAME_X_MAX = 1150;
+float C_FRAME_X_MIN = 50;
+float C_FRAME_Y_MAX = 720;
+float C_FRAME_Y_MIN = 50;
 
 bool Character::init()
 {
@@ -220,6 +224,16 @@ void Character::move(vec2 off)
 {
     motion.position.x += off.x;
     motion.position.y += off.y;
+    if (motion.position.x > C_FRAME_X_MAX) {
+        motion.position.x = C_FRAME_X_MAX;
+    } else if (motion.position.x < C_FRAME_X_MIN) {
+        motion.position.x = C_FRAME_X_MIN;
+    }
+    if (motion.position.y > C_FRAME_Y_MAX) {
+        motion.position.y = C_FRAME_Y_MAX;
+    } else if (motion.position.y < C_FRAME_Y_MIN) {
+        motion.position.y = C_FRAME_Y_MIN;
+    }
 }
 
 void Character::set_rotation(float radians)
