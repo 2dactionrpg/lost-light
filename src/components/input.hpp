@@ -7,4 +7,6 @@ struct input
     bool downKeyPressed;
     bool leftKeyPressed;
     bool rightKeyPressed;
+    double xpos;
+    double ypos;
 };

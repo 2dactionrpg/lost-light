@@ -20,7 +20,7 @@ public:
 
     // Update salmon position based on direction
     // ms represents the number of milliseconds elapsed from the previous update() call
-    void update(float ms);
+    // void update(float ms);
 
     // Renders the salmon
     void draw(const mat3& projection) override;
@@ -31,14 +31,13 @@ public:
 
     // Returns the current salmon position
     vec2 get_position() const;
-
-    // Moves the salmon's position by the specified offset
-    void move(vec2 off);
-
+    
     bool collides_with(const Projectile& Projectile);
 
     // Set salmon rotation in radians
     void set_rotation(float radians);
+
+    void set_position(vec2 position);
 
     // True if the salmon is alive
     bool is_alive() const;

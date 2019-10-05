@@ -1,6 +1,7 @@
 #include "PlayerMovementSystem.hpp"
+#include <iostream>
 
-void PlayerMovementSystem::update(entt::registry &registry, float ms)
+void PlayerMovementSystem::update(entt::registry &registry, float ms, Character &character, Shield &shield)
 {
     auto view = registry.view<player, motion, input>();
     for (auto entity : view)
@@ -8,6 +9,8 @@ void PlayerMovementSystem::update(entt::registry &registry, float ms)
         auto &position = view.get<motion>(entity).position;
         auto &radians = view.get<motion>(entity).radians;
         auto &speed = view.get<motion>(entity).speed;
+        auto &xpos = view.get<input>(entity).xpos;
+        auto &ypos = view.get<input>(entity).ypos;
         
         auto &upKeyPressed = view.get<input>(entity).upKeyPressed;
         auto &downKeyPressed = view.get<input>(entity).downKeyPressed;
@@ -42,17 +45,21 @@ void PlayerMovementSystem::update(entt::registry &registry, float ms)
         } else if (leftKeyPressed && upKeyPressed) {
             set_rotation(radians, 0.75f);
         }
+
+        character.set_position(position);
+        character.set_rotation(radians);
+        shield.set_position(character.get_position());        
     }
 }
 
-void PlayerMovementSystem::move(vec2 pos, vec2 off)
+void PlayerMovementSystem::move(vec2 &pos, vec2 off)
 {
     pos.x += off.x;
     pos.y += off.y;
 }
 
 
-void PlayerMovementSystem::set_rotation(float radians, float newRadians)
+void PlayerMovementSystem::set_rotation(float &radians, float newRadians)
 {
     radians = newRadians;
 }
