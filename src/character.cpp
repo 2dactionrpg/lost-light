@@ -248,8 +248,8 @@ vec2 Character::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * character_texture.width * 0.4,
-        std::fabs(physics.scale.y) * character_texture.height * 0.4 };
+    return { std::fabs(physics.scale.x) * character_texture.width * 0.4f,
+        std::fabs(physics.scale.y) * character_texture.height * 0.4f };
 }
 
 bool Character::collides_with(const Projectile& projectile)
