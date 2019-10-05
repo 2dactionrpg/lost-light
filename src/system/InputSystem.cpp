@@ -1,6 +1,6 @@
 #include "InputSystem.hpp"
 
-void InputSystem::update(entt::registry &registry, int key, int action, int mod)
+void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
 {
     auto view = registry.view<input>();
     for (auto entity : view)
@@ -29,5 +29,18 @@ void InputSystem::update(entt::registry &registry, int key, int action, int mod)
             rightKeyPressed = true;
         if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
             rightKeyPressed = false;
+    }
+}
+
+void on_mouse(entt::registry &registry, double xpos_new, double ypos_new)
+{
+        auto view = registry.view<input>();
+    for (auto entity : view)
+    {
+        auto &xpos = view.get(entity).xpos;
+        auto &ypos = view.get(entity).ypos;
+
+        xpos = xpos_new;
+        ypos = ypos_new;
     }
 }

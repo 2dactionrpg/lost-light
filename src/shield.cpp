@@ -92,50 +92,19 @@ void Shield::destroy()
 // Called on each frame by World::update()
 void Shield::update(float ms)
 {
-    transform.begin();
-    transform.translate(motion.position);
-    transform.rotate(motion.radians);
-    transform.translate({ 0.f, 300.f });
-    transform.scale(physics.scale);
-    transform.end();
-    // float step = motion.speed * (ms / 1000);
-    // if (m_is_alive) {
-    //     if (upKeyPressed) {
-    //         move({ 0.f, -step });
-    //         set_rotation(1.5f);
-    //     }
-    //     if (downKeyPressed) {
-    //         move({ 0.f, step });
-    //         set_rotation(-1.5f);
-    //     }
-    //     if (leftKeyPressed) {
-    //         move({ -step, 0.f });
-    //         set_rotation(0.f);
-    //     }
-    //     if (rightKeyPressed) {
-    //         move({ step, 0.f });
-    //         set_rotation(3.14f);
-    //     }
 
-    //     if (upKeyPressed && rightKeyPressed) {
-    //         set_rotation(2.25f);
-    //     } else if (rightKeyPressed && downKeyPressed) {
-    //         set_rotation(-2.25f);
-    //     } else if (downKeyPressed && leftKeyPressed) {
-    //         set_rotation(-0.75f);
-    //     } else if (leftKeyPressed && upKeyPressed) {
-    //         set_rotation(0.75f);
-    //     }
-    // }
-
-    // if (m_light_up_countdown_ms > 0.f)
-    //     m_light_up_countdown_ms -= ms;
 }
 
 void Shield::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
+    transform.begin();
+    transform.translate(motion.position);
+    transform.rotate(motion.radians);
+    transform.translate({ 0.f, 300.f });
+    transform.scale(physics.scale);
+    transform.end();
 
     // Setting shaders
     glUseProgram(effect.program);

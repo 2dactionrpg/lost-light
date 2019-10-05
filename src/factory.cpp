@@ -9,6 +9,6 @@ entt::entity makePlayer(entt::registry &registry) {
     mo.position = {50.f, 300.f};
     mo.radians = 20.f;
     mo.speed = 200.f;
-    registry.assign<input>(entity, false, false, false, false);
+    registry.assign<input>(entity, false, false, false, false, 0.0, 0.0);
     return entity;
 }

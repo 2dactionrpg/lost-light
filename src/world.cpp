@@ -241,10 +241,9 @@ bool World::update(float elapsed_ms)
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
-    playerMovementSystem.update(registry, elapsed_ms);
-    m_character.update(elapsed_ms);
-    m_shield.set_position(m_character.get_position());
-    m_shield.update(elapsed_ms);
+    playerMovementSystem.update(registry, elapsed_ms, m_character, m_shield);
+    // m_character.update(elapsed_ms);
+    // m_shield.set_position(m_character.get_position());
     // m_salmon.update(elapsed_ms);
     for (auto &projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -494,7 +493,6 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
     // key is of 'type' GLFW_KEY_
     // action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    inputSystem.update(registry, key, action, mod);
     // Resetting game
     if (action == GLFW_RELEASE && key == GLFW_KEY_R)
     {
@@ -513,6 +511,8 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
         m_current_speed = 1.f;
     }
 
+    inputSystem.on_key(registry, key, action, mod);
+    
     // Control the current speed with `<` `>`
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA)
         m_current_speed -= 0.1f;
@@ -544,6 +544,7 @@ void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 
 void World::on_mouse_move(GLFWwindow *window, double xpos, double ypos)
 {
+    inputSystem.on_mouse(registry, xpos, ypos);
     vec2 shieldVec = {0.f, 1.f};
     vec2 mouseVec = {
         (float)xpos - m_shield.get_position().x,

@@ -8,6 +8,6 @@
 
 struct InputSystem
 {
-    void on_key(int key, int action, int mod);
-    void update(entt::registry &registry, int key, int action, int mod);
+    void on_key(entt::registry &registry, int key, int action, int mod);
+    void on_mouse(entt::registry &registry, double xpos, double ypos);
 };
