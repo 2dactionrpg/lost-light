@@ -232,7 +232,7 @@ bool Shield::collides_with(const Projectile& projectile)
 
     float area1 = squareArea(tl, tr, bl);
     float area2 = trianglesArea(tl, tr, br, bl, projectile.get_position());
-    if (area1 == area2) {
+    if (std::fabs(area1 - area2) < 1000) {
         return true;
     }
     return false;
