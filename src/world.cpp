@@ -18,8 +18,8 @@ namespace {
     {
         fprintf(stderr, "%d: %s", error, desc);
     }
-}
-}
+} // namespace
+} // namespace
 
 World::World()
     : m_points(0)
@@ -118,6 +118,8 @@ bool World::init(vec2 screen)
     fprintf(stderr, "Loaded music\n");
 
     m_current_speed = 1.f;
+
+    makePlayer(registry);
 
     return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init() && m_enemy.init();
 }
@@ -237,10 +239,10 @@ bool World::update(float elapsed_ms)
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
-    m_character.update(elapsed_ms);
-    m_shield.set_position(m_character.get_position());
-    m_shield.update(elapsed_ms);
     m_enemy.update(elapsed_ms);
+    playerMovementSystem.update(registry, elapsed_ms, m_character, m_shield);
+    // m_character.update(elapsed_ms);
+    // m_shield.set_position(m_character.get_position());
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -498,7 +500,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     // key is of 'type' GLFW_KEY_
     // action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     // Resetting game
     if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
         int w, h;
@@ -516,54 +517,38 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         m_current_speed = 1.f;
     }
 
+    inputSystem.on_key(registry, key, action, mod);
+
     // Control the current speed with `<` `>`
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA)
         m_current_speed -= 0.1f;
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
         m_current_speed += 0.1f;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
-        m_character.upKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
-        m_character.upKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
+    //     m_character.upKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
+    //     m_character.upKeyPressed = false;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
-        m_character.downKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
-        m_character.downKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
+    //     m_character.downKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
+    //     m_character.downKeyPressed = false;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
-        m_character.leftKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
-        m_character.leftKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
+    //     m_character.leftKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
+    //     m_character.leftKeyPressed = false;
 
-    if (action == GLFW_PRESS && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
-        m_character.rightKeyPressed = true;
-    if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
-        m_character.rightKeyPressed = false;
+    // if (action == GLFW_PRESS && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
+    //     m_character.rightKeyPressed = true;
+    // if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
+    //     m_character.rightKeyPressed = false;
 
     m_current_speed = fmax(0.f, m_current_speed);
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-    vec2 shieldVec = { 0.f, 1.f };
-    vec2 mouseVec = {
-        (float)xpos - m_shield.get_position().x,
-        (float)ypos - m_shield.get_position().y
-    };
-
-    int factor = 1;
-    if (mouseVec.x > 0.f)
-        factor = -1;
-
-    float angle = acos(dot(mouseVec, shieldVec) / (lengthVec2(mouseVec) * lengthVec2(shieldVec)));
-
-    m_shield.set_rotation(factor * angle);
-}
-
-// Calculates the length of a vec2 vector
-float World::lengthVec2(vec2 v)
-{
-    return sqrt(pow(v.x, 2.f) + pow(v.y, 2.f));
+    inputSystem.on_mouse(registry, xpos, ypos);
 }

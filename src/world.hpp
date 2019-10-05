@@ -12,6 +12,12 @@
 #include "pebbles.hpp"
 #include "projectile.hpp"
 #include "water.hpp"
+#include "factory.hpp"
+#include "./system/InputSystem.hpp"
+#include "./system/PlayerMovementSystem.hpp"
+
+// entt
+#include <entt/entity/registry.hpp>
 
 // stlib
 #include <random>
@@ -94,4 +100,8 @@ private:
     // C++ rng
     std::default_random_engine m_rng;
     std::uniform_real_distribution<float> m_dist; // default 0..1
+
+    InputSystem inputSystem;
+    PlayerMovementSystem playerMovementSystem;
+    entt::registry registry;
 };
