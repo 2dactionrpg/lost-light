@@ -76,8 +76,24 @@ void PlayerMovementSystem::update(entt::registry& registry, float ms, Character&
 
 void PlayerMovementSystem::move(vec2& pos, vec2 off)
 {
+    float C_FRAME_X_MAX = 1150;
+    float C_FRAME_X_MIN = 50;
+    float C_FRAME_Y_MAX = 720;
+    float C_FRAME_Y_MIN = 50;
+
     pos.x += off.x;
     pos.y += off.y;
+
+    if (pos.x > C_FRAME_X_MAX) {
+        pos.x = C_FRAME_X_MAX;
+    } else if (pos.x < C_FRAME_X_MIN) {
+        pos.x = C_FRAME_X_MIN;
+    }
+    if (pos.y > C_FRAME_Y_MAX) {
+        pos.y = C_FRAME_Y_MAX;
+    } else if (pos.y < C_FRAME_Y_MIN) {
+        pos.y = C_FRAME_Y_MIN;
+    }
 }
 
 void PlayerMovementSystem::setPlayerDead(entt::registry& registry, Character& character)
