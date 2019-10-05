@@ -33,9 +33,6 @@ public:
 
     void set_position(vec2 position);
 
-    // Moves the salmon's position by the specified offset
-    void move(vec2 off);
-
     // Set salmon rotation in radians
     void set_rotation(float radians);
 
