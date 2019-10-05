@@ -54,7 +54,7 @@ bool Projectile::init()
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
 
-    motion.radians = 0.f;
+    // motion.radians = 0.f;
     motion.speed = 200.f;
     setDirection({ -1.f, 0.2f });
 
@@ -97,6 +97,10 @@ void Projectile::setDirection(vec2 direction)
     motion.direction = { direction.x / normal, direction.y / normal };
 }
 
+void Projectile::setRotation(float rad)
+{
+    motion.radians = rad;
+}
 void Projectile::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
