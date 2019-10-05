@@ -5,6 +5,7 @@
 // #include "turtle.hpp"
 // #include "fish.hpp"
 
+#include "potion.hpp"
 #include "projectile.hpp"
 
 // stlib
@@ -258,6 +259,20 @@ bool Character::collides_with(const Projectile& projectile)
     float dy = motion.position.y - projectile.get_position().y;
     float d_sq = dx * dx + dy * dy;
     float other_r = std::max(projectile.get_bounding_box().x, projectile.get_bounding_box().y);
+    float my_r = std::max(physics.scale.x, physics.scale.y);
+    float r = std::max(other_r, my_r);
+    r *= 0.6f;
+    if (d_sq < r * r)
+        return true;
+    return false;
+}
+
+bool Character::collides_with(const Potion& potion)
+{
+    float dx = motion.position.x - potion.get_position().x;
+    float dy = motion.position.y - potion.get_position().y;
+    float d_sq = dx * dx + dy * dy;
+    float other_r = std::max(potion.get_bounding_box().x, potion.get_bounding_box().y);
     float my_r = std::max(physics.scale.x, physics.scale.y);
     float r = std::max(other_r, my_r);
     r *= 0.6f;

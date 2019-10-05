@@ -119,7 +119,8 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init() && m_enemy.init();
+    return m_character.init() && m_water.init() && m_pebbles_emitter.init()
+        && m_shield.init() && m_enemy.init() && m_potion.init();
 }
 
 // Releases all the associated resources
@@ -138,6 +139,7 @@ void World::destroy()
 
     m_character.destroy();
     m_enemy.destroy();
+    m_potion.destroy();
     m_shield.destroy();
     m_salmon.destroy();
     m_pebbles_emitter.destroy();
@@ -165,6 +167,11 @@ bool World::update(float elapsed_ms)
     m_enemy.set_target(m_character.get_position());
 
     // Checking Salmon - Turtle collisions
+    if (m_character.collides_with(m_potion) && m_potion.is_alive()) {
+        m_potion.destroy();
+        m_shield.increaseSize();
+    }
+
     int i = 0;
     for (auto& projectile : m_projectiles) {
         if (m_enemy.collides_with(projectile)) {
@@ -241,6 +248,7 @@ bool World::update(float elapsed_ms)
     m_shield.set_position(m_character.get_position());
     m_shield.update(elapsed_ms);
     m_enemy.update(elapsed_ms);
+    m_potion.update(elapsed_ms);
     // m_salmon.update(elapsed_ms);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
@@ -418,6 +426,8 @@ void World::draw()
     // 	fish.draw(projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
+    if (m_potion.is_alive())
+        m_potion.draw(projection_2D);
     if (m_enemy.is_alive())
         m_enemy.draw(projection_2D);
     // m_salmon.draw(projection_2D);
