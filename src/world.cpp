@@ -119,7 +119,6 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    printf("%s\n","here");
     return m_character.init() && m_water.init() && m_pebbles_emitter.init() && m_shield.init() && m_enemy.init();
 }
 
@@ -168,7 +167,6 @@ bool World::update(float elapsed_ms)
     // Checking Salmon - Turtle collisions
     for (const auto& projectile : m_projectiles) {
         if (m_enemy.collides_with(projectile)) {
-            fprintf(stderr, "enemy hit");
             m_enemy.kill();
         }
         if (m_character.collides_with(projectile)) {
@@ -183,7 +181,6 @@ bool World::update(float elapsed_ms)
 
     for (auto& projectile : m_projectiles) {
         if (m_shield.collides_with(projectile)) {
-            fprintf(stderr, "BOOM");
             vec2 shieldDirection = m_shield.getDirection();
             vec2 projectileDirection = projectile.getDirection();
 
@@ -261,10 +258,7 @@ bool World::update(float elapsed_ms)
     while (projectile_it != m_projectiles.end()) {
         float w = projectile_it->get_bounding_box().x / 2;
         float h = projectile_it->get_bounding_box().y / 2;
-        if (projectile_it->get_position().x + w < 0.f || 
-            projectile_it->get_position().x - w > 1200.f || 
-            projectile_it->get_position().y + h < 0.f ||
-            projectile_it->get_position().y - h > 850.f) {
+        if (projectile_it->get_position().x + w < 0.f || projectile_it->get_position().x - w > 1200.f || projectile_it->get_position().y + h < 0.f || projectile_it->get_position().y - h > 850.f) {
             projectile_it = m_projectiles.erase(projectile_it);
             continue;
         }
@@ -302,8 +296,8 @@ bool World::update(float elapsed_ms)
     vec2 enemy_pos = m_enemy.get_position();
     vec2 character_pos = m_character.get_position();
     vec2 enemy_bbox = m_enemy.get_bounding_box();
-    vec2 projectile_direction = {character_pos.x - enemy_pos.x, character_pos.y - enemy_pos.y};
-    
+    vec2 projectile_direction = { character_pos.x - enemy_pos.x, character_pos.y - enemy_pos.y };
+
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
         if (!spawn_projectile() || !m_enemy.is_alive())
@@ -312,7 +306,7 @@ bool World::update(float elapsed_ms)
         Projectile& new_projectile = m_projectiles.back();
 
         // Setting random initial position
-        new_projectile.set_position({ enemy_pos.x - enemy_bbox.x , enemy_pos.y});
+        new_projectile.set_position({ enemy_pos.x - enemy_bbox.x, enemy_pos.y });
         new_projectile.setDirection(projectile_direction);
 
         // Next spawn
@@ -420,7 +414,7 @@ void World::draw()
     // 	fish.draw(projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
-    if(m_enemy.is_alive())
+    if (m_enemy.is_alive())
         m_enemy.draw(projection_2D);
     // m_salmon.draw(projection_2D);
     for (auto& projectile : m_projectiles)
