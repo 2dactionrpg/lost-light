@@ -69,7 +69,7 @@ bool Character::init()
     motion.radians = 20.f;
     motion.speed = 200.f;
 
-    physics.scale = { -1.f, 1.f };
+    physics.scale = { 0.5f, 0.5f };
 
     m_is_alive = true;
     m_light_up_countdown_ms = -1.f;
@@ -248,7 +248,8 @@ vec2 Character::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * character_texture.width, std::fabs(physics.scale.y) * character_texture.height };
+    return { std::fabs(physics.scale.x) * character_texture.width * 0.4,
+        std::fabs(physics.scale.y) * character_texture.height * 0.4 };
 }
 
 bool Character::collides_with(const Projectile& projectile)
