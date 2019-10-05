@@ -1,14 +1,21 @@
 #include "InputSystem.hpp"
 
-void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
+void InputSystem::on_key(entt::registry& registry, int key, int action, int mod)
 {
     auto view = registry.view<input>();
-    for (auto entity : view)
-    {
-        auto &upKeyPressed = view.get(entity).upKeyPressed;
-        auto &downKeyPressed = view.get(entity).downKeyPressed;
-        auto &leftKeyPressed = view.get(entity).leftKeyPressed;
-        auto &rightKeyPressed = view.get(entity).rightKeyPressed;
+    for (auto entity : view) {
+        auto& upKeyPressed = view.get(entity).upKeyPressed;
+        auto& downKeyPressed = view.get(entity).downKeyPressed;
+        auto& leftKeyPressed = view.get(entity).leftKeyPressed;
+        auto& rightKeyPressed = view.get(entity).rightKeyPressed;
+        auto& resetKeyPressed = view.get(entity).resetKeyPressed;
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_R) {
+            resetKeyPressed = true;
+        }
+        if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
+            resetKeyPressed = false;
+        }
 
         if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
             upKeyPressed = true;
@@ -32,13 +39,12 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
     }
 }
 
-void InputSystem::on_mouse(entt::registry &registry, double xpos_new, double ypos_new)
+void InputSystem::on_mouse(entt::registry& registry, double xpos_new, double ypos_new)
 {
     auto view = registry.view<input>();
-    for (auto entity : view)
-    {
-        auto &xpos = view.get(entity).xpos;
-        auto &ypos = view.get(entity).ypos;
+    for (auto entity : view) {
+        auto& xpos = view.get(entity).xpos;
+        auto& ypos = view.get(entity).ypos;
 
         xpos = xpos_new;
         ypos = ypos_new;

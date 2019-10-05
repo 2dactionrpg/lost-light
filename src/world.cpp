@@ -507,8 +507,8 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         glfwGetWindowSize(m_window, &w, &h);
         // m_salmon.destroy();
         // m_salmon.init();
-        m_character.destroy();
-        m_character.init();
+        // m_character.destroy();
+        // m_character.init();
         m_pebbles_emitter.destroy();
         m_pebbles_emitter.init();
         m_projectiles.clear();
