@@ -1,33 +1,23 @@
 // Header
-#include "shield.hpp"
-
-// internal
-// #include "turtle.hpp"
-// #include "fish.hpp"
-
-#include "projectile.hpp"
-
-// stlib
-#include <algorithm>
-#include <string>
+#include "potion.hpp"
 
 #include <cmath>
 
-Texture Shield::shield_texture;
+Texture Potion::potion_texture;
 
-bool Shield::init()
+bool Potion::init()
 {
     // Load shared texture
-    if (!shield_texture.is_valid()) {
-        if (!shield_texture.load_from_file(textures_path("shield.png"))) {
-            fprintf(stderr, "Failed to load projectile texture!");
+    if (!potion_texture.is_valid()) {
+        if (!potion_texture.load_from_file(textures_path("potion.png"))) {
+            fprintf(stderr, "Failed to load potion texture!");
             return false;
         }
     }
 
     // The position corresponds to the center of the texture
-    float wr = shield_texture.width * 0.5f;
-    float hr = shield_texture.height * 0.5f;
+    float wr = potion_texture.width * 0.5f;
+    float hr = potion_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
     vertices[0].position = { -wr, +hr, -0.02f };
@@ -64,22 +54,23 @@ bool Shield::init()
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
 
-    // Setting initial values
-    // motion.position = { 0.f, 0.f };
     // motion.radians = 0.f;
     // motion.speed = 200.f;
+    motion.position = { 850.f, 600.f };
+    setDirection({ -1.f, 0.2f });
 
-    physics.scale = { 0.5f, 0.05f };
-
-    // m_is_alive = true;
-    // m_light_up_countdown_ms = -1.f;
+    // Setting initial values, scale is negative to make it face the opposite way
+    // 1.0 would be as big as the original texture.
+    physics.scale = { -0.1f, 0.1f };
+    m_is_alive = true;
 
     return true;
 }
 
 // Releases all graphics resources
-void Shield::destroy()
+void Potion::destroy()
 {
+    m_is_alive = false;
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
     glDeleteBuffers(1, &mesh.vao);
@@ -89,19 +80,37 @@ void Shield::destroy()
     glDeleteShader(effect.program);
 }
 
-void Shield::increaseSize()
+void Potion::update(float ms)
 {
-    physics.scale = { physics.scale.x * 2.f, physics.scale.y };
+    // Move fish along -X based on how much time has passed, this is to (partially) avoid
+    // having entities move at different speed based on the machine.
+    // float step = 5.0 * motion.speed * (ms / 1000);
+    // motion.position.x += step * motion.direction.x;
+    // motion.position.y += step * motion.direction.y;
 }
 
-void Shield::draw(const mat3& projection)
+vec2 Potion::getDirection()
+{
+    return motion.direction;
+}
+
+void Potion::setDirection(vec2 direction)
+{
+    float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
+    motion.direction = { direction.x / normal, direction.y / normal };
+}
+
+void Potion::setRotation(float rad)
+{
+    motion.radians = rad;
+}
+void Potion::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
     transform.translate(motion.position);
     transform.rotate(motion.radians);
-    transform.translate({ 0.f, 80.f });
     transform.scale(physics.scale);
     transform.end();
 
@@ -133,7 +142,7 @@ void Shield::draw(const mat3& projection)
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, shield_texture.id);
+    glBindTexture(GL_TEXTURE_2D, potion_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
@@ -145,78 +154,25 @@ void Shield::draw(const mat3& projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-vec2 Shield::get_position() const
+vec2 Potion::get_position() const
 {
     return motion.position;
 }
 
-void Shield::set_position(vec2 position)
+void Potion::set_position(vec2 position)
 {
     motion.position = position;
 }
 
-void Shield::set_rotation(float radians)
+vec2 Potion::get_bounding_box() const
 {
-    motion.radians = radians;
-}
-
-vec2 Shield::getDirection()
-{
-    vec2 direction = { sinf(motion.radians), -cosf(motion.radians) };
-    float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
-    direction = { direction.x / normal, direction.y / normal };
-    return direction;
-}
-
-vec2 Shield::get_bounding_box() const
-{
-    // Returns the local bounding coordinates scaled by the current size of the projectile
+    // Returns the local bounding coordinates scaled by the current size of the potion
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * shield_texture.width, std::fabs(physics.scale.y) * shield_texture.height };
+    return { std::fabs(physics.scale.x) * potion_texture.width * 2,
+        std::fabs(physics.scale.y) * potion_texture.height * 2 };
 }
 
-bool Shield::collides_with(const Projectile& projectile)
+bool Potion::is_alive() const
 {
-    vec3 tlMul = { -shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
-    vec3 trMul = { +shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
-    vec3 brMul = { +shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
-    vec3 blMul = { -shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
-
-    tlMul = mul(transform.out, tlMul);
-    trMul = mul(transform.out, trMul);
-    brMul = mul(transform.out, brMul);
-    blMul = mul(transform.out, blMul);
-
-    vec2 tl = { tlMul.x, tlMul.y };
-    vec2 tr = { trMul.x, trMul.y };
-    vec2 br = { brMul.x, brMul.y };
-    vec2 bl = { blMul.x, blMul.y };
-
-    float area1 = squareArea(tl, tr, bl);
-    float area2 = trianglesArea(tl, tr, br, bl, projectile.get_position());
-    if (std::fabs(area1 - area2) < 1000) {
-        return true;
-    }
-    return false;
-}
-
-float Shield::triangleArea(vec2 p1, vec2 p2, vec2 p3)
-{
-    return 0.5f * std::fabs((p1.y * (p2.x - p3.x) + p2.y * (p3.x - p1.x) + p3.y * (p1.x - p2.x)));
-}
-
-float Shield::trianglesArea(vec2 p1, vec2 p2, vec2 p3, vec2 p4, vec2 projectileP)
-{
-    float area1 = triangleArea(p1, p2, projectileP);
-    float area2 = triangleArea(p2, p3, projectileP);
-    float area3 = triangleArea(p3, p4, projectileP);
-    float area4 = triangleArea(p4, p1, projectileP);
-    return area1 + area2 + area3 + area4;
-}
-
-float Shield::squareArea(vec2 p1, vec2 p2, vec2 p3)
-{
-    float side1 = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
-    float side2 = sqrt(pow(p1.x - p3.x, 2) + pow(p1.y - p3.y, 2));
-    return side1 * side2;
+    return m_is_alive;
 }

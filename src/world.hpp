@@ -10,8 +10,15 @@
 // #include "turtle.hpp"
 // #include "fish.hpp"
 #include "pebbles.hpp"
+#include "potion.hpp"
 #include "projectile.hpp"
 #include "water.hpp"
+#include "factory.hpp"
+#include "./system/InputSystem.hpp"
+#include "./system/PlayerMovementSystem.hpp"
+
+// entt
+#include <entt/entity/registry.hpp>
 
 // stlib
 #include <random>
@@ -77,6 +84,7 @@ private:
     Character m_character;
     Shield m_shield;
     Enemy m_enemy;
+    Potion m_potion;
     // std::vector<Turtle> m_turtles;
     std::vector<Projectile> m_projectiles;
     // std::vector<Fish> m_fish;
@@ -94,4 +102,8 @@ private:
     // C++ rng
     std::default_random_engine m_rng;
     std::uniform_real_distribution<float> m_dist; // default 0..1
+
+    InputSystem inputSystem;
+    PlayerMovementSystem playerMovementSystem;
+    entt::registry registry;
 };
