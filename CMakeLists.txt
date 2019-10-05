@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.1)
 project(salmon)
 
-# Set c++11
+# Set c++17
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake
 if (POLICY CMP0025)
   cmake_policy(SET CMP0025 NEW)
 endif ()
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 
 # nice hierarchichal structure in MSVC
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -40,6 +40,9 @@ set(SOURCE_FILES
   src/pebbles.cpp
   src/projectile.cpp
   src/shield.cpp
+  src/factory.cpp
+  src/system/InputSystem.cpp
+  src/system/PlayerMovementSystem.cpp
   src/enemy.cpp
   src/potion.cpp
 
@@ -54,6 +57,11 @@ set(SOURCE_FILES
   src/shield.hpp
   src/enemy.hpp
   src/potion.hpp
+  src/components/input.hpp
+  src/components/motion.hpp
+  src/components/player.hpp
+  src/system/InputSystem.hpp
+  src/system/PlayerMovementSystem.hpp
 	)
 
 if (IS_OS_MAC)
