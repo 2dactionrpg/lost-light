@@ -19,7 +19,7 @@ bool Shield::init()
 {
     // Load shared texture
     if (!shield_texture.is_valid()) {
-        if (!shield_texture.load_from_file(textures_path("rectangle.png"))) {
+        if (!shield_texture.load_from_file(textures_path("shield.png"))) {
             fprintf(stderr, "Failed to load projectile texture!");
             return false;
         }
@@ -69,7 +69,7 @@ bool Shield::init()
     motion.radians = 0.f;
     // motion.speed = 200.f;
 
-    physics.scale = { 1.f, 0.1f };
+    physics.scale = { 0.9f, 0.15f };
 
     // m_is_alive = true;
     // m_light_up_countdown_ms = -1.f;
@@ -95,7 +95,7 @@ void Shield::update(float ms)
     transform.begin();
     transform.translate(motion.position);
     transform.rotate(motion.radians);
-    transform.translate({ 0.f, 300.f });
+    transform.translate({ 0.f, 150.f });
     transform.scale(physics.scale);
     transform.end();
     // float step = motion.speed * (ms / 1000);
