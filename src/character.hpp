@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "potion.hpp"
 #include <vector>
 
 // class Turtle;
@@ -35,6 +36,8 @@ public:
     void move(vec2 off);
 
     bool collides_with(const Projectile& Projectile);
+
+    bool collides_with(const Potion& potion);
 
     // Set salmon rotation in radians
     void set_rotation(float radians);

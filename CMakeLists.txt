@@ -41,6 +41,7 @@ set(SOURCE_FILES
   src/projectile.cpp
   src/shield.cpp
   src/enemy.cpp
+  src/potion.cpp
 
   src/project_path.hpp
 	src/character.hpp
@@ -52,6 +53,7 @@ set(SOURCE_FILES
   src/projectile.hpp
   src/shield.hpp
   src/enemy.hpp
+  src/potion.hpp
 	)
 
 if (IS_OS_MAC)

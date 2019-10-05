@@ -69,7 +69,7 @@ bool Shield::init()
     motion.radians = 0.f;
     // motion.speed = 200.f;
 
-    physics.scale = { 0.9f, 0.1f };
+    physics.scale = { 0.5f, 0.05f };
 
     // m_is_alive = true;
     // m_light_up_countdown_ms = -1.f;
@@ -89,15 +89,15 @@ void Shield::destroy()
     glDeleteShader(effect.program);
 }
 
+void Shield::increaseSize()
+{
+    physics.scale = { physics.scale.x * 2.f, physics.scale.y };
+}
+
 // Called on each frame by World::update()
 void Shield::update(float ms)
 {
-    transform.begin();
-    transform.translate(motion.position);
-    transform.rotate(motion.radians);
-    transform.translate({ 0.f, 150.f });
-    transform.scale(physics.scale);
-    transform.end();
+
     // float step = motion.speed * (ms / 1000);
     // if (m_is_alive) {
     //     if (upKeyPressed) {
@@ -134,6 +134,12 @@ void Shield::update(float ms)
 
 void Shield::draw(const mat3& projection)
 {
+    transform.begin();
+    transform.translate(motion.position);
+    transform.rotate(motion.radians);
+    transform.translate({ 0.f, 80.f });
+    transform.scale(physics.scale);
+    transform.end();
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
 
