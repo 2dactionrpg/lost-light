@@ -302,9 +302,9 @@ bool World::update(float elapsed_ms)
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
         if (!m_enemy.is_alive()) {
-            return;
+            return false;
         }
-       
+
         spawn_projectile();
 
         Projectile& new_projectile = m_projectiles.back();
