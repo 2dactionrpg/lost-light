@@ -15,6 +15,10 @@
 #include <cmath>
 
 Texture Character::character_texture;
+float C_FRAME_X_MAX = 1150;
+float C_FRAME_X_MIN = 50;
+float C_FRAME_Y_MAX = 720;
+float C_FRAME_Y_MIN = 50;
 
 bool Character::init()
 {
