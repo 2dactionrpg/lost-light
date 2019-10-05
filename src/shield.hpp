@@ -10,48 +10,45 @@ class Projectile;
 class Shield : public Entity {
     static Texture shield_texture;
 
-    public:
-        // Creates all the associated render resources and default transform
-        bool init();
+public:
+    // Creates all the associated render resources and default transform
+    bool init();
 
-        // Releases all associated resources
-        void destroy();
+    // Releases all associated resources
+    void destroy();
 
-        // Update salmon position based on direction
-        // ms represents the number of milliseconds elapsed from the previous update() call
-        void update(float ms);
+    // Update salmon position based on direction
+    // ms represents the number of milliseconds elapsed from the previous update() call
+    void update(float ms);
 
-        // Renders the salmon
-        void draw(const mat3& projection) override;
+    // Renders the salmon
+    void draw(const mat3& projection) override;
 
-        // Collision routines for turtles and fish
-        // bool collides_with(const Turtle& turtle);
-        // bool collides_with(const Fish& fish);
+    // Collision routines for turtles and fish
+    // bool collides_with(const Turtle& turtle);
+    // bool collides_with(const Fish& fish);
 
-        // Returns the current salmon position
-        vec2 get_position() const;
+    // Returns the current salmon position
+    vec2 get_position() const;
 
-        void set_position(vec2 position);
+    void set_position(vec2 position);
 
-        // Moves the salmon's position by the specified offset
-        void move(vec2 off);
+    // Set salmon rotation in radians
+    void set_rotation(float radians);
 
-        // Set salmon rotation in radians
-        void set_rotation(float radians);
+    vec2 getDirection();
 
-        vec2 getDirection();
+    vec2 get_bounding_box() const;
 
-        vec2 get_bounding_box() const;
+    bool collides_with(const Projectile& projectile);
 
-        bool collides_with(const Projectile& projectile);
+    float triangleArea(vec2 p1, vec2 p2, vec2 p3);
 
-        float triangleArea(vec2 p1, vec2 p2, vec2 p3);
+    float trianglesArea(vec2 p1, vec2 p2, vec2 p3, vec2 p4, vec2 projectileP);
 
-        float trianglesArea(vec2 p1, vec2 p2, vec2 p3, vec2 p4, vec2 projectileP);
+    float squareArea(vec2 p1, vec2 p2, vec2 p3);
 
-        float squareArea(vec2 p1, vec2 p2, vec2 p3);
-
-    private:
-        std::vector<Vertex> m_vertices;
-        std::vector<uint16_t> m_indices;
+private:
+    std::vector<Vertex> m_vertices;
+    std::vector<uint16_t> m_indices;
 };
