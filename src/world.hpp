@@ -3,9 +3,9 @@
 // internal
 #include "character.hpp"
 #include "common.hpp"
+#include "enemy.hpp"
 #include "salmon.hpp"
 #include "shield.hpp"
-#include "enemy.hpp"
 
 // #include "turtle.hpp"
 // #include "fish.hpp"
