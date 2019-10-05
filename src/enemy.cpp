@@ -70,7 +70,7 @@ bool Enemy::init()
         return false;
 
     // Setting initial values
-    motion.position = { 1000.f, 300.f };
+    motion.position = { 0.f, 0.f };
     motion.radians = 4.75f;
     motion.speed = 200.f;
 
@@ -279,4 +279,11 @@ bool Enemy::collides_with(const Projectile& projectile)
     if (d_sq < r * r)
         return true;
     return false;
+}
+
+vec2 Enemy::get_face_position()
+{
+    vec3 tlMul = { 0, -enemy_texture.height / 2.f - 50, 1.f };
+    tlMul = mul(transform.out, tlMul);
+    return { tlMul.x, tlMul.y };
 }

@@ -23,7 +23,7 @@ namespace {
 
 World::World()
     : m_points(0)
-    , m_next_projectile_spawn(0.f)
+    , m_next_projectile_spawn(2000.f)
 // m_next_turtle_spawn(0.f),
 // m_next_fish_spawn(0.f)
 {
@@ -170,6 +170,7 @@ bool World::update(float elapsed_ms)
         if (m_enemy.collides_with(projectile)) {
             m_enemy.kill();
             m_projectiles.erase(m_projectiles.begin() + i);
+            m_next_projectile_spawn = 3000.f;
         }
         if (m_character.collides_with(projectile)) {
             m_character.kill();
@@ -300,13 +301,16 @@ bool World::update(float elapsed_ms)
 
     m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
-        if (!spawn_projectile() || !m_enemy.is_alive())
-            return false;
+        if (!m_enemy.is_alive()) {
+            return;
+        }
+       
+        spawn_projectile();
 
         Projectile& new_projectile = m_projectiles.back();
 
         // Setting random initial position
-        new_projectile.set_position({ enemy_pos.x - enemy_bbox.x, enemy_pos.y });
+        new_projectile.set_position(m_enemy.get_face_position());
         new_projectile.setDirection(projectile_direction);
 
         // Next spawn

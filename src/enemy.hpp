@@ -64,6 +64,8 @@ public:
 
     vec2 target;
 
+    vec2 get_face_position();
+
 private:
     float m_remain_dead_countdown_ms; // Used to keep track for how long the salmon should be lit up
     bool m_is_alive; // True if the salmon is alive=
