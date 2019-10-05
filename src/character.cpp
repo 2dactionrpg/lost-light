@@ -96,29 +96,29 @@ void Character::update(float ms)
     if (m_is_alive) {
         if (upKeyPressed) {
             move({ 0.f, -step });
-            set_rotation(1.5f);
+            set_rotation(-1.5f);
         }
         if (downKeyPressed) {
             move({ 0.f, step });
-            set_rotation(-1.5f);
+            set_rotation(1.5f);
         }
         if (leftKeyPressed) {
             move({ -step, 0.f });
-            set_rotation(0.f);
+            set_rotation(3.14f);
         }
         if (rightKeyPressed) {
             move({ step, 0.f });
-            set_rotation(3.14f);
+            set_rotation(0.f);
         }
 
         if (upKeyPressed && rightKeyPressed) {
-            set_rotation(2.25f);
-        } else if (rightKeyPressed && downKeyPressed) {
-            set_rotation(-2.25f);
-        } else if (downKeyPressed && leftKeyPressed) {
             set_rotation(-0.75f);
-        } else if (leftKeyPressed && upKeyPressed) {
+        } else if (rightKeyPressed && downKeyPressed) {
             set_rotation(0.75f);
+        } else if (downKeyPressed && leftKeyPressed) {
+            set_rotation(2.25f);
+        } else if (leftKeyPressed && upKeyPressed) {
+            set_rotation(-2.25f);
         }
     }
 
