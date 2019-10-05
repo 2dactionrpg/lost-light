@@ -65,8 +65,8 @@ bool Shield::init()
         return false;
 
     // Setting initial values
-    motion.position = { 0.f, 0.f };
-    motion.radians = 0.f;
+    // motion.position = { 0.f, 0.f };
+    // motion.radians = 0.f;
     // motion.speed = 200.f;
 
     physics.scale = { 1.f, 1.f };
@@ -87,12 +87,6 @@ void Shield::destroy()
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
     glDeleteShader(effect.program);
-}
-
-// Called on each frame by World::update()
-void Shield::update(float ms)
-{
-
 }
 
 void Shield::draw(const mat3& projection)
@@ -154,12 +148,6 @@ vec2 Shield::get_position() const
 void Shield::set_position(vec2 position)
 {
     motion.position = position;
-}
-
-void Shield::move(vec2 off)
-{
-    motion.position.x += off.x;
-    motion.position.y += off.y;
 }
 
 void Shield::set_rotation(float radians)

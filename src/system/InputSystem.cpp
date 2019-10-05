@@ -32,9 +32,9 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
     }
 }
 
-void on_mouse(entt::registry &registry, double xpos_new, double ypos_new)
+void InputSystem::on_mouse(entt::registry &registry, double xpos_new, double ypos_new)
 {
-        auto view = registry.view<input>();
+    auto view = registry.view<input>();
     for (auto entity : view)
     {
         auto &xpos = view.get(entity).xpos;

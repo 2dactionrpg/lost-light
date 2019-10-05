@@ -65,9 +65,9 @@ bool Character::init()
         return false;
 
     // Setting initial values
-    motion.position = { 50.f, 300.f };
-    motion.radians = 20.f;
-    motion.speed = 200.f;
+    // motion.position = { 50.f, 300.f };
+    // motion.radians = 20.f;
+    // motion.speed = 200.f;
 
     physics.scale = { -1.f, 1.f };
 
