@@ -227,3 +227,8 @@ bool Character::collides_with(const Projectile& projectile)
         return true;
     return false;
 }
+
+void Character::setAlive(bool status)
+{
+    m_is_alive = status;
+}
