@@ -15,6 +15,11 @@
 
 Texture Enemy::enemy_texture;
 
+// following variables can change depending on the enemy's character size / world's frame size
+float FRAME_X_MAX = 1050;
+float FRAME_X_MIN = 100;
+float FRAME_Y_MAX = 680;
+float FRAME_Y_MIN = 100;
 bool Enemy::init()
 {
     // Load shared texture
@@ -206,6 +211,16 @@ void Enemy::move(vec2 off)
 {
     motion.position.x += off.x;
     motion.position.y += off.y;
+    if(motion.position.x > FRAME_X_MAX) {
+        motion.position.x = FRAME_X_MAX;
+    }else if(motion.position.x < FRAME_X_MIN) {
+        motion.position.x = FRAME_X_MIN;
+    }
+    if(motion.position.y > FRAME_Y_MAX) {
+        motion.position.y = FRAME_Y_MAX;
+    }else if(motion.position.y < FRAME_Y_MIN) {
+        motion.position.y = FRAME_Y_MIN;
+    }
 }
 
 void Enemy::set_target(vec2 character_pos){
@@ -239,6 +254,7 @@ void Enemy::respawn()
 
 Projectile Enemy::shoot_projectile() {
     Projectile projectlie;
+    projectlie.setRotation(motion.radians+ 1.2);
     return projectlie;
 }
 
