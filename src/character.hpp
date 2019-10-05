@@ -1,8 +1,8 @@
 #pragma once
 
 #include "common.hpp"
-#include <vector>
 #include <entt/entity/registry.hpp>
+#include <vector>
 
 // class Turtle;
 // class Fish;
@@ -31,7 +31,7 @@ public:
 
     // Returns the current salmon position
     vec2 get_position() const;
-    
+
     bool collides_with(const Projectile& Projectile);
 
     // Set salmon rotation in radians
@@ -49,6 +49,8 @@ public:
     void light_up();
 
     vec2 get_bounding_box() const;
+
+    void setAlive(bool status);
 
     // bool collides_with(Projectile&) const;
 

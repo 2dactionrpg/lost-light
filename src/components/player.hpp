@@ -1,6 +1,6 @@
 #pragma once
 
-struct player
-{
+struct player {
     /* data */
+    bool is_alive;
 };
