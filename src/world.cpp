@@ -165,18 +165,18 @@ bool World::update(float elapsed_ms)
     m_enemy.set_target(m_character.get_position());
 
     // Checking Salmon - Turtle collisions
-    for (const auto& projectile : m_projectiles) {
+    int i = 0;
+    for (auto& projectile : m_projectiles) {
         if (m_enemy.collides_with(projectile)) {
             m_enemy.kill();
+            m_projectiles.erase(m_projectiles.begin() + i);
         }
         if (m_character.collides_with(projectile)) {
-            // if (m_character.is_alive()) {
-            // Mix_PlayChannel(-1, m_salmon_dead_sound, 0);
-            // m_water.set_salmon_dead();
-            // }
             m_character.kill();
+            m_projectiles.erase(m_projectiles.begin() + i);
             break;
         }
+        i++;
     }
 
     for (auto& projectile : m_projectiles) {

@@ -264,8 +264,7 @@ vec2 Enemy::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * enemy_texture.width * 0.8,
-        std::fabs(physics.scale.y) * enemy_texture.height * 0.8 };
+    return { std::fabs(physics.scale.x) * enemy_texture.width, std::fabs(physics.scale.y) * enemy_texture.height };
 }
 
 bool Enemy::collides_with(const Projectile& projectile)
