@@ -17,4 +17,5 @@ public:
     void rotate(float& radians, float newRadians);
     float lengthVec2(vec2 v);
     void setPlayerDead(entt::registry& registry, Character& character);
+    void resetPlayer(entt::registry& registry, Character& character);
 };

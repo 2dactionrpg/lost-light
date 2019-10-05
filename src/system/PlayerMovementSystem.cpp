@@ -15,9 +15,14 @@ void PlayerMovementSystem::update(entt::registry& registry, float ms, Character&
         auto& downKeyPressed = view.get<input>(entity).downKeyPressed;
         auto& leftKeyPressed = view.get<input>(entity).leftKeyPressed;
         auto& rightKeyPressed = view.get<input>(entity).rightKeyPressed;
+        auto& resetKeyPressed = view.get<input>(entity).resetKeyPressed;
         auto& is_alive = view.get<player>(entity).is_alive;
 
         float step = speed * (ms / 1000);
+
+        if (resetKeyPressed) {
+            resetPlayer(registry, character);
+        }
 
         // Set movement for player
         if (is_alive) {
@@ -77,15 +82,26 @@ void PlayerMovementSystem::move(vec2& pos, vec2 off)
 
 void PlayerMovementSystem::setPlayerDead(entt::registry& registry, Character& character)
 {
-    // auto player = registry.view<player>();
     auto view = registry.view<player>();
     for (auto entity : view) {
         auto& is_alive = view.get(entity).is_alive;
         is_alive = false;
         character.setAlive(false);
     }
+}
 
-    // for (auto entity : view) {
+void PlayerMovementSystem::resetPlayer(entt::registry& registry, Character& character)
+{
+    auto view = registry.view<player, motion>();
+    for (auto entity : view) {
+        auto& is_alive = view.get<player>(entity).is_alive;
+        is_alive = true;
+        character.setAlive(true);
+
+        auto& position = view.get<motion>(entity).position;
+        position = { 250.f, 300.f };
+        character.set_position(position);
+    }
 }
 
 void PlayerMovementSystem::rotate(float& radians, float newRadians)
