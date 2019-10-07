@@ -183,7 +183,7 @@ bool World::update(float elapsed_ms)
             m_next_projectile_spawn = 3000.f;
         }
         if (m_character.collides_with(projectile)) {
-            m_character.kill();
+            movementSystem.setCharacterDead(registry);
             m_projectiles.erase(m_projectiles.begin() + i);
             break;
         }

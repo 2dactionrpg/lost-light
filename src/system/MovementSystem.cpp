@@ -20,7 +20,6 @@ void MovementSystem::sync(entt::registry &registry, float ms)
         {
             resetCharacter(registry);
         }
-
         // Set movement for character
         if (is_alive)
         {
@@ -101,11 +100,8 @@ void MovementSystem::update(entt::registry &registry, Character &m_character, Sh
             auto &position = character.get<motionComponent>(entity).position;
             auto &radians = character.get<motionComponent>(entity).radians;
 
-            auto &is_alive = character.get<characterComponent>(entity).is_alive;
-
             m_character.set_position(position);
             m_character.set_rotation(radians);
-            m_character.setAlive(is_alive);
         }
     }
 
