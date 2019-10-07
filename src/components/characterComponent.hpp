@@ -1,6 +1,7 @@
 #pragma once
 
-struct player {
+struct characterComponent
+{
     /* data */
     bool is_alive;
 };

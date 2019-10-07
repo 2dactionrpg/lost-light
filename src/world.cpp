@@ -119,7 +119,8 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
-    makePlayer(registry);
+    makeCharacter(registry);
+    makeShield(registry);
 
     return m_character.init() && m_water.init() && m_pebbles_emitter.init()
         && m_shield.init() && m_enemy.init() && m_potion.init();
@@ -249,7 +250,8 @@ bool World::update(float elapsed_ms)
 
     m_enemy.update(elapsed_ms);
     m_potion.update(elapsed_ms);
-    playerMovementSystem.update(registry, elapsed_ms, m_character, m_shield);
+    movementSystem.sync(registry, elapsed_ms);
+    movementSystem.update(registry, m_character, m_shield);
     // m_character.update(elapsed_ms);
     // m_shield.set_position(m_character.get_position());
     // m_salmon.update(elapsed_ms);
@@ -517,8 +519,8 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         glfwGetWindowSize(m_window, &w, &h);
         // m_salmon.destroy();
         // m_salmon.init();
-        m_character.destroy();
-        m_character.init();
+        // m_character.destroy();
+        // m_character.init();
         m_pebbles_emitter.destroy();
         m_pebbles_emitter.init();
         m_projectiles.clear();
@@ -535,26 +537,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         m_current_speed -= 0.1f;
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
         m_current_speed += 0.1f;
-
-    // if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
-    //     m_character.upKeyPressed = true;
-    // if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
-    //     m_character.upKeyPressed = false;
-
-    // if (action == GLFW_PRESS && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
-    //     m_character.downKeyPressed = true;
-    // if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
-    //     m_character.downKeyPressed = false;
-
-    // if (action == GLFW_PRESS && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
-    //     m_character.leftKeyPressed = true;
-    // if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
-    //     m_character.leftKeyPressed = false;
-
-    // if (action == GLFW_PRESS && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
-    //     m_character.rightKeyPressed = true;
-    // if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
-    //     m_character.rightKeyPressed = false;
 
     m_current_speed = fmax(0.f, m_current_speed);
 }

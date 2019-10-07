@@ -63,12 +63,7 @@ bool Shield::init()
     // Loading shaders
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
-
-    // Setting initial values
-    // motion.position = { 0.f, 0.f };
-    // motion.radians = 0.f;
-    // motion.speed = 200.f;
-
+        
     physics.scale = { 0.5f, 0.05f };
 
     // m_is_alive = true;

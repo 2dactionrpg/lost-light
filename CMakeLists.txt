@@ -37,14 +37,15 @@ set(SOURCE_FILES
 	src/salmon.cpp
 	src/water.cpp
 	src/world.cpp
-  src/pebbles.cpp
-  src/projectile.cpp
-  src/shield.cpp
-  src/factory.cpp
-  src/system/InputSystem.cpp
-  src/system/PlayerMovementSystem.cpp
-  src/enemy.cpp
-  src/potion.cpp
+    src/pebbles.cpp
+    src/projectile.cpp
+    src/shield.cpp
+    src/factory.cpp
+    src/enemy.cpp
+    src/potion.cpp
+    # System
+    src/system/InputSystem.cpp
+    src/system/MovementSystem.cpp
 
   src/project_path.hpp
 	src/character.hpp
@@ -52,16 +53,20 @@ set(SOURCE_FILES
 	src/salmon.hpp
 	src/water.hpp
 	src/world.hpp
-  src/pebbles.hpp
-  src/projectile.hpp
-  src/shield.hpp
-  src/enemy.hpp
-  src/potion.hpp
-  src/components/input.hpp
-  src/components/motion.hpp
-  src/components/player.hpp
-  src/system/InputSystem.hpp
-  src/system/PlayerMovementSystem.hpp
+    src/pebbles.hpp
+    src/projectile.hpp
+    src/shield.hpp
+    src/enemy.hpp
+    src/potion.hpp
+    # Component
+    src/components/inputKeyboard.hpp
+    src/components/inputMouse.hpp
+    src/components/motionComponent.hpp
+    src/components/playerComponent.hpp
+    src/components/shieldComponent.hpp
+    # System
+    src/system/InputSystem.hpp
+    src/system/MovementSystem.hpp
 	)
 
 if (IS_OS_MAC)
