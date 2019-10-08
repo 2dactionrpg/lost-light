@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entity/registry.hpp>
+#include "../components/motionComponent.hpp"
 #include "../components/inputMouse.hpp"
 #include "../components/inputKeyboard.hpp"
 #include "../common.hpp"

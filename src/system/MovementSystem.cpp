@@ -3,9 +3,8 @@
 
 void MovementSystem::sync(entt::registry &registry, float ms)
 {
-
     // Character Movement Update
-    auto view = registry.view<characterComponent, motionComponent, inputKeyboard>();
+    auto view = registry.view<characterComponent, motionComponent, inputKeyboard, inputMouse>();
     for (auto entity : view)
     {
         auto &[position, direction, radians, speed] = view.get<motionComponent>(entity);
@@ -14,7 +13,10 @@ void MovementSystem::sync(entt::registry &registry, float ms)
 
         auto &[upKeyPressed, downKeyPressed, leftKeyPressed, rightKeyPressed, resetKeyPressed] = view.get<inputKeyboard>(entity);
 
+        auto &[xpos, ypos] = view.get<inputMouse>(entity);
+
         float step = speed * (ms / 1000);
+        vec2 offset = mul(normalize(direction), step);
 
         if (resetKeyPressed)
         {
@@ -23,43 +25,19 @@ void MovementSystem::sync(entt::registry &registry, float ms)
         // Set movement for character
         if (is_alive)
         {
-            if (upKeyPressed)
-            {
-                move(position, {0.f, -step});
-                rotate(radians, -1.5f);
-            }
-            if (downKeyPressed)
-            {
-                move(position, {0.f, step});
-                rotate(radians, 1.5f);
-            }
-            if (leftKeyPressed)
-            {
-                move(position, {-step, 0.f});
-                rotate(radians, 3.14f);
-            }
-            if (rightKeyPressed)
-            {
-                move(position, {step, 0.f});
-                rotate(radians, 0.f);
-            }
+            move(position, offset);
+            // TODO: Let character rotate
+            vec2 characterVector = {0.f, 1.f};
+            vec2 mouseVec = {
+                (float)xpos - position.x,
+                (float)ypos - position.y};
 
-            if (upKeyPressed && rightKeyPressed)
-            {
-                rotate(radians, -0.75f);
-            }
-            else if (rightKeyPressed && downKeyPressed)
-            {
-                rotate(radians, 0.75f);
-            }
-            else if (downKeyPressed && leftKeyPressed)
-            {
-                rotate(radians, 2.25f);
-            }
-            else if (leftKeyPressed && upKeyPressed)
-            {
-                rotate(radians, -2.25f);
-            }
+            int factor = 1;
+            if (mouseVec.x > 0.f)
+                factor = -1;
+
+            float angle = acos(dot(mouseVec, characterVector) / (lengthVec2(mouseVec) * lengthVec2(characterVector)));
+            radians = factor * angle;
         }
     }
 
@@ -69,22 +47,26 @@ void MovementSystem::sync(entt::registry &registry, float ms)
     for (auto character : viewCharacter)
     {
         auto &position = viewCharacter.get<motionComponent>(character).position;
-        for (auto shield : viewShield)
+        auto &is_alive = viewCharacter.get<characterComponent>(character).is_alive;
+        if (is_alive)
         {
-            auto &radians = viewShield.get<motionComponent>(shield).radians;
-            auto &[xpos, ypos] = viewShield.get<inputMouse>(shield);
+            for (auto shield : viewShield)
+            {
+                auto &radians = viewShield.get<motionComponent>(shield).radians;
+                auto &[xpos, ypos] = viewShield.get<inputMouse>(shield);
 
-            vec2 shieldVec = {0.f, 1.f};
-            vec2 mouseVec = {
-                (float)xpos - position.x,
-                (float)ypos - position.y};
+                vec2 shieldVec = {0.f, 1.f};
+                vec2 mouseVec = {
+                    (float)xpos - position.x,
+                    (float)ypos - position.y};
 
-            int factor = 1;
-            if (mouseVec.x > 0.f)
-                factor = -1;
+                int factor = 1;
+                if (mouseVec.x > 0.f)
+                    factor = -1;
 
-            float angle = acos(dot(mouseVec, shieldVec) / (lengthVec2(mouseVec) * lengthVec2(shieldVec)));
-            radians = factor * angle;
+                float angle = acos(dot(mouseVec, shieldVec) / (lengthVec2(mouseVec) * lengthVec2(shieldVec)));
+                radians = factor * angle;
+            }
         }
     }
 }
@@ -95,26 +77,20 @@ void MovementSystem::update(entt::registry &registry, Character &m_character, Sh
     auto character = registry.view<characterComponent, motionComponent>();
     for (auto entity : character)
     {
-        if (registry.has<characterComponent>(entity))
-        {
-            auto &position = character.get<motionComponent>(entity).position;
-            auto &radians = character.get<motionComponent>(entity).radians;
+        auto &position = character.get<motionComponent>(entity).position;
+        auto &radians = character.get<motionComponent>(entity).radians;
 
-            m_character.set_position(position);
-            m_character.set_rotation(radians);
-        }
+        m_character.set_position(position);
+        m_character.set_rotation(radians);
     }
 
     auto shield = registry.view<shieldComponent, motionComponent>();
 
     for (auto entity : shield)
     {
-        if (registry.has<shieldComponent>(entity))
-        {
-            auto &radians = shield.get<motionComponent>(entity).radians;
-            m_shield.set_position(m_character.get_position());
-            m_shield.set_rotation(radians);
-        }
+        auto &radians = shield.get<motionComponent>(entity).radians;
+        m_shield.set_position(m_character.get_position());
+        m_shield.set_rotation(radians);
     }
 }
 

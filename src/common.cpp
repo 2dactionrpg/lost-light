@@ -95,6 +95,9 @@ mat3 mul(const mat3& l, const mat3& r)
 
 vec2 normalize(vec2 v)
 {
+    if (!v.x && !v.y) {
+        return v;
+    }
     float m = sqrtf(dot(v, v));
     return { v.x / m, v.y / m };
 }
