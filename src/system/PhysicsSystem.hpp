@@ -8,6 +8,7 @@
 #include "../components/inputMouse.hpp"
 #include "../components/inputKeyboard.hpp"
 #include "../components/motionComponent.hpp"
+#include "../components/physicsScaleComponent.hpp"
 #include "../components/characterComponent.hpp"
 #include "../components/shieldComponent.hpp"
 

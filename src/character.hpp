@@ -34,6 +34,10 @@ public:
     // Returns the current salmon position
     vec2 get_position() const;
 
+    float get_rotation() const;
+
+    vec2 get_scale() const;
+
     bool collides_with(const Projectile& Projectile);
 
     bool collides_with(const Potion& potion);
@@ -42,6 +46,8 @@ public:
     void set_rotation(float radians);
 
     void set_position(vec2 position);
+
+    void set_scale(vec2 scale);
 
     // True if the salmon is alive
     bool is_alive() const;

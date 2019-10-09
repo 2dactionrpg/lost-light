@@ -73,14 +73,16 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
 void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield)
 {
     // Character Movement Update
-    auto character = registry.view<characterComponent, motionComponent>();
+    auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
     for (auto entity : character)
     {
         auto &position = character.get<motionComponent>(entity).position;
         auto &radians = character.get<motionComponent>(entity).radians;
+        auto &scale = character.get<physicsScaleComponent>(entity).scale;
 
         m_character.set_position(position);
         m_character.set_rotation(radians);
+        m_character.set_scale(scale);
     }
 
     auto shield = registry.view<shieldComponent, motionComponent>();
