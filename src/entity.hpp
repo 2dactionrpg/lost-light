@@ -1,6 +1,13 @@
 #pragma once
 #include "common.hpp"
 
+#include "../ext/stb_image/stb_image.h"
+
+// stlib
+#include <cmath>
+#include <sstream>
+#include <vector>
+
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & salmon.vs.glsl)
 struct Vertex {
     vec3 position;
@@ -32,6 +39,8 @@ struct Texture {
 // An entity boils down to a collection of components,
 // organized by their in-game context (mesh, effect, motion, etc...)
 struct Entity {
+    bool init();
+    void destroy();
     // projection contains the orthographic projection matrix. As every Entity::draw()
     // renders itself it needs it to correctly bind it to its shader.
     virtual void draw(const mat3& projection) = 0;

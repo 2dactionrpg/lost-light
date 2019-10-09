@@ -40,6 +40,7 @@ set(SOURCE_FILES
     src/pebbles.cpp
     src/projectile.cpp
     src/shield.cpp
+    src/entity.cpp
     src/factory.cpp
     src/enemy.cpp
     src/potion.cpp
@@ -57,6 +58,7 @@ set(SOURCE_FILES
     src/pebbles.hpp
     src/projectile.hpp
     src/shield.hpp
+    src/entity.hpp
     src/enemy.hpp
     src/potion.hpp
     # Component

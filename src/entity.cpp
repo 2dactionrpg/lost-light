@@ -1,15 +1,5 @@
 #include "entity.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../ext/stb_image/stb_image.h"
-
-// stlib
-#include <cmath>
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-
 Texture::Texture()
 {
 }
@@ -201,5 +191,4 @@ void Entity::Transform::translate(vec2 offset)
 
 void Entity::Transform::end()
 {
-    //
 }
