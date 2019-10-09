@@ -47,7 +47,7 @@ set(SOURCE_FILES
     # System
     src/system/InputSystem.cpp
     src/system/ShieldSystem.cpp
-    src/system/MovementSystem.cpp
+    src/system/PhysicsSystem.cpp
 
   src/project_path.hpp
 	src/character.hpp
@@ -71,7 +71,7 @@ set(SOURCE_FILES
     # System
     src/system/InputSystem.hpp
     src/system/ShieldSystem.hpp
-    src/system/MovementSystem.hpp
+    src/system/PhysicsSystem.hpp
 	)
 
 if (IS_OS_MAC)

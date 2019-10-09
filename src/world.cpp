@@ -183,7 +183,7 @@ bool World::update(float elapsed_ms)
             m_next_projectile_spawn = 3000.f;
         }
         if (m_character.collides_with(projectile)) {
-            movementSystem.setCharacterUnmovable(registry);
+            physicsSystem.setCharacterUnmovable(registry);
             m_projectiles.erase(m_projectiles.begin() + i);
             break;
         }
@@ -250,8 +250,8 @@ bool World::update(float elapsed_ms)
 
     m_enemy.update(elapsed_ms);
     m_potion.update(elapsed_ms);
-    movementSystem.sync(registry, elapsed_ms);
-    movementSystem.update(registry, m_character, m_shield);
+    physicsSystem.sync(registry, elapsed_ms);
+    physicsSystem.update(registry, m_character, m_shield);
     shieldSystem.update(registry, m_shield);
     // m_character.update(elapsed_ms);
     // m_shield.set_position(m_character.get_position());

@@ -1,7 +1,7 @@
-#include "MovementSystem.hpp"
+#include "PhysicsSystem.hpp"
 #include <iostream>
 
-void MovementSystem::sync(entt::registry &registry, float ms)
+void PhysicsSystem::sync(entt::registry &registry, float ms)
 {
     // Character Movement Update
     auto view = registry.view<characterComponent, motionComponent, inputKeyboard, inputMouse>();
@@ -70,7 +70,7 @@ void MovementSystem::sync(entt::registry &registry, float ms)
     }
 }
 
-void MovementSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield)
+void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield)
 {
     // Character Movement Update
     auto character = registry.view<characterComponent, motionComponent>();
@@ -93,7 +93,7 @@ void MovementSystem::update(entt::registry &registry, Character &m_character, Sh
     }
 }
 
-void MovementSystem::move(vec2 &pos, vec2 off)
+void PhysicsSystem::move(vec2 &pos, vec2 off)
 {
     float C_FRAME_X_MAX = 1150;
     float C_FRAME_X_MIN = 50;
@@ -121,7 +121,7 @@ void MovementSystem::move(vec2 &pos, vec2 off)
     }
 }
 
-void MovementSystem::setCharacterUnmovable(entt::registry &registry)
+void PhysicsSystem::setCharacterUnmovable(entt::registry &registry)
 {
     auto view = registry.view<characterComponent>();
     for (auto entity : view)
@@ -131,7 +131,7 @@ void MovementSystem::setCharacterUnmovable(entt::registry &registry)
     }
 }
 
-void MovementSystem::resetCharacter(entt::registry &registry)
+void PhysicsSystem::resetCharacter(entt::registry &registry)
 {
     auto view = registry.view<characterComponent, motionComponent>();
     for (auto entity : view)
@@ -144,13 +144,13 @@ void MovementSystem::resetCharacter(entt::registry &registry)
     }
 }
 
-void MovementSystem::rotate(float &radians, float newRadians)
+void PhysicsSystem::rotate(float &radians, float newRadians)
 {
     radians = newRadians;
 }
 
 // Calculates the length of a vec2 vector
-float MovementSystem::lengthVec2(vec2 v)
+float PhysicsSystem::lengthVec2(vec2 v)
 {
     return sqrt(pow(v.x, 2.f) + pow(v.y, 2.f));
 }

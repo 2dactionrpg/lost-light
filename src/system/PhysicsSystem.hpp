@@ -11,7 +11,7 @@
 #include "../components/characterComponent.hpp"
 #include "../components/shieldComponent.hpp"
 
-class MovementSystem
+class PhysicsSystem
 {
 private:
 public:
