@@ -3,5 +3,5 @@
 struct characterComponent
 {
     /* data */
-    bool is_alive;
+    bool is_movable;
 };

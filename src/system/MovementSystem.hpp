@@ -20,6 +20,6 @@ public:
     void move(vec2 &pos, vec2 off);
     void rotate(float &radians, float newRadians);
     float lengthVec2(vec2 v);
-    void setCharacterDead(entt::registry &registry);
+    void setCharacterUnmovable(entt::registry &registry);
     void resetCharacter(entt::registry &registry);
 };

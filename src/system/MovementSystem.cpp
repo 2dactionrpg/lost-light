@@ -9,7 +9,7 @@ void MovementSystem::sync(entt::registry &registry, float ms)
     {
         auto &[position, direction, radians, speed] = view.get<motionComponent>(entity);
 
-        auto &[is_alive] = view.get<characterComponent>(entity);
+        auto &[is_movable] = view.get<characterComponent>(entity);
 
         auto &[upKeyPressed, downKeyPressed, leftKeyPressed, rightKeyPressed, resetKeyPressed] = view.get<inputKeyboard>(entity);
 
@@ -23,7 +23,7 @@ void MovementSystem::sync(entt::registry &registry, float ms)
             resetCharacter(registry);
         }
         // Set movement for character
-        if (is_alive)
+        if (is_movable)
         {
             move(position, offset);
             // TODO: Let character rotate
@@ -47,8 +47,8 @@ void MovementSystem::sync(entt::registry &registry, float ms)
     for (auto character : viewCharacter)
     {
         auto &position = viewCharacter.get<motionComponent>(character).position;
-        auto &is_alive = viewCharacter.get<characterComponent>(character).is_alive;
-        if (is_alive)
+        auto &is_movable = viewCharacter.get<characterComponent>(character).is_movable;
+        if (is_movable)
         {
             for (auto shield : viewShield)
             {
@@ -122,13 +122,13 @@ void MovementSystem::move(vec2 &pos, vec2 off)
     }
 }
 
-void MovementSystem::setCharacterDead(entt::registry &registry)
+void MovementSystem::setCharacterUnmovable(entt::registry &registry)
 {
     auto view = registry.view<characterComponent>();
     for (auto entity : view)
     {
-        auto &is_alive = view.get(entity).is_alive;
-        is_alive = false;
+        auto &is_movable = view.get(entity).is_movable;
+        is_movable = false;
     }
 }
 
@@ -137,8 +137,8 @@ void MovementSystem::resetCharacter(entt::registry &registry)
     auto view = registry.view<characterComponent, motionComponent>();
     for (auto entity : view)
     {
-        auto &is_alive = view.get<characterComponent>(entity).is_alive;
-        is_alive = true;
+        auto &is_movable = view.get<characterComponent>(entity).is_movable;
+        is_movable = true;
 
         auto &position = view.get<motionComponent>(entity).position;
         position = {250.f, 300.f};

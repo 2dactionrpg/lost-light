@@ -62,7 +62,7 @@ set(SOURCE_FILES
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp
     src/components/motionComponent.hpp
-    src/components/playerComponent.hpp
+    src/components/characterComponent.hpp
     src/components/shieldComponent.hpp
     # System
     src/system/InputSystem.hpp
