@@ -55,9 +55,6 @@ private:
     // Generates a new turtle
     bool spawn_projectile();
 
-    // Generates a new fish
-    // bool spawn_fish();
-
     // !!! INPUT CALLBACK FUNCTIONS
     void on_key(GLFWwindow*, int key, int, int action, int mod);
     void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
@@ -86,15 +83,11 @@ private:
     Shield m_shield;
     Enemy m_enemy;
     Potion m_potion;
-    // std::vector<Turtle> m_turtles;
     std::vector<Projectile> m_projectiles;
-    // std::vector<Fish> m_fish;
     Pebbles m_pebbles_emitter;
 
     float m_current_speed;
     float m_next_projectile_spawn;
-    // float m_next_turtle_spawn;
-    // float m_next_fish_spawn;
 
     Mix_Music* m_background_music;
     Mix_Chunk* m_salmon_dead_sound;
