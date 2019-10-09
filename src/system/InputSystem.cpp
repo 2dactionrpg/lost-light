@@ -26,9 +26,7 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
         {
-            if (direction.y == -1.f) {
-                direction = add(direction, {0.f, 1.f});
-            }
+            direction = add(direction, {0.f, 1.f});
             upKeyPressed = false;
         }
 
@@ -39,9 +37,7 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
         {
-            if (direction.y == 1.f) {
-                direction = add(direction, {0.f, -1.f});
-            }
+            direction = add(direction, {0.f, -1.f});
             downKeyPressed = false;
         }
 
@@ -52,9 +48,7 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
         {
-            if (direction.x == -1.f) {
-                direction = add(direction, {1.f, 0.f});
-            }
+            direction = add(direction, {1.f, 0.f});
             leftKeyPressed = false;
         }
 
@@ -65,9 +59,7 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
         {
-            if (direction.x == 1.f) {
-                direction = add(direction, {-1.f, 0.f});
-            }
+            direction = add(direction, {-1.f, 0.f});
             rightKeyPressed = false;
         }
     }

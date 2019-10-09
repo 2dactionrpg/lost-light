@@ -93,8 +93,7 @@ vec2 Projectile::getDirection()
 
 void Projectile::setDirection(vec2 direction)
 {
-    float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
-    motion.direction = { direction.x / normal, direction.y / normal };
+    motion.direction = normalize(direction);
 }
 
 void Projectile::setRotation(float rad)
