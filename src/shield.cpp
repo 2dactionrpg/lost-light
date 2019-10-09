@@ -147,11 +147,6 @@ void Shield::hide()
     physics.scale = {0.f, 0.f};
 }
 
-void Shield::scaleMultiplier(float x, float y)
-{
-    physics.scale = {physics.scale.x * x, physics.scale.y * y};
-}
-
 vec2 Shield::get_position() const
 {
     return motion.position;
@@ -189,10 +184,11 @@ vec2 Shield::get_bounding_box() const
 
 bool Shield::collides_with(const Projectile &projectile)
 {
-    vec3 tlMul = {-shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
-    vec3 trMul = {+shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
-    vec3 brMul = {+shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f};
-    vec3 blMul = {-shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f};
+    vec2 boundry = get_bounding_box();
+    vec3 tlMul = {-boundry.x / 2.f, -boundry.y / 2.f, 1.f};
+    vec3 trMul = {+boundry.x / 2.f, -boundry.y / 2.f, 1.f};
+    vec3 brMul = {+boundry.x / 2.f, +boundry.y / 2.f, 1.f};
+    vec3 blMul = {-boundry.x / 2.f, +boundry.y / 2.f, 1.f};
 
     tlMul = mul(transform.out, tlMul);
     trMul = mul(transform.out, trMul);

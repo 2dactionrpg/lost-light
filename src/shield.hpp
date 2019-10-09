@@ -34,8 +34,6 @@ public:
 
     vec2 getDirection();
 
-    void scaleMultiplier(float x, float y);
-
     vec2 get_bounding_box() const;
 
     bool collides_with(const Projectile& projectile);

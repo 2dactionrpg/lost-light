@@ -92,12 +92,15 @@ void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shi
         auto &radians = shield.get<motionComponent>(entity).radians;
         auto &is_reflectable = shield.get<shieldComponent>(entity).is_reflectable;
         auto &scale = shield.get<physicsScaleComponent>(entity).scale;
-        
+
         m_shield.set_position(m_character.get_position());
         m_shield.set_rotation(radians);
-        if (is_reflectable) {
+        if (is_reflectable)
+        {
             m_shield.set_scale(scale);
-        } else {
+        }
+        else
+        {
             m_shield.hide();
         }
     }
@@ -128,6 +131,16 @@ void PhysicsSystem::move(vec2 &pos, vec2 off)
     else if (pos.y < C_FRAME_Y_MIN)
     {
         pos.y = C_FRAME_Y_MIN;
+    }
+}
+
+void PhysicsSystem::setShieldScaleMultiplier(entt::registry &registry, float x, float y)
+{
+    auto view = registry.view<shieldComponent, physicsScaleComponent>();
+    for (auto entity : view)
+    {
+        auto &scale = view.get<physicsScaleComponent>(entity).scale;
+        scale = { scale.x * x, scale.y * y};
     }
 }
 

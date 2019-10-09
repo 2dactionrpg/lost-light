@@ -21,6 +21,7 @@ public:
     void move(vec2 &pos, vec2 off);
     void rotate(float &radians, float newRadians);
     float lengthVec2(vec2 v);
+    void setShieldScaleMultiplier(entt::registry &registry, float x, float y);
     void setCharacterUnmovable(entt::registry &registry);
     void resetCharacter(entt::registry &registry);
 };

@@ -172,7 +172,7 @@ bool World::update(float elapsed_ms)
     // Checking Salmon - Turtle collisions
     if (m_character.collides_with(m_potion) && m_potion.is_alive()) {
         m_potion.destroy();
-        m_shield.scaleMultiplier(2.0f, 1.0f);
+        physicsSystem.setShieldScaleMultiplier(registry, 2.0f, 1.0f);
     }
 
     int i = 0;
@@ -252,7 +252,7 @@ bool World::update(float elapsed_ms)
     m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
     physicsSystem.update(registry, m_character, m_shield);
-    shieldSystem.update(registry, m_shield);
+    // shieldSystem.update(registry, m_shield);
     // m_character.update(elapsed_ms);
     // m_shield.set_position(m_character.get_position());
     // m_salmon.update(elapsed_ms);
