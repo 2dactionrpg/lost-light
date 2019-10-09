@@ -1,6 +1,7 @@
 #pragma once
 
-#include "common.hpp"
+// #include "common.hpp"
+#include "entity.hpp"
 #include <vector>
 
 // class Turtle;

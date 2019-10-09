@@ -1,9 +1,9 @@
 #pragma once
 
 #include <entt/entity/registry.hpp>
-#include "../components/input.hpp"
-#include "../components/player.hpp"
-#include "../components/motion.hpp"
+#include "../components/motionComponent.hpp"
+#include "../components/inputMouse.hpp"
+#include "../components/inputKeyboard.hpp"
 #include "../common.hpp"
 
 struct InputSystem

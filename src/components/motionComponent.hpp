@@ -1,7 +1,7 @@
 #pragma once
 #include <common.hpp>
 
-struct motion
+struct motionComponent
 {
     vec2 position;
     vec2 direction;

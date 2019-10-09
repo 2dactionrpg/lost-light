@@ -65,13 +65,6 @@ bool Character::init()
     if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
         return false;
 
-    // Setting initial values
-    // motion.position = { 50.f, 300.f };
-    // motion.radians = 20.f;
-    // motion.speed = 200.f;
-
-    physics.scale = { 0.5f, 0.5f };
-
     m_is_alive = true;
     m_light_up_countdown_ms = -1.f;
 
@@ -140,40 +133,15 @@ void Character::draw(const mat3& projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-// Simple bounding box collision check
-// This is a SUPER APPROXIMATE check that puts a circle around the bounding
-// boxes and sees if the center point of either object is inside the other's
-// bounding-box-circle. You don't need to try to use this technique. bool
-// Character::collides_with(const Turtle& turtle)
-// {
-// 	float dx = motion.position.x - turtle.get_position().x;
-// 	float dy = motion.position.y - turtle.get_position().y;
-// 	float d_sq = dx * dx + dy * dy;
-// 	float other_r = std::max(turtle.get_bounding_box().x,
-// turtle.get_bounding_box().y); 	float my_r = std::max(physics.scale.x,
-// physics.scale.y); 	float r = std::max(other_r, my_r); 	r *= 0.6f;
-// if (d_sq < r
-// * r) 		return true; 	return false;
-// }
+vec2 Character::get_scale() const
+{
+    return physics.scale;
+}
 
-// bool Character::collides_with(const Fish& fish)
-// {
-// 	float dx = motion.position.x - fish.get_position().x;
-// 	float dy = motion.position.y - fish.get_position().y;
-// 	float d_sq = dx * dx + dy * dy;
-// 	float other_r = std::max(fish.get_bounding_box().x,
-// fish.get_bounding_box().y); 	float my_r = std::max(physics.scale.x,
-// physics.scale.y); 	float r = std::max(other_r, my_r); 	r *= 0.6f;
-// if (d_sq < r
-// * r) 		return true; 	return false;
-// }
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// HANDLE SALMON - WALL COLLISIONS HERE
-// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 2
-// You will want to write new functions from scratch for checking/handling
-// character - wall collisions.
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void Character::set_scale(vec2 scale)
+{
+    physics.scale = scale;
+}
 
 vec2 Character::get_position() const
 {
@@ -183,6 +151,11 @@ vec2 Character::get_position() const
 void Character::set_position(vec2 pos)
 {
     motion.position = pos;
+}
+
+float Character::get_rotation() const
+{
+    return motion.radians;
 }
 
 void Character::set_rotation(float radians)
