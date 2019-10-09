@@ -3,7 +3,7 @@
 
 void PhysicsSystem::sync(entt::registry &registry, float ms)
 {
-    // Character Movement Update
+    // Character Physics Sync
     auto view = registry.view<characterComponent, motionComponent, inputKeyboard, inputMouse>();
     for (auto entity : view)
     {
@@ -22,7 +22,6 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
         {
             resetCharacter(registry);
         }
-        // Set movement for character
         if (is_movable)
         {
             move(position, offset);
@@ -40,7 +39,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
         }
     }
 
-    // Shield Position Update
+    // Shield Physics Sync
     auto viewCharacter = registry.view<characterComponent, motionComponent>();
     auto viewShield = registry.view<shieldComponent, motionComponent, inputMouse>();
     for (auto character : viewCharacter)
@@ -72,7 +71,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
 
 void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield)
 {
-    // Character Movement Update
+    // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
     for (auto entity : character)
     {
@@ -85,13 +84,22 @@ void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shi
         m_character.set_scale(scale);
     }
 
-    auto shield = registry.view<shieldComponent, motionComponent>();
+    // Shield Physics Update
+    auto shield = registry.view<shieldComponent, motionComponent, physicsScaleComponent>();
 
     for (auto entity : shield)
     {
         auto &radians = shield.get<motionComponent>(entity).radians;
+        auto &is_reflectable = shield.get<shieldComponent>(entity).is_reflectable;
+        auto &scale = shield.get<physicsScaleComponent>(entity).scale;
+        
         m_shield.set_position(m_character.get_position());
         m_shield.set_rotation(radians);
+        if (is_reflectable) {
+            m_shield.set_scale(scale);
+        } else {
+            m_shield.hide();
+        }
     }
 }
 
