@@ -8,6 +8,8 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
         auto &[upKeyPressed, downKeyPressed, leftKeyPressed, rightKeyPressed, resetKeyPressed] = view.get<inputKeyboard>(entity);
         auto &[position, direction, radians, speed] = view.get<motionComponent>(entity);
 
+        direction = {0.f, 0.f};
+
         if (action == GLFW_PRESS && key == GLFW_KEY_R)
         {
             direction = {0.f, 0.f};
@@ -21,46 +23,51 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
 
         if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
         {
-            direction = add(direction, {0.f, -1.f});
             upKeyPressed = true;
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_UP || key == GLFW_KEY_W))
         {
-            direction = add(direction, {0.f, 1.f});
             upKeyPressed = false;
         }
 
         if (action == GLFW_PRESS && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
         {
-            direction = add(direction, {0.f, 1.f});
             downKeyPressed = true;
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_DOWN || key == GLFW_KEY_S))
         {
-            direction = add(direction, {0.f, -1.f});
             downKeyPressed = false;
         }
 
         if (action == GLFW_PRESS && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
         {
-            direction = add(direction, {-1.f, 0.f});
             leftKeyPressed = true;
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_LEFT || key == GLFW_KEY_A))
         {
-            direction = add(direction, {1.f, 0.f});
             leftKeyPressed = false;
         }
 
         if (action == GLFW_PRESS && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
         {
-            direction = add(direction, {1.f, 0.f});
             rightKeyPressed = true;
         }
         if (action == GLFW_RELEASE && (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D))
         {
-            direction = add(direction, {-1.f, 0.f});
             rightKeyPressed = false;
+        }
+
+        if (upKeyPressed) {
+            direction = add(direction, {0.f, -1.f});
+        }
+        if (downKeyPressed) {
+            direction = add(direction, {0.f, 1.f});
+        }        
+        if (leftKeyPressed) {
+            direction = add(direction, {-1.f, 0.f});
+        }
+        if (rightKeyPressed) {
+            direction = add(direction, {1.f, 0.f});
         }
     }
 }
