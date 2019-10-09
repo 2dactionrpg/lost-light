@@ -26,7 +26,6 @@ void MovementSystem::sync(entt::registry &registry, float ms)
         if (is_movable)
         {
             move(position, offset);
-            // TODO: Let character rotate
             vec2 characterVector = {0.f, 1.f};
             vec2 mouseVec = {
                 (float)xpos - position.x,

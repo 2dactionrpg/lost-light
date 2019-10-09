@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "entity.hpp"
 #include <vector>
 
 // class Turtle;
@@ -38,7 +39,11 @@ public:
 
     vec2 getDirection();
 
-    void increaseSize();
+    void show(float x, float y);
+
+    void hide();
+
+    void sizeMultiplier(float x, float y);
 
     vec2 get_bounding_box() const;
 

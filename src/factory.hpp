@@ -2,6 +2,7 @@
 #include "./components/characterComponent.hpp"
 #include "./components/shieldComponent.hpp"
 #include "./components/motionComponent.hpp"
+#include "./components/physicsScaleComponent.hpp"
 #include "./components/inputKeyboard.hpp"
 #include "./components/inputMouse.hpp"
 

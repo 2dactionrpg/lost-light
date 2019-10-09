@@ -84,9 +84,19 @@ void Shield::destroy()
     glDeleteShader(effect.program);
 }
 
-void Shield::increaseSize()
+void Shield::show(float x, float y)
 {
-    physics.scale = { physics.scale.x * 2.f, physics.scale.y };
+    physics.scale = { x, y };
+}
+
+void Shield::hide()
+{
+    physics.scale = { 0.f, 0.f };
+}
+
+void Shield::sizeMultiplier(float x, float y)
+{
+    physics.scale = { physics.scale.x * x, physics.scale.y * y };
 }
 
 void Shield::draw(const mat3& projection)

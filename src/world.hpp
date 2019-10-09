@@ -16,6 +16,7 @@
 #include "factory.hpp"
 #include "./system/InputSystem.hpp"
 #include "./system/MovementSystem.hpp"
+#include "./system/ShieldSystem.hpp"
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -105,5 +106,6 @@ private:
 
     InputSystem inputSystem;
     MovementSystem movementSystem;
+    ShieldSystem shieldSystem;
     entt::registry registry;
 };

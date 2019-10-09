@@ -2,5 +2,7 @@
 
 struct shieldComponent
 {
-    /* data */
+    // int reflect_max;
+    // int reflect_count;
+    bool is_reflectable;
 };

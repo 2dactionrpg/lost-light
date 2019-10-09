@@ -45,6 +45,7 @@ set(SOURCE_FILES
     src/potion.cpp
     # System
     src/system/InputSystem.cpp
+    src/system/ShieldSystem.cpp
     src/system/MovementSystem.cpp
 
   src/project_path.hpp
@@ -63,9 +64,11 @@ set(SOURCE_FILES
     src/components/inputMouse.hpp
     src/components/motionComponent.hpp
     src/components/characterComponent.hpp
+    src/components/physicsScaleComponent.hpp
     src/components/shieldComponent.hpp
     # System
     src/system/InputSystem.hpp
+    src/system/ShieldSystem.hpp
     src/system/MovementSystem.hpp
 	)
 
