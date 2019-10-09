@@ -12,38 +12,29 @@ class Shield : public Entity {
     static Texture shield_texture;
 
 public:
-    // Creates all the associated render resources and default transform
     bool init();
 
-    // Releases all associated resources
     void destroy();
 
-    // Update salmon position based on direction
-    // ms represents the number of milliseconds elapsed from the previous update() call
-    void update(float ms);
-
-    // Renders the salmon
     void draw(const mat3& projection) override;
 
-    // Collision routines for turtles and fish
-    // bool collides_with(const Turtle& turtle);
-    // bool collides_with(const Fish& fish);
-
-    // Returns the current salmon position
     vec2 get_position() const;
 
     void set_position(vec2 position);
 
-    // Set salmon rotation in radians
+    float get_rotation() const;
+
     void set_rotation(float radians);
 
-    vec2 getDirection();
+    vec2 get_scale() const;
 
-    void show(float x, float y);
+    void set_scale(vec2 scale);
 
     void hide();
 
-    void sizeMultiplier(float x, float y);
+    vec2 getDirection();
+
+    void scaleMultiplier(float x, float y);
 
     vec2 get_bounding_box() const;
 

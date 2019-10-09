@@ -172,7 +172,7 @@ bool World::update(float elapsed_ms)
     // Checking Salmon - Turtle collisions
     if (m_character.collides_with(m_potion) && m_potion.is_alive()) {
         m_potion.destroy();
-        m_shield.sizeMultiplier(2.0f, 1.0f);
+        m_shield.scaleMultiplier(2.0f, 1.0f);
     }
 
     int i = 0;
