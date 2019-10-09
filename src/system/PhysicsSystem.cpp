@@ -156,14 +156,21 @@ void PhysicsSystem::setCharacterUnmovable(entt::registry &registry)
 
 void PhysicsSystem::resetCharacter(entt::registry &registry)
 {
-    auto view = registry.view<characterComponent, motionComponent>();
-    for (auto entity : view)
+    auto viewCharacter = registry.view<characterComponent, motionComponent>();
+    for (auto entity : viewCharacter)
     {
-        auto &is_movable = view.get<characterComponent>(entity).is_movable;
+        auto &is_movable = viewCharacter.get<characterComponent>(entity).is_movable;
         is_movable = true;
 
-        auto &position = view.get<motionComponent>(entity).position;
+        auto &position = viewCharacter.get<motionComponent>(entity).position;
         position = {250.f, 300.f};
+    }
+
+    auto viewShield = registry.view<shieldComponent, physicsScaleComponent>();
+    for (auto entity : viewShield)
+    {
+        auto &scale = viewShield.get<physicsScaleComponent>(entity).scale;
+        scale = { 0.5f, 0.05f };
     }
 }
 

@@ -167,41 +167,6 @@ void Enemy::draw(const mat3& projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-// Simple bounding box collision check
-// This is a SUPER APPROXIMATE check that puts a circle around the bounding
-// boxes and sees if the center point of either object is inside the other's
-// bounding-box-circle. You don't need to try to use this technique. bool
-// Character::collides_with(const Turtle& turtle)
-// {
-// 	float dx = motion.position.x - turtle.get_position().x;
-// 	float dy = motion.position.y - turtle.get_position().y;
-// 	float d_sq = dx * dx + dy * dy;
-// 	float other_r = std::max(turtle.get_bounding_box().x,
-// turtle.get_bounding_box().y); 	float my_r = std::max(physics.scale.x,
-// physics.scale.y); 	float r = std::max(other_r, my_r); 	r *= 0.6f;
-// if (d_sq < r
-// * r) 		return true; 	return false;
-// }
-
-// bool Character::collides_with(const Fish& fish)
-// {
-// 	float dx = motion.position.x - fish.get_position().x;
-// 	float dy = motion.position.y - fish.get_position().y;
-// 	float d_sq = dx * dx + dy * dy;
-// 	float other_r = std::max(fish.get_bounding_box().x,
-// fish.get_bounding_box().y); 	float my_r = std::max(physics.scale.x,
-// physics.scale.y); 	float r = std::max(other_r, my_r); 	r *= 0.6f;
-// if (d_sq < r
-// * r) 		return true; 	return false;
-// }
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// HANDLE SALMON - WALL COLLISIONS HERE
-// DON'T WORRY ABOUT THIS UNTIL ASSIGNMENT 2
-// You will want to write new functions from scratch for checking/handling
-// character - wall collisions.
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 vec2 Enemy::get_position() const
 {
     return motion.position;
@@ -239,7 +204,6 @@ bool Enemy::is_alive() const
     return m_is_alive;
 }
 
-// Called when the character collides with a turtle
 void Enemy::kill()
 {
     m_is_alive = false;
