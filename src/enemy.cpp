@@ -66,7 +66,7 @@ bool Enemy::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+    if (!effect.load_from_file(shader_path("enemy.vs.glsl"), shader_path("enemy.fs.glsl")))
         return false;
 
     // Setting initial values

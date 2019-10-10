@@ -18,10 +18,8 @@ Texture Shield::shield_texture;
 bool Shield::init()
 {
     // Load shared texture
-    if (!shield_texture.is_valid())
-    {
-        if (!shield_texture.load_from_file(textures_path("shield.png")))
-        {
+    if (!shield_texture.is_valid()) {
+        if (!shield_texture.load_from_file(textures_path("shield.png"))) {
             fprintf(stderr, "Failed to load projectile texture!");
             return false;
         }
@@ -32,17 +30,17 @@ bool Shield::init()
     float hr = shield_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
-    vertices[0].position = {-wr, +hr, -0.02f};
-    vertices[0].texcoord = {0.f, 1.f};
-    vertices[1].position = {+wr, +hr, -0.02f};
-    vertices[1].texcoord = {1.f, 1.f};
-    vertices[2].position = {+wr, -hr, -0.02f};
-    vertices[2].texcoord = {1.f, 0.f};
-    vertices[3].position = {-wr, -hr, -0.02f};
-    vertices[3].texcoord = {0.f, 0.f};
+    vertices[0].position = { -wr, +hr, -0.02f };
+    vertices[0].texcoord = { 0.f, 1.f };
+    vertices[1].position = { +wr, +hr, -0.02f };
+    vertices[1].texcoord = { 1.f, 1.f };
+    vertices[2].position = { +wr, -hr, -0.02f };
+    vertices[2].texcoord = { 1.f, 0.f };
+    vertices[3].position = { -wr, -hr, -0.02f };
+    vertices[3].texcoord = { 0.f, 0.f };
 
     // Counterclockwise as it's the default opengl front winding direction
-    uint16_t indices[] = {0, 3, 1, 1, 3, 2};
+    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
 
     // Clearing errors
     gl_flush_errors();
@@ -63,7 +61,7 @@ bool Shield::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+    if (!effect.load_from_file(shader_path("shield.vs.glsl"), shader_path("shield.fs.glsl")))
         return false;
 
     return true;
@@ -81,14 +79,14 @@ void Shield::destroy()
     glDeleteShader(effect.program);
 }
 
-void Shield::draw(const mat3 &projection)
+void Shield::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
     transform.translate(motion.position);
     transform.rotate(motion.radians);
-    transform.translate({0.f, 80.f});
+    transform.translate({ 0.f, 80.f });
     transform.scale(physics.scale);
     transform.end();
 
@@ -115,18 +113,18 @@ void Shield::draw(const mat3 &projection)
     GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
     glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)0);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)sizeof(vec3));
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, shield_texture.id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
-    float color[] = {1.f, 1.f, 1.f};
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
+    float color[] = { 1.f, 1.f, 1.f };
     glUniform3fv(color_uloc, 1, color);
-    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -144,7 +142,7 @@ void Shield::set_scale(vec2 scale)
 
 void Shield::hide()
 {
-    physics.scale = {0.f, 0.f};
+    physics.scale = { 0.f, 0.f };
 }
 
 vec2 Shield::get_position() const
@@ -169,9 +167,9 @@ void Shield::set_rotation(float radians)
 
 vec2 Shield::getDirection()
 {
-    vec2 direction = {sinf(motion.radians), -cosf(motion.radians)};
+    vec2 direction = { sinf(motion.radians), -cosf(motion.radians) };
     float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
-    direction = {direction.x / normal, direction.y / normal};
+    direction = { direction.x / normal, direction.y / normal };
     return direction;
 }
 
@@ -179,15 +177,15 @@ vec2 Shield::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return {std::fabs(physics.scale.x) * shield_texture.width, std::fabs(physics.scale.y) * shield_texture.height};
+    return { std::fabs(physics.scale.x) * shield_texture.width, std::fabs(physics.scale.y) * shield_texture.height };
 }
 
-bool Shield::collides_with(const Projectile &projectile)
+bool Shield::collides_with(const Projectile& projectile)
 {
-    vec3 tlMul = {-shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
-    vec3 trMul = {+shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
-    vec3 brMul = {+shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f};
-    vec3 blMul = {-shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f};
+    vec3 tlMul = { -shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
+    vec3 trMul = { +shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
+    vec3 brMul = { +shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
+    vec3 blMul = { -shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
     // vec2 boundry = get_bounding_box();
     // vec3 tlMul = {-boundry.x / 2.f, -boundry.y / 2.f, 1.f};
     // vec3 trMul = {+boundry.x / 2.f, -boundry.y / 2.f, 1.f};
@@ -199,15 +197,14 @@ bool Shield::collides_with(const Projectile &projectile)
     brMul = mul(transform.out, brMul);
     blMul = mul(transform.out, blMul);
 
-    vec2 tl = {tlMul.x, tlMul.y};
-    vec2 tr = {trMul.x, trMul.y};
-    vec2 br = {brMul.x, brMul.y};
-    vec2 bl = {blMul.x, blMul.y};
+    vec2 tl = { tlMul.x, tlMul.y };
+    vec2 tr = { trMul.x, trMul.y };
+    vec2 br = { brMul.x, brMul.y };
+    vec2 bl = { blMul.x, blMul.y };
 
     float area1 = squareArea(tl, tr, bl);
     float area2 = trianglesArea(tl, tr, br, bl, projectile.get_position());
-    if (std::fabs(area1 - area2) < 1000)
-    {
+    if (std::fabs(area1 - area2) < 1000) {
         return true;
     }
     return false;

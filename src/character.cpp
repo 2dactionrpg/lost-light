@@ -62,7 +62,7 @@ bool Character::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+    if (!effect.load_from_file(shader_path("character.vs.glsl"), shader_path("character.fs.glsl")))
         return false;
 
     m_is_alive = true;
