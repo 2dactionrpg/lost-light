@@ -138,7 +138,6 @@ void World::destroy()
     m_enemy.destroy();
     m_potion.destroy();
     m_shield.destroy();
-    m_salmon.destroy();
     m_pebbles_emitter.destroy();
     for (auto& projectile : m_projectiles)
         projectile.destroy();

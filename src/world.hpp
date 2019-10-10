@@ -4,7 +4,6 @@
 #include "character.hpp"
 #include "common.hpp"
 #include "enemy.hpp"
-#include "salmon.hpp"
 #include "shield.hpp"
 
 // #include "turtle.hpp"
@@ -78,7 +77,6 @@ private:
     unsigned int m_points;
 
     // Game entities
-    Salmon m_salmon;
     Character m_character;
     Shield m_shield;
     Enemy m_enemy;

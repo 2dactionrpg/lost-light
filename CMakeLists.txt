@@ -34,7 +34,6 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/character.cpp
 	src/common.cpp
-	src/salmon.cpp
 	src/water.cpp
 	src/world.cpp
     src/pebbles.cpp
@@ -52,7 +51,6 @@ set(SOURCE_FILES
   src/project_path.hpp
 	src/character.hpp
 	src/common.hpp
-	src/salmon.hpp
 	src/water.hpp
 	src/world.hpp
     src/pebbles.hpp
