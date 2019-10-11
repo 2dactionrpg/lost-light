@@ -9,7 +9,6 @@
 #include <sstream>
 #include <vector>
 
-
 void gl_flush_errors()
 {
     while (glGetError() != GL_NO_ERROR)

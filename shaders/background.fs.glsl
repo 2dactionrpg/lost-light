@@ -11,7 +11,7 @@ layout(location = 0) out vec4 color;
 vec2 distort(vec2 uv)
 {
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // HANDLE THE WATER WAVE DISTORTION HERE (you may want to try sin/cos)
+    // HANDLE THE BACKGROUND WAVE DISTORTION HERE (you may want to try sin/cos)
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     vec2 coord = uv.xy;

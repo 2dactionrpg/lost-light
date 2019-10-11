@@ -1,6 +1,5 @@
 #pragma once
 
-// #include "common.hpp"
 #include "entity.hpp"
 
 // Salmon enemy
@@ -26,6 +25,7 @@ public:
     vec2 getDirection();
 
     void setDirection(vec2 direction);
+
     void setRotation(float rad);
 
     // Returns the current potion position

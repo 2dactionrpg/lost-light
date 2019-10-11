@@ -1,11 +1,8 @@
 #pragma once
 
-// #include "common.hpp"
 #include "entity.hpp"
 #include <vector>
 
-// class Turtle;
-// class Fish;
 class Projectile;
 
 enum Direction { up,
@@ -28,10 +25,6 @@ public:
     // Renders the salmon
     void draw(const mat3& projection) override;
 
-    // Collision routines for turtles and fish
-    // bool collides_with(const Turtle& turtle);
-    // bool collides_with(const Fish& fish);
-
     // Returns the current salmon position
     vec2 get_position() const;
 
@@ -52,12 +45,7 @@ public:
     void kill();
     void respawn();
 
-    // Called when the salmon collides with a fish, starts lighting up the salmon
-    void light_up();
-
     vec2 get_bounding_box() const;
-
-    // bool collides_with(Projectile&) const;
 
     Projectile shoot_projectile();
 

@@ -4,19 +4,17 @@
 #include "character.hpp"
 #include "common.hpp"
 #include "enemy.hpp"
-#include "salmon.hpp"
 #include "shield.hpp"
 
 // #include "turtle.hpp"
 // #include "fish.hpp"
-#include "pebbles.hpp"
-#include "potion.hpp"
-#include "projectile.hpp"
-#include "water.hpp"
-#include "factory.hpp"
 #include "./system/InputSystem.hpp"
 #include "./system/PhysicsSystem.hpp"
 #include "./system/ShieldSystem.hpp"
+#include "background.hpp"
+#include "factory.hpp"
+#include "potion.hpp"
+#include "projectile.hpp"
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -55,9 +53,6 @@ private:
     // Generates a new turtle
     bool spawn_projectile();
 
-    // Generates a new fish
-    // bool spawn_fish();
-
     // !!! INPUT CALLBACK FUNCTIONS
     void on_key(GLFWwindow*, int key, int, int action, int mod);
     void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
@@ -70,31 +65,25 @@ private:
     float m_screen_scale; // Screen to pixel coordinates scale factor
 
     // Screen texture
-    // The draw loop first renders to this texture, then it is used for the water shader
+    // The draw loop first renders to this texture, then it is used for the background shader
     GLuint m_frame_buffer;
     Texture m_screen_tex;
 
-    // Water effect
-    Water m_water;
+    // Background effect
+    Background m_background;
 
     // Number of fish eaten by the salmon, displayed in the window title
     unsigned int m_points;
 
     // Game entities
-    Salmon m_salmon;
     Character m_character;
     Shield m_shield;
     Enemy m_enemy;
     Potion m_potion;
-    // std::vector<Turtle> m_turtles;
     std::vector<Projectile> m_projectiles;
-    // std::vector<Fish> m_fish;
-    Pebbles m_pebbles_emitter;
 
     float m_current_speed;
     float m_next_projectile_spawn;
-    // float m_next_turtle_spawn;
-    // float m_next_fish_spawn;
 
     Mix_Music* m_background_music;
     Mix_Chunk* m_salmon_dead_sound;

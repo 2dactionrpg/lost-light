@@ -51,7 +51,7 @@ bool Projectile::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+    if (!effect.load_from_file(shader_path("projectile.vs.glsl"), shader_path("projectile.fs.glsl")))
         return false;
 
     // motion.radians = 0.f;

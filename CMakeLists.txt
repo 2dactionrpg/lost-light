@@ -34,10 +34,8 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/character.cpp
 	src/common.cpp
-	src/salmon.cpp
-	src/water.cpp
+	src/background.cpp
 	src/world.cpp
-    src/pebbles.cpp
     src/projectile.cpp
     src/shield.cpp
     src/entity.cpp
@@ -52,10 +50,8 @@ set(SOURCE_FILES
   src/project_path.hpp
 	src/character.hpp
 	src/common.hpp
-	src/salmon.hpp
-	src/water.hpp
+	src/background.hpp
 	src/world.hpp
-    src/pebbles.hpp
     src/projectile.hpp
     src/shield.hpp
     src/entity.hpp

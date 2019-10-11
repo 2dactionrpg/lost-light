@@ -1,9 +1,7 @@
 #pragma once
 
-// #include "common.hpp"
 #include "entity.hpp"
 
-// Salmon enemy
 class Projectile : public Entity {
     // Shared between all projectiles, no need to load one for each instance
     static Texture projectile_texture;
@@ -26,6 +24,7 @@ public:
     vec2 getDirection();
 
     void setDirection(vec2 direction);
+
     void setRotation(float rad);
 
     // Returns the current projectile position

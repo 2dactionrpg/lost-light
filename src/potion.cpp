@@ -51,11 +51,9 @@ bool Potion::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+    if (!effect.load_from_file(shader_path("potion.vs.glsl"), shader_path("potion.fs.glsl")))
         return false;
 
-    // motion.radians = 0.f;
-    // motion.speed = 200.f;
     motion.position = { 850.f, 600.f };
     setDirection({ -1.f, 0.2f });
 
@@ -82,11 +80,6 @@ void Potion::destroy()
 
 void Potion::update(float ms)
 {
-    // Move fish along -X based on how much time has passed, this is to (partially) avoid
-    // having entities move at different speed based on the machine.
-    // float step = 5.0 * motion.speed * (ms / 1000);
-    // motion.position.x += step * motion.direction.x;
-    // motion.position.y += step * motion.direction.y;
 }
 
 vec2 Potion::getDirection()
@@ -104,6 +97,7 @@ void Potion::setRotation(float rad)
 {
     motion.radians = rad;
 }
+
 void Potion::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
