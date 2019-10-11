@@ -1,10 +1,6 @@
 // Header
 #include "shield.hpp"
 
-// internal
-// #include "turtle.hpp"
-// #include "fish.hpp"
-
 #include "projectile.hpp"
 
 // stlib

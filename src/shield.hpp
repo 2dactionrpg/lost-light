@@ -1,11 +1,8 @@
 #pragma once
 
-// #include "common.hpp"
 #include "entity.hpp"
 #include <vector>
 
-// class Turtle;
-// class Fish;
 class Projectile;
 
 class Shield : public Entity {
