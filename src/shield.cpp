@@ -46,6 +46,7 @@ bool Shield::init()
     gl_flush_errors();
 
     // Vertex Buffer creation
+    // This is where magic happens
     glGenBuffers(1, &mesh.vbo);
     glGenBuffers(1, &mesh.vbo);
     glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
