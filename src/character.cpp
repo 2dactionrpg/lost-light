@@ -1,10 +1,6 @@
 // Header
 #include "character.hpp"
 
-// internal
-// #include "turtle.hpp"
-// #include "fish.hpp"
-
 #include "potion.hpp"
 #include "projectile.hpp"
 
@@ -66,7 +62,6 @@ bool Character::init()
         return false;
 
     m_is_alive = true;
-    m_light_up_countdown_ms = -1.f;
 
     return true;
 }
@@ -172,12 +167,6 @@ bool Character::is_alive() const
 void Character::kill()
 {
     m_is_alive = false;
-}
-
-// Called when the character collides with a fish
-void Character::light_up()
-{
-    m_light_up_countdown_ms = 1500.f;
 }
 
 vec2 Character::get_bounding_box() const

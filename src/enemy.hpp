@@ -45,9 +45,6 @@ public:
     void kill();
     void respawn();
 
-    // Called when the salmon collides with a fish, starts lighting up the salmon
-    void light_up();
-
     vec2 get_bounding_box() const;
 
     Projectile shoot_projectile();
