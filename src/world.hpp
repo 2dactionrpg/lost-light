@@ -11,11 +11,10 @@
 #include "./system/InputSystem.hpp"
 #include "./system/PhysicsSystem.hpp"
 #include "./system/ShieldSystem.hpp"
+#include "background.hpp"
 #include "factory.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
-#include "water.hpp"
-
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -66,12 +65,12 @@ private:
     float m_screen_scale; // Screen to pixel coordinates scale factor
 
     // Screen texture
-    // The draw loop first renders to this texture, then it is used for the water shader
+    // The draw loop first renders to this texture, then it is used for the background shader
     GLuint m_frame_buffer;
     Texture m_screen_tex;
 
-    // Water effect
-    Water m_water;
+    // Background effect
+    Background m_background;
 
     // Number of fish eaten by the salmon, displayed in the window title
     unsigned int m_points;

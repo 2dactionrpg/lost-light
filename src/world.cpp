@@ -117,7 +117,7 @@ bool World::init(vec2 screen)
     makeShield(registry);
 
     return m_character.init()
-        && m_water.init()
+        && m_background.init()
         && m_shield.init()
         && m_enemy.init()
         && m_potion.init();
@@ -307,7 +307,7 @@ void World::draw()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_screen_tex.id);
 
-    m_water.draw(projection_2D);
+    m_background.draw(projection_2D);
 
     //////////////////
     // Presenting
@@ -340,7 +340,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         int w, h;
         glfwGetWindowSize(m_window, &w, &h);
         m_projectiles.clear();
-        m_water.reset_salmon_dead_time();
+        m_background.reset_salmon_dead_time();
         m_current_speed = 1.f;
     }
 

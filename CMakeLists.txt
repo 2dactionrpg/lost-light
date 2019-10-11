@@ -34,7 +34,7 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/character.cpp
 	src/common.cpp
-	src/water.cpp
+	src/background.cpp
 	src/world.cpp
     src/projectile.cpp
     src/shield.cpp
@@ -50,7 +50,7 @@ set(SOURCE_FILES
   src/project_path.hpp
 	src/character.hpp
 	src/common.hpp
-	src/water.hpp
+	src/background.hpp
 	src/world.hpp
     src/projectile.hpp
     src/shield.hpp

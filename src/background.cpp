@@ -1,8 +1,8 @@
-#include "water.hpp"
+#include "background.hpp"
 
 #include <iostream>
 
-bool Water::init()
+bool Background::init()
 {
     m_dead_time = -1;
 
@@ -42,14 +42,14 @@ bool Water::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("water.vs.glsl"), shader_path("water.fs.glsl")))
+    if (!effect.load_from_file(shader_path("background.vs.glsl"), shader_path("background.fs.glsl")))
         return false;
 
     return true;
 }
 
 // Releases all graphics resources
-void Water::destroy()
+void Background::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
 
@@ -58,22 +58,22 @@ void Water::destroy()
     glDeleteShader(effect.program);
 }
 
-void Water::set_salmon_dead()
+void Background::set_salmon_dead()
 {
     m_dead_time = glfwGetTime();
 }
 
-void Water::reset_salmon_dead_time()
+void Background::reset_salmon_dead_time()
 {
     m_dead_time = -1;
 }
 
-float Water::get_salmon_dead_time() const
+float Background::get_salmon_dead_time() const
 {
     return glfwGetTime() - m_dead_time;
 }
 
-void Water::draw(const mat3& projection)
+void Background::draw(const mat3& projection)
 {
     // Enabling alpha channel for textures
     glEnable(GL_BLEND);

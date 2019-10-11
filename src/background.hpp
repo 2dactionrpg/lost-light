@@ -3,7 +3,7 @@
 // #include "common.hpp"
 #include "entity.hpp"
 
-class Water : public Entity {
+class Background : public Entity {
 public:
     // Creates all the associated render resources and default transform
     bool init();
@@ -11,7 +11,7 @@ public:
     // Releases all associated resources
     void destroy();
 
-    // Renders the water
+    // Renders the background
     void draw(const mat3& projection) override;
 
     // Salmon dead time getters and setters
