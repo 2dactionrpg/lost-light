@@ -47,6 +47,7 @@ bool Shield::init()
 
     // Vertex Buffer creation
     glGenBuffers(1, &mesh.vbo);
+    glGenBuffers(1, &mesh.vbo);
     glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
 
