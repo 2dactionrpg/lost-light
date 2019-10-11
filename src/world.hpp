@@ -72,7 +72,7 @@ private:
     // Background effect
     Background m_background;
 
-    // Number of fish eaten by the salmon, displayed in the window title
+    // Number of fish eaten by the character, displayed in the window title
     unsigned int m_points;
 
     // Game entities
@@ -86,8 +86,8 @@ private:
     float m_next_projectile_spawn;
 
     Mix_Music* m_background_music;
-    Mix_Chunk* m_salmon_dead_sound;
-    Mix_Chunk* m_salmon_eat_sound;
+    Mix_Chunk* m_character_dead_sound;
+    Mix_Chunk* m_character_eat_sound;
 
     // C++ rng
     std::default_random_engine m_rng;

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(salmon)
+project(lostlight)
 
 # Set c++17
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake

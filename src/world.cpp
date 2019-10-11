@@ -51,7 +51,7 @@ bool World::init(vec2 screen)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
     glfwWindowHint(GLFW_RESIZABLE, 0);
-    m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Salmon Game Assignment", nullptr, nullptr);
+    m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Lost Light", nullptr, nullptr);
     if (m_window == nullptr)
         return false;
 
@@ -95,14 +95,14 @@ bool World::init(vec2 screen)
     }
 
     m_background_music = Mix_LoadMUS(audio_path("music.wav"));
-    m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-    m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
+    m_character_dead_sound = Mix_LoadWAV(audio_path("character_dead.wav"));
+    m_character_eat_sound = Mix_LoadWAV(audio_path("character_eat.wav"));
 
-    if (m_background_music == nullptr || m_salmon_dead_sound == nullptr || m_salmon_eat_sound == nullptr) {
+    if (m_background_music == nullptr || m_character_dead_sound == nullptr || m_character_eat_sound == nullptr) {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
             audio_path("music.wav"),
-            audio_path("salmon_dead.wav"),
-            audio_path("salmon_eat.wav"));
+            audio_path("character_dead.wav"),
+            audio_path("character_eat.wav"));
         return false;
     }
 
@@ -130,10 +130,10 @@ void World::destroy()
 
     if (m_background_music != nullptr)
         Mix_FreeMusic(m_background_music);
-    if (m_salmon_dead_sound != nullptr)
-        Mix_FreeChunk(m_salmon_dead_sound);
-    if (m_salmon_eat_sound != nullptr)
-        Mix_FreeChunk(m_salmon_eat_sound);
+    if (m_character_dead_sound != nullptr)
+        Mix_FreeChunk(m_character_dead_sound);
+    if (m_character_eat_sound != nullptr)
+        Mix_FreeChunk(m_character_eat_sound);
 
     Mix_CloseAudio();
 
@@ -158,7 +158,7 @@ bool World::update(float elapsed_ms)
     // set new target for enemie(s)
     m_enemy.set_target(m_character.get_position());
 
-    // Checking Salmon - Turtle collisions
+    // Checking character - Turtle collisions
     if (m_character.collides_with(m_potion) && m_potion.is_alive()) {
         m_potion.destroy();
         physicsSystem.setShieldScaleMultiplier(registry, 2.0f, 1.0f);
@@ -340,7 +340,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         int w, h;
         glfwGetWindowSize(m_window, &w, &h);
         m_projectiles.clear();
-        m_background.reset_salmon_dead_time();
+        m_background.reset_character_dead_time();
         m_current_speed = 1.f;
     }
 

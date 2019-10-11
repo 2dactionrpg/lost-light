@@ -17,10 +17,10 @@ public:
     // Releases all associated resources
     void destroy();
 
-    // Renders the salmon
+    // Renders the character
     void draw(const mat3& projection) override;
 
-    // Returns the current salmon position
+    // Returns the current character position
     vec2 get_position() const;
 
     float get_rotation() const;
@@ -31,7 +31,7 @@ public:
 
     bool collides_with(const Potion& potion);
 
-    // Set salmon rotation in radians
+    // Set character rotation in radians
     void set_rotation(float radians);
 
     void set_position(vec2 position);
@@ -52,7 +52,7 @@ public:
     bool rightKeyPressed;
 
 private:
-    bool m_is_alive; // True if the salmon is alive=
+    bool m_is_alive; // True if the character is alive=
 
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;

@@ -2,7 +2,6 @@
 
 #include "entity.hpp"
 
-// Salmon enemy
 class Potion : public Entity {
     // Shared between all potions, no need to load one for each instance
     static Texture potion_texture;
@@ -18,7 +17,7 @@ public:
     // ms represents the number of milliseconds elapsed from the previous update() call
     void update(float ms);
 
-    // Renders the salmon
+    // Renders the potion
     // projection is the 2D orthographic projection matrix
     void draw(const mat3& projection) override;
 

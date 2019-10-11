@@ -8,7 +8,7 @@
 #include <sstream>
 #include <vector>
 
-// Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & salmon.vs.glsl)
+// Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & character.vs.glsl)
 struct Vertex {
     vec3 position;
     vec3 color;
@@ -66,7 +66,7 @@ protected:
         void release(); // release shaders and program
     } effect;
 
-    // All data relevant to the motion of the salmon.
+    // All data relevant to the motion of the character.
     struct Motion {
         vec2 position;
         vec2 direction;
