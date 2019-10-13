@@ -115,6 +115,8 @@ bool World::init(vec2 screen)
 
     makeCharacter(registry);
     makeShield(registry);
+    makeEnemy(registry);
+    fprintf(stderr, "factory done\n");
 
     return m_character.init()
         && m_background.init()
@@ -193,14 +195,16 @@ bool World::update(float elapsed_ms)
         }
     }
 
+
+    enemyAI.set_direction(registry);
     // Updating all entities, making the turtle and fish
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
-    m_enemy.update(elapsed_ms);
+    // m_enemy.update(elapsed_ms);
     m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
-    physicsSystem.update(registry, m_character, m_shield);
+    physicsSystem.update(registry, m_character, m_shield, m_enemy);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
 
@@ -227,13 +231,13 @@ bool World::update(float elapsed_ms)
             return false;
         }
 
-        spawn_projectile();
+        // spawn_projectile();
 
-        Projectile& new_projectile = m_projectiles.back();
+        // Projectile& new_projectile = m_projectiles.back();
 
         // Setting random initial position
-        new_projectile.set_position(m_enemy.get_face_position());
-        new_projectile.setDirection(projectile_direction);
+        // new_projectile.set_position(m_enemy.get_face_position());
+        // new_projectile.setDirection(projectile_direction);
 
         // Next spawn
         m_next_projectile_spawn = (TURTLE_DELAY_MS / 2) + m_dist(m_rng) * (TURTLE_DELAY_MS / 2);

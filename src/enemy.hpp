@@ -5,9 +5,6 @@
 
 class Projectile;
 
-enum Direction { up,
-    down };
-
 class Enemy : public Entity {
     static Texture enemy_texture;
 
@@ -27,6 +24,8 @@ public:
 
     // Returns the current salmon position
     vec2 get_position() const;
+    
+    void set_position(vec2 pos);
 
     // Moves the salmon's position by the specified offset
     void move(vec2 off);
@@ -48,8 +47,6 @@ public:
     vec2 get_bounding_box() const;
 
     Projectile shoot_projectile();
-
-    Direction direction;
 
     vec2 target;
 

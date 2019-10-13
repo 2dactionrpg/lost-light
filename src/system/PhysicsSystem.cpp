@@ -8,11 +8,8 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
     for (auto entity : view)
     {
         auto &[position, direction, radians, speed] = view.get<motionComponent>(entity);
-
         auto &[is_movable] = view.get<characterComponent>(entity);
-
         auto &[upKeyPressed, downKeyPressed, leftKeyPressed, rightKeyPressed, resetKeyPressed] = view.get<inputKeyboard>(entity);
-
         auto &[xpos, ypos] = view.get<inputMouse>(entity);
 
         float step = speed * (ms / 1000);
@@ -28,7 +25,8 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
             vec2 characterVector = {0.f, 1.f};
             vec2 mouseVec = {
                 (float)xpos - position.x,
-                (float)ypos - position.y};
+                (float)ypos - position.y
+            };
 
             int factor = 1;
             if (mouseVec.x > 0.f)
@@ -67,9 +65,52 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
             }
         }
     }
+
+    // Enemy Physics Sync
+    auto viewEnemy = registry.view<enemyComponent, motionComponent>(); 
+    for (auto enemy : viewEnemy)
+    {
+        auto &[position, direction, radians, speed] = viewEnemy.get<motionComponent>(enemy);
+        // auto &destination = viewEnemy.get<enemyComponent>(enemy).is_alive;
+        auto &is_alive = viewEnemy.get<enemyComponent>(enemy).is_alive;
+        auto &destination = viewEnemy.get<enemyComponent>(enemy).destination;
+        float step = speed * (ms / 1000);
+        if (is_alive)
+        {
+            if (direction.x > 0) 
+            {
+                if (position.x + direction.x > destination.x)
+                {
+                    direction.x = 0.f;
+                }
+            }else if (direction.x < 0) 
+            {
+                if (position.x + direction.x < destination.x)
+                {
+                    direction.x = 0.f;
+                }
+            }
+            if (direction.y > 0) 
+            {
+                if (position.y + direction.y > destination.y)
+                {
+                    direction.y = 0.f;
+                }
+            }else if (direction.y < 0) 
+            {
+                if (position.y + direction.y < destination.y)
+                {
+                    direction.y = 0.f;
+                }
+            }
+            // fprintf(stderr, "%f %f\n", direction.x, direction.y);
+            vec2 offset = mul(normalize(direction), step);
+            move(position, offset);       
+        }
+    }
 }
 
-void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield)
+void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, Enemy &m_enemy)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -103,6 +144,19 @@ void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shi
         {
             m_shield.hide();
         }
+    }
+
+    // Enemy Physics Update
+    auto enemy = registry.view<enemyComponent, motionComponent, physicsScaleComponent>();
+
+    for (auto entity : enemy)
+    {
+        auto &position = enemy.get<motionComponent>(entity).position;
+        auto &radians = enemy.get<motionComponent>(entity).radians;
+        // auto &scale = character.get<physicsScaleComponent>(entity).scale;
+
+        m_enemy.set_position(position);
+        m_enemy.set_rotation(radians);
     }
 }
 

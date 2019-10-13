@@ -72,7 +72,6 @@ bool Enemy::init()
 
     physics.scale = { 0.4f, 0.4f };
 
-    direction = down;
     target = { 50.f, 300.f };
 
     m_is_alive = true;
@@ -99,8 +98,8 @@ void Enemy::update(float ms)
     float step = motion.speed * (ms / 1000);
 
     // Random movement
-    srand(time(NULL));
-    move({ ((rand() % 3) - 1) * step, ((rand() % 3) - 1) * step });
+    // srand(time(NULL));
+    // move({ ((rand() % 3) - 1) * step, ((rand() % 3) - 1) * step });
 
     if (m_remain_dead_countdown_ms > 0.f)
         m_remain_dead_countdown_ms -= ms;
@@ -168,21 +167,26 @@ vec2 Enemy::get_position() const
     return motion.position;
 }
 
-void Enemy::move(vec2 off)
+void Enemy::set_position(vec2 pos)
 {
-    motion.position.x += off.x;
-    motion.position.y += off.y;
-    if (motion.position.x > FRAME_X_MAX) {
-        motion.position.x = FRAME_X_MAX;
-    } else if (motion.position.x < FRAME_X_MIN) {
-        motion.position.x = FRAME_X_MIN;
-    }
-    if (motion.position.y > FRAME_Y_MAX) {
-        motion.position.y = FRAME_Y_MAX;
-    } else if (motion.position.y < FRAME_Y_MIN) {
-        motion.position.y = FRAME_Y_MIN;
-    }
+    motion.position = pos;
 }
+
+// void Enemy::move(vec2 off)
+// {
+//     motion.position.x += off.x;
+//     motion.position.y += off.y;
+//     if (motion.position.x > FRAME_X_MAX) {
+//         motion.position.x = FRAME_X_MAX;
+//     } else if (motion.position.x < FRAME_X_MIN) {
+//         motion.position.x = FRAME_X_MIN;
+//     }
+//     if (motion.position.y > FRAME_Y_MAX) {
+//         motion.position.y = FRAME_Y_MAX;
+//     } else if (motion.position.y < FRAME_Y_MIN) {
+//         motion.position.y = FRAME_Y_MIN;
+//     }
+// }
 
 void Enemy::set_target(vec2 character_pos)
 {
@@ -209,8 +213,7 @@ void Enemy::kill()
 void Enemy::respawn()
 {
     m_is_alive = true;
-    motion.position = { 1000.f, 0.f };
-    direction = down;
+    motion.position = { 0.f, 0.f };
 }
 
 Projectile Enemy::shoot_projectile()
