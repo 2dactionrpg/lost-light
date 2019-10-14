@@ -41,6 +41,12 @@ public:
 
     float squareArea(vec2 p1, vec2 p2, vec2 p3);
 
+    bool onSegment(vec2 p, vec2 q, vec2 r);
+
+    int orientation(vec2 p, vec2 q, vec2 r);
+
+    bool doIntersect(vec2 p1, vec2 q1, vec2 p2, vec2 q2);
+
 private:
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;
