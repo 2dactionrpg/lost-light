@@ -31,3 +31,20 @@ entt::entity makeShield(entt::registry& registry)
     ps.scale = { 0.5f, 0.05f };
     return entity;
 }
+
+entt::entity makeEnemy(entt::registry& registry, int id)
+{
+    const entt::entity entity = registry.create();
+    auto& em = registry.assign<enemyComponent>(entity);
+    em.id = id;
+    em.is_alive = true;
+    em.shoot_delay_ms = 3000.f;
+    auto& mo = registry.assign<motionComponent>(entity);
+    // Setting initial values
+    mo.position = { 50.f, 300.f };
+    mo.radians = 20.f;
+    mo.speed = 200.f;
+    auto &ps = registry.assign<physicsScaleComponent>(entity);
+    ps.scale = { 0.5f, 0.05f };
+    return entity;
+}

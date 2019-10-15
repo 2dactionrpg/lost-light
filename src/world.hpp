@@ -11,6 +11,7 @@
 #include "./system/InputSystem.hpp"
 #include "./system/PhysicsSystem.hpp"
 #include "./system/ShieldSystem.hpp"
+#include "./system/enemyAISystem.hpp"
 #include "background.hpp"
 #include "factory.hpp"
 #include "potion.hpp"
@@ -50,8 +51,8 @@ public:
     bool is_over() const;
 
 private:
-    // Generates a new turtle
-    bool spawn_projectile();
+    // generate enemies
+    bool spawn_enemy(int &id);
 
     // !!! INPUT CALLBACK FUNCTIONS
     void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -78,12 +79,15 @@ private:
     // Game entities
     Character m_character;
     Shield m_shield;
-    Enemy m_enemy;
     Potion m_potion;
     std::vector<Projectile> m_projectiles;
+    std::vector<Enemy> m_enemies;
+
+    // id assigned to enemies
+    int enemy_number;
 
     float m_current_speed;
-    float m_next_projectile_spawn;
+    float m_next_enemy_spawn;
 
     Mix_Music* m_background_music;
     Mix_Chunk* m_salmon_dead_sound;
@@ -96,5 +100,6 @@ private:
     InputSystem inputSystem;
     PhysicsSystem physicsSystem;
     ShieldSystem shieldSystem;
+    EnemyAISystem enemyAI;
     entt::registry registry;
 };

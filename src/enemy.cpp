@@ -16,7 +16,7 @@ float FRAME_X_MAX = 1050;
 float FRAME_X_MIN = 100;
 float FRAME_Y_MAX = 680;
 float FRAME_Y_MIN = 100;
-bool Enemy::init()
+bool Enemy::init(int id)
 {
     // Load shared texture
     if (!enemy_texture.is_valid()) {
@@ -70,9 +70,10 @@ bool Enemy::init()
     motion.radians = 4.75f;
     motion.speed = 200.f;
 
+    enemy_id = id;
+
     physics.scale = { 0.4f, 0.4f };
 
-    direction = down;
     target = { 50.f, 300.f };
 
     m_is_alive = true;
@@ -91,26 +92,6 @@ void Enemy::destroy()
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
     glDeleteShader(effect.program);
-}
-
-// Called on each frame by World::update()
-void Enemy::update(float ms)
-{
-    float step = motion.speed * (ms / 1000);
-
-    // Random movement
-    srand(time(NULL));
-    move({ ((rand() % 3) - 1) * step, ((rand() % 3) - 1) * step });
-
-    if (m_remain_dead_countdown_ms > 0.f)
-        m_remain_dead_countdown_ms -= ms;
-
-    if (!m_is_alive && m_remain_dead_countdown_ms <= 0.f)
-        respawn();
-
-    // face the enemy to its target
-    float rad = atan2(target.x - motion.position.x, motion.position.y - target.y);
-    set_rotation(rad);
 }
 
 void Enemy::draw(const mat3& projection)
@@ -168,21 +149,26 @@ vec2 Enemy::get_position() const
     return motion.position;
 }
 
-void Enemy::move(vec2 off)
+void Enemy::set_position(vec2 pos)
 {
-    motion.position.x += off.x;
-    motion.position.y += off.y;
-    if (motion.position.x > FRAME_X_MAX) {
-        motion.position.x = FRAME_X_MAX;
-    } else if (motion.position.x < FRAME_X_MIN) {
-        motion.position.x = FRAME_X_MIN;
-    }
-    if (motion.position.y > FRAME_Y_MAX) {
-        motion.position.y = FRAME_Y_MAX;
-    } else if (motion.position.y < FRAME_Y_MIN) {
-        motion.position.y = FRAME_Y_MIN;
-    }
+    motion.position = pos;
 }
+
+// void Enemy::move(vec2 off)
+// {
+//     motion.position.x += off.x;
+//     motion.position.y += off.y;
+//     if (motion.position.x > FRAME_X_MAX) {
+//         motion.position.x = FRAME_X_MAX;
+//     } else if (motion.position.x < FRAME_X_MIN) {
+//         motion.position.x = FRAME_X_MIN;
+//     }
+//     if (motion.position.y > FRAME_Y_MAX) {
+//         motion.position.y = FRAME_Y_MAX;
+//     } else if (motion.position.y < FRAME_Y_MIN) {
+//         motion.position.y = FRAME_Y_MIN;
+//     }
+// }
 
 void Enemy::set_target(vec2 character_pos)
 {
@@ -209,8 +195,7 @@ void Enemy::kill()
 void Enemy::respawn()
 {
     m_is_alive = true;
-    motion.position = { 1000.f, 0.f };
-    direction = down;
+    motion.position = { 0.f, 0.f };
 }
 
 Projectile Enemy::shoot_projectile()
@@ -246,4 +231,9 @@ vec2 Enemy::get_face_position()
     vec3 tlMul = { 0, -enemy_texture.height / 2.f - 50, 1.f };
     tlMul = mul(transform.out, tlMul);
     return { tlMul.x, tlMul.y };
+}
+
+int Enemy::get_id()
+{
+    return enemy_id;
 }
