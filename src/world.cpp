@@ -8,8 +8,9 @@
 
 // Same as static in c, local to compilation unit
 namespace {
-const size_t MAX_ENEMIES = 35;
-const size_t ENEMY_SPAWN_DELAY_MS = 200;
+    // change these numbers for minimal difficulty control
+    const size_t MAX_ENEMIES = 35;
+    const size_t ENEMY_SPAWN_DELAY_MS = 200;
 
     namespace {
         void glfw_err_cb(int error, const char* desc)
@@ -176,7 +177,9 @@ bool World::update(float elapsed_ms)
             {
                 enemy.kill();
                 m_enemies.erase(m_enemies.begin() + j);
+                j--;
                 hits_enemy = true;
+                break;
             }
             j++;
         }
@@ -186,8 +189,9 @@ bool World::update(float elapsed_ms)
             break;
         }
         if (hits_enemy)
-        {
+        {   
             m_projectiles.erase(m_projectiles.begin() + i);
+            i--;
         }
         i++;
     }
@@ -243,6 +247,8 @@ bool World::update(float elapsed_ms)
         else
             fprintf(stderr, "%s\n", "couldn't spawn new enemy");
     }
+
+    enemyAI.destroy_dead_enemies(registry);
 
     return true;
 }

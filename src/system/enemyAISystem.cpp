@@ -64,6 +64,7 @@ void EnemyAISystem::shoot(entt::registry &registry, float elapsed_ms, vector<Ene
         if ( is_alive && shoot_delay_ms < 0.f)
         {
             vec2 proj_direction = { target.x - position.x, target.y - position.y };
+            bool enemy_alive = false;
             for (auto& m_enemy : m_enemies)
             {
                 if (id == m_enemy.get_id())
@@ -78,13 +79,26 @@ void EnemyAISystem::shoot(entt::registry &registry, float elapsed_ms, vector<Ene
                     {
                         fprintf(stderr, "Failed to spawn projectile");
                     }
+                    enemy_alive = true;
                 }
             }
             shoot_delay_ms = 3000.f;
+            is_alive = enemy_alive;
         }
         else
         {
             shoot_delay_ms -= elapsed_ms;
         }
+    }
+}
+
+void EnemyAISystem::destroy_dead_enemies(entt::registry &registry)
+{
+    auto enemies = registry.view<enemyComponent, motionComponent>();
+    for (const auto enemy : enemies)
+    {
+        auto &is_alive = enemies.get<enemyComponent>(enemy).is_alive;
+        if(!is_alive)
+            registry.destroy(enemy);
     }
 }
