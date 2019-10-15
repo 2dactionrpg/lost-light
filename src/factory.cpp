@@ -38,6 +38,7 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     auto& em = registry.assign<enemyComponent>(entity);
     em.id = id;
     em.is_alive = true;
+    em.shoot_delay_ms = 3000.f;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
     mo.position = { 50.f, 300.f };

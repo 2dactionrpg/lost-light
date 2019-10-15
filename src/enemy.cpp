@@ -94,16 +94,6 @@ void Enemy::destroy()
     glDeleteShader(effect.program);
 }
 
-// Called on each frame by World::update()
-void Enemy::update(float ms)
-{
-    if (m_remain_dead_countdown_ms > 0.f)
-        m_remain_dead_countdown_ms -= ms;
-
-    if (!m_is_alive && m_remain_dead_countdown_ms <= 0.f)
-        respawn();
-}
-
 void Enemy::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info

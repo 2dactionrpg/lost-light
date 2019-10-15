@@ -53,3 +53,38 @@ void EnemyAISystem::set_rotation(entt::registry &registry)
         radians = atan2(target.x - position.x, position.y - target.y);
     }
 }
+
+void EnemyAISystem::shoot(entt::registry &registry, float elapsed_ms, vector<Enemy> &m_enemies, vector<Projectile> &m_projectiles)
+{
+    auto enemies = registry.view<enemyComponent, motionComponent>();
+    for (auto enemy : enemies)
+    {
+        auto &[position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
+        auto &[id, is_alive, shoot_delay_ms, destination, target] = enemies.get<enemyComponent>(enemy);
+        if ( is_alive && shoot_delay_ms < 0.f)
+        {
+            vec2 proj_direction = { target.x - position.x, target.y - position.y };
+            for (auto& m_enemy : m_enemies)
+            {
+                if (id == m_enemy.get_id())
+                {
+                    Projectile projectile = m_enemy.shoot_projectile();
+                    if(projectile.init()){
+                        projectile.set_position(m_enemy.get_face_position());
+                        projectile.setDirection(proj_direction);
+                        m_projectiles.emplace_back(projectile);
+                    }
+                    else
+                    {
+                        fprintf(stderr, "Failed to spawn projectile");
+                    }
+                }
+            }
+            shoot_delay_ms = 3000.f;
+        }
+        else
+        {
+            shoot_delay_ms -= elapsed_ms;
+        }
+    }
+}

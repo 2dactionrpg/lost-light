@@ -51,9 +51,7 @@ public:
     bool is_over() const;
 
 private:
-    // Generates a new turtle
-    bool spawn_projectile(Enemy &enemy);
-
+    // generate enemies
     bool spawn_enemy(int &id);
 
     // !!! INPUT CALLBACK FUNCTIONS
@@ -81,7 +79,6 @@ private:
     // Game entities
     Character m_character;
     Shield m_shield;
-    // Enemy m_enemy;
     Potion m_potion;
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
@@ -90,7 +87,6 @@ private:
     int enemy_number;
 
     float m_current_speed;
-    float m_next_projectile_spawn;
     float m_next_enemy_spawn;
 
     Mix_Music* m_background_music;
