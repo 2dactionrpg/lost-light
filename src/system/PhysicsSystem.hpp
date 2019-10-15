@@ -14,11 +14,13 @@
 #include "../components/shieldComponent.hpp"
 #include "../components/enemyComponent.hpp"
 
+using namespace std;
+
 class PhysicsSystem
 {
 private:
 public:
-    void update(entt::registry &registry, Character &m_character, Shield &m_shield, Enemy &m_enemy);
+    void update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies);
     void sync(entt::registry &registry, float elapsed_ms);
     void move(vec2 &pos, vec2 off);
     void rotate(float &radians, float newRadians);

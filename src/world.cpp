@@ -10,13 +10,15 @@
 namespace {
 const size_t MAX_TURTLES = 15;
 const size_t TURTLE_DELAY_MS = 2000;
+const size_t MAX_ENEMIES = 5;
+const size_t ENEMY_SPAWN_DELAY_MS = 5000;
 
-namespace {
-    void glfw_err_cb(int error, const char* desc)
-    {
-        fprintf(stderr, "%d: %s", error, desc);
-    }
-} // namespace
+    namespace {
+        void glfw_err_cb(int error, const char* desc)
+        {
+            fprintf(stderr, "%d: %s", error, desc);
+        }
+    } // namespace
 } // namespace
 
 World::World()
@@ -113,15 +115,18 @@ bool World::init(vec2 screen)
 
     m_current_speed = 1.f;
 
+    enemy_number = 0;
+
     makeCharacter(registry);
     makeShield(registry);
-    makeEnemy(registry);
+    spawn_enemy(enemy_number);
+    // makeEnemy(registry);
     fprintf(stderr, "factory done\n");
 
     return m_character.init()
         && m_background.init()
         && m_shield.init()
-        && m_enemy.init()
+        // && m_enemy.init()
         && m_potion.init();
 }
 
@@ -140,12 +145,16 @@ void World::destroy()
     Mix_CloseAudio();
 
     m_character.destroy();
-    m_enemy.destroy();
+    // m_enemy.destroy();
     m_potion.destroy();
     m_shield.destroy();
     for (auto& projectile : m_projectiles)
         projectile.destroy();
     m_projectiles.clear();
+
+    for (auto& enemy : m_enemies)
+        enemy.destroy();
+    m_enemies.clear();
 
     glfwDestroyWindow(m_window);
 }
@@ -157,9 +166,6 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
-    // set new target for enemie(s)
-    m_enemy.set_target(m_character.get_position());
-
     // Checking Salmon - Turtle collisions
     if (m_character.collides_with(m_potion) && m_potion.is_alive()) {
         m_potion.destroy();
@@ -168,15 +174,33 @@ bool World::update(float elapsed_ms)
 
     int i = 0;
     for (auto& projectile : m_projectiles) {
-        if (m_enemy.collides_with(projectile)) {
-            m_enemy.kill();
-            m_projectiles.erase(m_projectiles.begin() + i);
-            m_next_projectile_spawn = 3000.f;
+        int j = 0;
+        bool hits_enemy = false;
+        for (auto& enemy: m_enemies)
+        {
+            if (enemy.collides_with(projectile))
+            {
+                enemy.kill();
+                m_enemies.erase(m_enemies.begin() + j);
+                m_next_enemy_spawn = 5000.f;
+                hits_enemy = true;
+            }
+            j++;
         }
+        // if (m_enemy.collides_with(projectile)) {
+        //     m_enemy.kill();
+        //     m_projectiles.erase(m_projectiles.begin() + i);
+        //     m_next_projectile_spawn = 3000.f;
+        // }
         if (m_character.collides_with(projectile)) {
             physicsSystem.setCharacterUnmovable(registry);
             m_projectiles.erase(m_projectiles.begin() + i);
             break;
+        }
+        if (hits_enemy)
+        {
+            m_projectiles.erase(m_projectiles.begin() + i);
+            m_next_projectile_spawn = 3000.f;
         }
         i++;
     }
@@ -197,14 +221,18 @@ bool World::update(float elapsed_ms)
 
 
     enemyAI.set_direction(registry);
+    enemyAI.set_target(registry);
+    enemyAI.set_rotation(registry);
     // Updating all entities, making the turtle and fish
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
+
     // m_enemy.update(elapsed_ms);
+
     m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
-    physicsSystem.update(registry, m_character, m_shield, m_enemy);
+    physicsSystem.update(registry, m_character, m_shield, m_enemies);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
 
@@ -220,27 +248,38 @@ bool World::update(float elapsed_ms)
         ++projectile_it;
     }
 
-    vec2 enemy_pos = m_enemy.get_position();
-    vec2 character_pos = m_character.get_position();
-    vec2 enemy_bbox = m_enemy.get_bounding_box();
-    vec2 projectile_direction = { character_pos.x - enemy_pos.x, character_pos.y - enemy_pos.y };
 
-    m_next_projectile_spawn -= elapsed_ms * m_current_speed;
+    // enemyAI.shoot(registry, elapsed_ms, );
+    // vec2 enemy_pos = m_enemy.get_position();
+    vec2 character_pos = m_character.get_position();
+    // vec2 enemy_bbox = m_enemy.get_bounding_box();
+    // vec2 projectile_direction = { character_pos.x - enemy_pos.x, character_pos.y - enemy_pos.y };
+
+    // m_next_projectile_spawn -= elapsed_ms * m_current_speed;
     if (m_projectiles.size() <= MAX_TURTLES && m_next_projectile_spawn < 0.f) {
-        if (!m_enemy.is_alive()) {
-            return false;
-        }
+        // if (!m_enemy.is_alive()) {
+        //     return false;
+        // }
 
         // spawn_projectile();
 
         // Projectile& new_projectile = m_projectiles.back();
 
-        // Setting random initial position
+        // Setting initial position to enemy
         // new_projectile.set_position(m_enemy.get_face_position());
         // new_projectile.setDirection(projectile_direction);
 
         // Next spawn
         m_next_projectile_spawn = (TURTLE_DELAY_MS / 2) + m_dist(m_rng) * (TURTLE_DELAY_MS / 2);
+    }
+
+    m_next_enemy_spawn -= elapsed_ms;
+    if (m_enemies.size() <= MAX_ENEMIES && m_next_enemy_spawn < 0.f)
+    {
+        if(spawn_enemy(enemy_number))
+            m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
+        else
+            fprintf(stderr, "%s\n", "couldn't spawn new enemy");
     }
 
     return true;
@@ -291,8 +330,10 @@ void World::draw()
     m_shield.draw(projection_2D);
     if (m_potion.is_alive())
         m_potion.draw(projection_2D);
-    if (m_enemy.is_alive())
-        m_enemy.draw(projection_2D);
+    // if (m_enemy.is_alive())
+    //     m_enemy.draw(projection_2D);
+    for (auto& enemy : m_enemies)
+        enemy.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
 
@@ -325,7 +366,7 @@ bool World::is_over() const
 }
 
 // Creates a new projectiles and if successfull adds it to the list of projectiles
-bool World::spawn_projectile()
+bool World::spawn_projectile(Enemy &m_enemy)
 {
     Projectile projectile = m_enemy.shoot_projectile();
     if (projectile.init()) {
@@ -333,6 +374,19 @@ bool World::spawn_projectile()
         return true;
     }
     fprintf(stderr, "Failed to spawn projectile");
+    return false;
+}
+
+bool World::spawn_enemy(int &id)
+{
+    Enemy enemy;
+    if (enemy.init(id)) {
+        m_enemies.emplace_back(enemy);
+        makeEnemy(registry, id);
+        id++;
+        return true;
+    }
+    fprintf(stderr, "Failed to spawn enemy");
     return false;
 }
 

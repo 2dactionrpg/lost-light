@@ -16,7 +16,7 @@ float FRAME_X_MAX = 1050;
 float FRAME_X_MIN = 100;
 float FRAME_Y_MAX = 680;
 float FRAME_Y_MIN = 100;
-bool Enemy::init()
+bool Enemy::init(int id)
 {
     // Load shared texture
     if (!enemy_texture.is_valid()) {
@@ -70,6 +70,8 @@ bool Enemy::init()
     motion.radians = 4.75f;
     motion.speed = 200.f;
 
+    enemy_id = id;
+
     physics.scale = { 0.4f, 0.4f };
 
     target = { 50.f, 300.f };
@@ -95,21 +97,11 @@ void Enemy::destroy()
 // Called on each frame by World::update()
 void Enemy::update(float ms)
 {
-    float step = motion.speed * (ms / 1000);
-
-    // Random movement
-    // srand(time(NULL));
-    // move({ ((rand() % 3) - 1) * step, ((rand() % 3) - 1) * step });
-
     if (m_remain_dead_countdown_ms > 0.f)
         m_remain_dead_countdown_ms -= ms;
 
     if (!m_is_alive && m_remain_dead_countdown_ms <= 0.f)
         respawn();
-
-    // face the enemy to its target
-    float rad = atan2(target.x - motion.position.x, motion.position.y - target.y);
-    set_rotation(rad);
 }
 
 void Enemy::draw(const mat3& projection)
@@ -249,4 +241,9 @@ vec2 Enemy::get_face_position()
     vec3 tlMul = { 0, -enemy_texture.height / 2.f - 50, 1.f };
     tlMul = mul(transform.out, tlMul);
     return { tlMul.x, tlMul.y };
+}
+
+int Enemy::get_id()
+{
+    return enemy_id;
 }

@@ -110,7 +110,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
     }
 }
 
-void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, Enemy &m_enemy)
+void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -153,10 +153,15 @@ void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shi
     {
         auto &position = enemy.get<motionComponent>(entity).position;
         auto &radians = enemy.get<motionComponent>(entity).radians;
+        auto &id = enemy.get<enemyComponent>(entity).id;
         // auto &scale = character.get<physicsScaleComponent>(entity).scale;
-
-        m_enemy.set_position(position);
-        m_enemy.set_rotation(radians);
+        for (auto& m_enemy : m_enemies)
+        {
+            if(id == m_enemy.get_id()){
+                m_enemy.set_position(position);
+                m_enemy.set_rotation(radians);
+            }
+        }
     }
 }
 

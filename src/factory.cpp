@@ -32,10 +32,12 @@ entt::entity makeShield(entt::registry& registry)
     return entity;
 }
 
-entt::entity makeEnemy(entt::registry& registry)
+entt::entity makeEnemy(entt::registry& registry, int id)
 {
     const entt::entity entity = registry.create();
-    registry.assign<enemyComponent>(entity, true);
+    auto& em = registry.assign<enemyComponent>(entity);
+    em.id = id;
+    em.is_alive = true;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
     mo.position = { 50.f, 300.f };
