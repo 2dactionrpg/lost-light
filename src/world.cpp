@@ -176,6 +176,7 @@ bool World::update(float elapsed_ms)
             if (enemy.collides_with(projectile))
             {
                 enemy.kill();
+                enemy_number--;
                 m_enemies.erase(m_enemies.begin() + j);
                 j--;
                 hits_enemy = true;
@@ -240,7 +241,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
-    if (m_enemies.size() <= MAX_ENEMIES && m_next_enemy_spawn < 0.f)
+    if (enemy_number<=5 && m_enemies.size() <= MAX_ENEMIES && m_next_enemy_spawn < 0.f)
     {
         if(spawn_enemy(enemy_number))
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
