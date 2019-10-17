@@ -214,6 +214,7 @@ vec2 Enemy::get_bounding_box() const
 
 bool Enemy::collides_with(const Projectile& projectile)
 {
+    printf("danger \n");
     float dx = motion.position.x - projectile.get_position().x;
     float dy = motion.position.y - projectile.get_position().y;
     float d_sq = dx * dx + dy * dy;
