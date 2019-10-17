@@ -164,5 +164,5 @@ vec2 Projectile::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * projectile_texture.width * 4, std::fabs(physics.scale.y) * projectile_texture.height * 4 };
+    return { std::fabs(physics.scale.x) * projectile_texture.width, std::fabs(physics.scale.y) * projectile_texture.height };
 }

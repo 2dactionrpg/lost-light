@@ -200,31 +200,63 @@ bool Shield::collides_with(const Projectile& projectile)
     vec2 br = { brMul.x, brMul.y };
     vec2 bl = { blMul.x, blMul.y };
 
-    float area1 = squareArea(tl, tr, bl);
-    float area2 = trianglesArea(tl, tr, br, bl, projectile.get_position());
-    if (std::fabs(area1 - area2) < 1000) {
-        return true;
+    vec2 position = projectile.get_position();
+    vec2 pbl = { position.x - projectile.get_bounding_box().x / 2.0f,
+        position.y + projectile.get_bounding_box().y / 2.0f };
+    vec2 pbr = { position.x + projectile.get_bounding_box().x / 2.0f,
+        position.y + projectile.get_bounding_box().y / 2.0f };
+
+    return doIntersect(bl, br, pbl, pbr);
+}
+
+// Formulas from https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+bool Shield::onSegment(vec2 p, vec2 q, vec2 r)
+{
+    return q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x)
+        && q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y);
+}
+
+int Shield::orientation(vec2 p, vec2 q, vec2 r)
+{
+    // From https://www.geeksforgeeks.org/orientation-3-ordered-points/
+    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+
+    if (val == 0) {
+        return 0;
     }
-    return false;
+
+    return (val > 0) ? 1 : 2;
 }
 
-float Shield::triangleArea(vec2 p1, vec2 p2, vec2 p3)
+bool Shield::doIntersect(vec2 p1, vec2 q1, vec2 p2, vec2 q2)
 {
-    return 0.5f * std::fabs((p1.y * (p2.x - p3.x) + p2.y * (p3.x - p1.x) + p3.y * (p1.x - p2.x)));
-}
+    // Find the four orientations needed for general and
+    // special cases
+    int o1 = orientation(p1, q1, p2);
+    int o2 = orientation(p1, q1, q2);
+    int o3 = orientation(p2, q2, p1);
+    int o4 = orientation(p2, q2, q1);
 
-float Shield::trianglesArea(vec2 p1, vec2 p2, vec2 p3, vec2 p4, vec2 projectileP)
-{
-    float area1 = triangleArea(p1, p2, projectileP);
-    float area2 = triangleArea(p2, p3, projectileP);
-    float area3 = triangleArea(p3, p4, projectileP);
-    float area4 = triangleArea(p4, p1, projectileP);
-    return area1 + area2 + area3 + area4;
-}
+    // General case
+    if (o1 != o2 && o3 != o4)
+        return true;
 
-float Shield::squareArea(vec2 p1, vec2 p2, vec2 p3)
-{
-    float side1 = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
-    float side2 = sqrt(pow(p1.x - p3.x, 2) + pow(p1.y - p3.y, 2));
-    return side1 * side2;
+    // Special Cases
+    // p1, q1 and p2 are colinear and p2 lies on segment p1q1
+    if (o1 == 0 && onSegment(p1, p2, q1))
+        return true;
+
+    // p1, q1 and q2 are colinear and q2 lies on segment p1q1
+    if (o2 == 0 && onSegment(p1, q2, q1))
+        return true;
+
+    // p2, q2 and p1 are colinear and p1 lies on segment p2q2
+    if (o3 == 0 && onSegment(p2, p1, q2))
+        return true;
+
+    // p2, q2 and q1 are colinear and q1 lies on segment p2q2
+    if (o4 == 0 && onSegment(p2, q1, q2))
+        return true;
+
+    return false; // Doesn't fall in any of the above cases
 }
