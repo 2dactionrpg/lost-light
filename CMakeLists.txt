@@ -36,35 +36,34 @@ set(SOURCE_FILES
 	src/common.cpp
 	src/background.cpp
 	src/world.cpp
-  src/projectile.cpp
-  src/shield.cpp
-  src/entity.cpp
-  src/factory.cpp
-  src/enemy.cpp
-  src/potion.cpp
-  src/project_path.hpp
+    src/projectile.cpp
+    src/shield.cpp
+    src/entity.cpp
+    src/factory.cpp
+    src/enemy.cpp
+    src/potion.cpp
+    src/project_path.hpp
 	src/character.hpp
 	src/common.hpp
 	src/background.hpp
 	src/world.hpp
-  src/projectile.hpp
-  src/shield.hpp
-  src/entity.hpp
-  src/enemy.hpp
-  src/potion.hpp
-  # Component
-  src/components/inputKeyboard.hpp
-  src/components/inputMouse.hpp
-  src/components/motionComponent.hpp
-  src/components/characterComponent.hpp
-  src/components/physicsScaleComponent.hpp
-  src/components/shieldComponent.hpp
-  src/components/enemyComponent.hpp
-  # System
-  src/system/InputSystem.cpp
-  src/system/ShieldSystem.cpp
-  src/system/PhysicsSystem.cpp
-  src/system/enemyAISystem.cpp
+    src/projectile.hpp
+    src/shield.hpp
+    src/entity.hpp
+    src/enemy.hpp
+    src/potion.hpp
+    # Component
+    src/components/inputKeyboard.hpp
+    src/components/inputMouse.hpp
+    src/components/motionComponent.hpp
+    src/components/characterComponent.hpp
+    src/components/physicsScaleComponent.hpp
+    src/components/shieldComponent.hpp
+    src/components/enemyComponent.hpp
+    # System
+    src/system/InputSystem.cpp
+    src/system/PhysicsSystem.cpp
+    src/system/enemyAISystem.cpp
 )
 
 if (IS_OS_MAC)
