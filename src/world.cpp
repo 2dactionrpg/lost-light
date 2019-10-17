@@ -8,16 +8,16 @@
 
 // Same as static in c, local to compilation unit
 namespace {
-    // change these numbers for minimal difficulty control
-    const size_t MAX_ENEMIES = 35;
-    const size_t ENEMY_SPAWN_DELAY_MS = 200;
+// change these numbers for minimal difficulty control
+const size_t MAX_ENEMIES = 5;
+const size_t ENEMY_SPAWN_DELAY_MS = 200;
 
-    namespace {
-        void glfw_err_cb(int error, const char* desc)
-        {
-            fprintf(stderr, "%d: %s", error, desc);
-        }
-    } // namespace
+namespace {
+    void glfw_err_cb(int error, const char* desc)
+    {
+        fprintf(stderr, "%d: %s", error, desc);
+    }
+} // namespace
 } // namespace
 
 World::World()
@@ -51,7 +51,7 @@ bool World::init(vec2 screen)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
     glfwWindowHint(GLFW_RESIZABLE, 0);
-    m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Salmon Game Assignment", nullptr, nullptr);
+    m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Lost Light", nullptr, nullptr);
     if (m_window == nullptr)
         return false;
 
@@ -95,14 +95,14 @@ bool World::init(vec2 screen)
     }
 
     m_background_music = Mix_LoadMUS(audio_path("music.wav"));
-    m_salmon_dead_sound = Mix_LoadWAV(audio_path("salmon_dead.wav"));
-    m_salmon_eat_sound = Mix_LoadWAV(audio_path("salmon_eat.wav"));
+    m_character_dead_sound = Mix_LoadWAV(audio_path("character_dead.wav"));
+    m_character_eat_sound = Mix_LoadWAV(audio_path("character_eat.wav"));
 
-    if (m_background_music == nullptr || m_salmon_dead_sound == nullptr || m_salmon_eat_sound == nullptr) {
+    if (m_background_music == nullptr || m_character_dead_sound == nullptr || m_character_eat_sound == nullptr) {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
             audio_path("music.wav"),
-            audio_path("salmon_dead.wav"),
-            audio_path("salmon_eat.wav"));
+            audio_path("character_dead.wav"),
+            audio_path("character_eat.wav"));
         return false;
     }
 
@@ -133,10 +133,10 @@ void World::destroy()
 
     if (m_background_music != nullptr)
         Mix_FreeMusic(m_background_music);
-    if (m_salmon_dead_sound != nullptr)
-        Mix_FreeChunk(m_salmon_dead_sound);
-    if (m_salmon_eat_sound != nullptr)
-        Mix_FreeChunk(m_salmon_eat_sound);
+    if (m_character_dead_sound != nullptr)
+        Mix_FreeChunk(m_character_dead_sound);
+    if (m_character_eat_sound != nullptr)
+        Mix_FreeChunk(m_character_eat_sound);
 
     Mix_CloseAudio();
 
@@ -161,7 +161,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
-    // Checking Salmon - Turtle collisions
+    // Checking Character - Potion collisions
     if (m_character.collides_with(m_potion) && m_potion.is_alive()) {
         m_potion.destroy();
         physicsSystem.setShieldScaleMultiplier(registry, 2.0f, 1.0f);
@@ -171,10 +171,8 @@ bool World::update(float elapsed_ms)
     for (auto& projectile : m_projectiles) {
         int j = 0;
         bool hits_enemy = false;
-        for (auto& enemy: m_enemies)
-        {
-            if (enemy.collides_with(projectile))
-            {
+        for (auto& enemy : m_enemies) {
+            if (enemy.collides_with(projectile)) {
                 enemy.kill();
                 m_enemies.erase(m_enemies.begin() + j);
                 j--;
@@ -188,8 +186,7 @@ bool World::update(float elapsed_ms)
             m_projectiles.erase(m_projectiles.begin() + i);
             break;
         }
-        if (hits_enemy)
-        {   
+        if (hits_enemy) {
             m_projectiles.erase(m_projectiles.begin() + i);
             i--;
         }
@@ -209,7 +206,6 @@ bool World::update(float elapsed_ms)
             continue;
         }
     }
-
 
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
@@ -240,9 +236,8 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
-    if (m_enemies.size() <= MAX_ENEMIES && m_next_enemy_spawn < 0.f)
-    {
-        if(spawn_enemy(enemy_number))
+    if (m_enemies.size() <= MAX_ENEMIES && m_next_enemy_spawn < 0.f) {
+        if (spawn_enemy(enemy_number))
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
         else
             fprintf(stderr, "%s\n", "couldn't spawn new enemy");
@@ -334,7 +329,7 @@ bool World::is_over() const
 }
 
 // create a new enemy
-bool World::spawn_enemy(int &id)
+bool World::spawn_enemy(int& id)
 {
     Enemy enemy;
     if (enemy.init(id)) {
@@ -355,7 +350,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         int w, h;
         glfwGetWindowSize(m_window, &w, &h);
         m_projectiles.clear();
-        m_background.reset_salmon_dead_time();
+        m_background.reset_character_dead_time();
         m_current_speed = 1.f;
     }
 

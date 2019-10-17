@@ -17,7 +17,7 @@ public:
     // ms represents the number of milliseconds elapsed from the previous update() call
     void update(float ms);
 
-    // Renders the salmon
+    // Renders the projectile
     // projection is the 2D orthographic projection matrix
     void draw(const mat3& projection) override;
 
