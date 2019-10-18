@@ -34,6 +34,7 @@ vec4 fade_color(vec4 in_color)
     if (dead_timer > 0)
         color -= 0.1 * dead_timer * vec4(0.1, 0.1, 0.1, 0);
 
+    color += vec4(0.1, 0.1, 0.1, 0);
     return color;
 }
 

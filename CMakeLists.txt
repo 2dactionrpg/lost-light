@@ -41,7 +41,9 @@ set(SOURCE_FILES
     src/entity.cpp
     src/factory.cpp
     src/enemy.cpp
+    src/menu.cpp
     src/potion.cpp
+
     src/project_path.hpp
 	src/character.hpp
 	src/common.hpp
@@ -51,6 +53,7 @@ set(SOURCE_FILES
     src/shield.hpp
     src/entity.hpp
     src/enemy.hpp
+    src/menu.hpp
     src/potion.hpp
     # Component
     src/components/inputKeyboard.hpp

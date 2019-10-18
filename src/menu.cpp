@@ -1,34 +1,24 @@
 // Header
-#include "enemy.hpp"
-
-#include "projectile.hpp"
-
-// stlib
-#include <algorithm>
-#include <string>
+#include "menu.hpp"
 
 #include <cmath>
 
-Texture Enemy::enemy_texture;
+Texture Menu::menu_texture;
 
-// following variables can change depending on the enemy's character size / world's frame size
-float FRAME_X_MAX = 1050;
-float FRAME_X_MIN = 100;
-float FRAME_Y_MAX = 680;
-float FRAME_Y_MIN = 100;
-bool Enemy::init(int id)
+bool Menu::init()
 {
+    oldState = -1;
     // Load shared texture
-    if (!enemy_texture.is_valid()) {
-        if (!enemy_texture.load_from_file(textures_path("enemy.png"))) {
-            fprintf(stderr, "Failed to load projectile texture!");
+    if (!menu_texture.is_valid()) {
+        if (!menu_texture.load_from_file(textures_path("game-over.png"))) {
+            fprintf(stderr, "Failed to load menu texture!");
             return false;
         }
     }
 
     // The position corresponds to the center of the texture
-    float wr = enemy_texture.width * 0.5f;
-    float hr = enemy_texture.height * 0.5f;
+    float wr = menu_texture.width * 0.5f;
+    float hr = menu_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
     vertices[0].position = { -wr, +hr, -0.02f };
@@ -62,29 +52,24 @@ bool Enemy::init(int id)
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("enemy.vs.glsl"), shader_path("enemy.fs.glsl")))
+    if (!effect.load_from_file(shader_path("menu.vs.glsl"), shader_path("menu.fs.glsl")))
         return false;
 
-    // Setting initial values
-    motion.position = { 0.f, 0.f };
-    motion.radians = 4.75f;
-    motion.speed = 200.f;
+    motion.position = { 600.f, 400.f };
+    setDirection({ 1.f, 1.f });
 
-    enemy_id = id;
-
-    physics.scale = { 0.4f, 0.4f };
-
-    target = { 50.f, 300.f };
-
+    // Setting initial values, scale is negative to make it face the opposite way
+    // 1.0 would be as big as the original texture.
+    physics.scale = { 1.f, 1.f };
     m_is_alive = true;
-    m_remain_dead_countdown_ms = -1.f;
 
     return true;
 }
 
 // Releases all graphics resources
-void Enemy::destroy()
+void Menu::destroy()
 {
+    m_is_alive = false;
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
     glDeleteBuffers(1, &mesh.vao);
@@ -94,7 +79,46 @@ void Enemy::destroy()
     glDeleteShader(effect.program);
 }
 
-void Enemy::draw(const mat3& projection)
+void Menu::update(float ms, int state)
+{
+    if (oldState != state) {
+        switch (state) {
+        case 0:
+            menu_texture.load_from_file(textures_path("start.png"));
+            break;
+        case 1:
+            menu_texture.load_from_file(textures_path("playing.png"));
+            break;
+        case 2:
+            menu_texture.load_from_file(textures_path("pause.png"));
+            break;
+        case 3:
+            menu_texture.load_from_file(textures_path("game-over.png"));
+            break;
+        default:
+            break;
+        }
+    }
+    oldState = state;
+}
+
+vec2 Menu::getDirection()
+{
+    return motion.direction;
+}
+
+void Menu::setDirection(vec2 direction)
+{
+    float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
+    motion.direction = { direction.x / normal, direction.y / normal };
+}
+
+void Menu::setRotation(float rad)
+{
+    motion.radians = rad;
+}
+
+void Menu::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -132,7 +156,7 @@ void Enemy::draw(const mat3& projection)
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, enemy_texture.id);
+    glBindTexture(GL_TEXTURE_2D, menu_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
@@ -144,102 +168,25 @@ void Enemy::draw(const mat3& projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-vec2 Enemy::get_position() const
+vec2 Menu::get_position() const
 {
     return motion.position;
 }
 
-void Enemy::set_position(vec2 pos)
+void Menu::set_position(vec2 position)
 {
-    motion.position = pos;
+    motion.position = position;
 }
 
-// void Enemy::move(vec2 off)
-// {
-//     motion.position.x += off.x;
-//     motion.position.y += off.y;
-//     if (motion.position.x > FRAME_X_MAX) {
-//         motion.position.x = FRAME_X_MAX;
-//     } else if (motion.position.x < FRAME_X_MIN) {
-//         motion.position.x = FRAME_X_MIN;
-//     }
-//     if (motion.position.y > FRAME_Y_MAX) {
-//         motion.position.y = FRAME_Y_MAX;
-//     } else if (motion.position.y < FRAME_Y_MIN) {
-//         motion.position.y = FRAME_Y_MIN;
-//     }
-// }
-
-void Enemy::set_target(vec2 character_pos)
+vec2 Menu::get_bounding_box() const
 {
-    if (target.x != character_pos.x || target.y != character_pos.y)
-        target = character_pos;
+    // Returns the local bounding coordinates scaled by the current size of the menu
+    // fabs is to avoid negative scale due to the facing direction.
+    return { std::fabs(physics.scale.x) * menu_texture.width * 2,
+        std::fabs(physics.scale.y) * menu_texture.height * 2 };
 }
 
-void Enemy::set_rotation(float radians)
-{
-    motion.radians = radians;
-}
-
-void Enemy::set_scale(vec2 scale)
-{
-    physics.scale = scale;
-}
-
-bool Enemy::is_alive() const
+bool Menu::is_alive() const
 {
     return m_is_alive;
-}
-
-void Enemy::kill()
-{
-    m_is_alive = false;
-    m_remain_dead_countdown_ms = 2000.f;
-}
-
-void Enemy::respawn()
-{
-    m_is_alive = true;
-    motion.position = { 0.f, 0.f };
-}
-
-Projectile Enemy::shoot_projectile()
-{
-    Projectile projectlie;
-    projectlie.setRotation(motion.radians + 1.2);
-    return projectlie;
-}
-
-vec2 Enemy::get_bounding_box() const
-{
-    // Returns the local bounding coordinates scaled by the current size of the projectile
-    // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * enemy_texture.width, std::fabs(physics.scale.y) * enemy_texture.height };
-}
-
-bool Enemy::collides_with(const Projectile& projectile)
-{
-    float dx = motion.position.x - projectile.get_position().x;
-    float dy = motion.position.y - projectile.get_position().y;
-    float d_sq = dx * dx + dy * dy;
-    // float other_r = std::max(projectile.get_bounding_box().x, projectile.get_bounding_box().y);
-    // float my_r = std::max(physics.scale.x, physics.scale.y);
-    // float r = std::max(other_r, my_r);
-    // r *= 0.6f;
-    // if (d_sq < r * r)
-    if (d_sq < 1000)
-        return true;
-    return false;
-}
-
-vec2 Enemy::get_face_position()
-{
-    vec3 tlMul = { 0, -enemy_texture.height / 2.f - 50, 1.f };
-    tlMul = mul(transform.out, tlMul);
-    return { tlMul.x, tlMul.y };
-}
-
-int Enemy::get_id()
-{
-    return enemy_id;
 }

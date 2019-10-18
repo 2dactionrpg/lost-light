@@ -180,33 +180,29 @@ vec2 Shield::get_bounding_box() const
 
 bool Shield::collides_with(const Projectile& projectile)
 {
-    vec3 tlMul = { -shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
-    vec3 trMul = { +shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
     vec3 brMul = { +shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
     vec3 blMul = { -shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
-    // vec2 boundry = get_bounding_box();
-    // vec3 tlMul = {-boundry.x / 2.f, -boundry.y / 2.f, 1.f};
-    // vec3 trMul = {+boundry.x / 2.f, -boundry.y / 2.f, 1.f};
-    // vec3 brMul = {+boundry.x / 2.f, +boundry.y / 2.f, 1.f};
-    // vec3 blMul = {-boundry.x / 2.f, +boundry.y / 2.f, 1.f};
 
-    tlMul = mul(transform.out, tlMul);
-    trMul = mul(transform.out, trMul);
     brMul = mul(transform.out, brMul);
     blMul = mul(transform.out, blMul);
 
-    vec2 tl = { tlMul.x, tlMul.y };
-    vec2 tr = { trMul.x, trMul.y };
-    vec2 br = { brMul.x, brMul.y };
-    vec2 bl = { blMul.x, blMul.y };
+    vec2 shieldBR = { brMul.x, brMul.y };
+    vec2 shieldBL = { blMul.x, blMul.y };
 
     vec2 position = projectile.get_position();
-    vec2 pbl = { position.x - projectile.get_bounding_box().x / 2.0f,
+    vec2 projectileTL = { position.x - projectile.get_bounding_box().x / 2.0f,
+        position.y - projectile.get_bounding_box().y / 2.0f };
+    vec2 projectileTR = { position.x + projectile.get_bounding_box().x / 2.0f,
+        position.y - projectile.get_bounding_box().y / 2.0f };
+    vec2 projectileBL = { position.x - projectile.get_bounding_box().x / 2.0f,
         position.y + projectile.get_bounding_box().y / 2.0f };
-    vec2 pbr = { position.x + projectile.get_bounding_box().x / 2.0f,
+    vec2 projectileBR = { position.x + projectile.get_bounding_box().x / 2.0f,
         position.y + projectile.get_bounding_box().y / 2.0f };
 
-    return doIntersect(bl, br, pbl, pbr);
+    return doIntersect(shieldBL, shieldBR, projectileBL, projectileBR)
+        || doIntersect(shieldBL, shieldBR, projectileBR, projectileTR)
+        || doIntersect(shieldBL, shieldBR, projectileTR, projectileTL)
+        || doIntersect(shieldBL, shieldBR, projectileTL, projectileBL);
 }
 
 // Formulas from https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/

@@ -6,11 +6,18 @@
 #include <sstream>
 #include <string.h>
 
+enum gameState {
+    STATE_START,
+    STATE_PLAYING,
+    STATE_PAUSE,
+    STATE_GAMEOVER,
+};
+
 // Same as static in c, local to compilation unit
 namespace {
 // change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 1;
-const size_t ENEMY_SPAWN_DELAY_MS = 5000;
+const size_t MAX_ENEMIES = 4;
+const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
     void glfw_err_cb(int error, const char* desc)
@@ -34,6 +41,7 @@ World::~World()
 // World initialization
 bool World::init(vec2 screen)
 {
+    state = STATE_START;
     //-------------------------------------------------------------------------
     // GLFW / OGL Initialization
     // Core Opengl 3.
@@ -120,12 +128,14 @@ bool World::init(vec2 screen)
     makeCharacter(registry);
     makeShield(registry);
     spawn_enemy(enemy_number);
+    m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
     fprintf(stderr, "factory done\n");
 
     return m_character.init()
         && m_background.init()
         && m_shield.init()
-        && m_potion.init();
+        && m_potion.init()
+        && m_menu.init();
 }
 
 // Releases all the associated resources
@@ -144,6 +154,7 @@ void World::destroy()
 
     m_character.destroy();
     m_potion.destroy();
+    m_menu.destroy();
     m_shield.destroy();
     for (auto& projectile : m_projectiles)
         projectile.destroy();
@@ -159,6 +170,11 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
+    m_menu.update(elapsed_ms, state);
+
+    if (state != STATE_PLAYING) {
+        return false;
+    }
     int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
@@ -238,7 +254,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
-    if (m_enemies.size() <= MAX_ENEMIES - 1 && m_next_enemy_spawn < 0.f) {
+    if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f) {
         if (spawn_enemy(enemy_number))
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
         else
@@ -301,6 +317,7 @@ void World::draw()
         enemy.draw(projection_2D);
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
+    m_menu.draw(projection_2D);
 
     /////////////////////
     // Truely render to the screen
@@ -357,6 +374,15 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     }
 
     inputSystem.on_key(registry, key, action, mod);
+
+    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && (state == STATE_START || state == STATE_PAUSE))
+        state = STATE_PLAYING;
+
+    if (action == GLFW_PRESS && key == GLFW_KEY_R && state == STATE_GAMEOVER)
+        state = STATE_PLAYING;
+
+    if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE && state == STATE_PLAYING)
+        state = STATE_PAUSE;
 
     // Control the current speed with `<` `>`
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA)

@@ -34,6 +34,8 @@ public:
 
     void set_target(vec2 character_pos);
 
+    void set_scale(vec2 scale);
+
     // Set enemy rotation in radians
     void set_rotation(float radians);
 
