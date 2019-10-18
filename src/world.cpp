@@ -9,8 +9,8 @@
 // Same as static in c, local to compilation unit
 namespace {
 // change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 5;
-const size_t ENEMY_SPAWN_DELAY_MS = 200;
+const size_t MAX_ENEMIES = 4;
+const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
     void glfw_err_cb(int error, const char* desc)
@@ -117,7 +117,6 @@ bool World::init(vec2 screen)
 
     makeCharacter(registry);
     makeShield(registry);
-    spawn_enemy(enemy_number);
     fprintf(stderr, "factory done\n");
 
     return m_character.init()
@@ -236,7 +235,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
-    if (m_enemies.size() <= MAX_ENEMIES && m_next_enemy_spawn < 0.f) {
+    if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f) {
         if (spawn_enemy(enemy_number))
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
         else
