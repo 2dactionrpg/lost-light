@@ -32,6 +32,14 @@ entt::entity makeShield(entt::registry& registry)
     return entity;
 }
 
+float randomFloat(float a, float b)
+{
+    float random = ((float)rand()) / (float)RAND_MAX;
+    float diff = b - a;
+    float r = random * diff;
+    return a + r;
+}
+
 entt::entity makeEnemy(entt::registry& registry, int id)
 {
     const entt::entity entity = registry.create();
@@ -41,7 +49,9 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     em.shoot_delay_ms = 3000.f;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
-    mo.position = { 50.f, 300.f };
+    float xpos = randomFloat(50.f, 1000.f);
+    float ypos = randomFloat(50.f, 500.f);
+    mo.position = { xpos, ypos };
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
