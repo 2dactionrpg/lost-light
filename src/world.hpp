@@ -11,7 +11,6 @@
 // #include "fish.hpp"
 #include "./system/InputSystem.hpp"
 #include "./system/PhysicsSystem.hpp"
-#include "./system/ShieldSystem.hpp"
 #include "./system/enemyAISystem.hpp"
 #include "background.hpp"
 #include "factory.hpp"
@@ -105,7 +104,6 @@ private:
 
     InputSystem inputSystem;
     PhysicsSystem physicsSystem;
-    ShieldSystem shieldSystem;
     EnemyAISystem enemyAI;
     entt::registry registry;
 };

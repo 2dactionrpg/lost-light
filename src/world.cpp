@@ -124,6 +124,8 @@ bool World::init(vec2 screen)
 
     enemy_number = 0;
 
+    m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
+
     makeCharacter(registry);
     makeShield(registry);
     spawn_enemy(enemy_number);
@@ -184,44 +186,55 @@ bool World::update(float elapsed_ms)
         physicsSystem.setShieldScaleMultiplier(registry, 2.0f, 1.0f);
     }
 
-    int i = 0;
-    for (auto& projectile : m_projectiles) {
-        int j = 0;
-        bool hits_enemy = false;
-        for (auto& enemy : m_enemies) {
-            if (enemy.collides_with(projectile)) {
-                enemy.kill();
-                m_enemies.erase(m_enemies.begin() + j);
-                j--;
-                hits_enemy = true;
-                break;
-            }
-            j++;
-        }
-        if (m_character.collides_with(projectile) && !hits_enemy) {
-            state = STATE_GAMEOVER;
-            physicsSystem.setCharacterUnmovable(registry);
-            m_projectiles.erase(m_projectiles.begin() + i);
-            break;
-        }
-        if (hits_enemy) {
-            m_projectiles.erase(m_projectiles.begin() + i);
-            i--;
-        }
-        i++;
-    }
+    auto projectile_it = m_projectiles.begin();
+    while (projectile_it != m_projectiles.end()) {
 
-    for (auto& projectile : m_projectiles) {
-        if (m_shield.collides_with(projectile)) {
+        // check boundry conditions
+        float w = projectile_it->get_bounding_box().x / 2;
+        float h = projectile_it->get_bounding_box().y / 2;
+        if (projectile_it->get_position().x + w < 0.f || projectile_it->get_position().x - w > 1200.f || projectile_it->get_position().y + h < 0.f || projectile_it->get_position().y - h > 850.f) {
+            projectile_it = m_projectiles.erase(projectile_it);
+            continue;
+        }
+
+        // check shield collision
+        if (m_shield.collides_with(*projectile_it)) {
             vec2 shieldDirection = m_shield.getDirection();
-            vec2 projectileDirection = projectile.getDirection();
-
+            vec2 projectileDirection = projectile_it->getDirection();
             vec2 reflection = sub(
                 projectileDirection,
                 mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
-
-            projectile.setDirection(reflection);
+            projectile_it->setDirection(reflection);
+            ++projectile_it;
             continue;
+        }
+
+        // check character collision
+        if (m_character.collides_with(*projectile_it)) {
+            physicsSystem.setCharacterUnmovable(registry);
+            projectile_it = m_projectiles.erase(projectile_it);
+            continue;
+        }
+
+        // check enemy collision
+        bool hits_enemy = false;
+        auto enemy_it = m_enemies.begin();
+        while (enemy_it != m_enemies.end()) {
+            if (enemy_it->collides_with(*projectile_it)) {
+                m_points++;
+                hits_enemy = true;
+                break;
+            } else {
+                ++enemy_it;
+            }
+        }
+
+        if (hits_enemy) {
+            enemy_it->kill();
+            enemy_it = m_enemies.erase(enemy_it);
+            projectile_it = m_projectiles.erase(projectile_it);
+        } else {
+            ++projectile_it;
         }
     }
 
@@ -238,18 +251,6 @@ bool World::update(float elapsed_ms)
     physicsSystem.update(registry, m_character, m_shield, m_enemies);
     for (auto& projectile : m_projectiles)
         projectile.update(elapsed_ms * m_current_speed);
-
-    // Removing out of screen projectiles
-    auto projectile_it = m_projectiles.begin();
-    while (projectile_it != m_projectiles.end()) {
-        float w = projectile_it->get_bounding_box().x / 2;
-        float h = projectile_it->get_bounding_box().y / 2;
-        if (projectile_it->get_position().x + w < 0.f || projectile_it->get_position().x - w > 1200.f || projectile_it->get_position().y + h < 0.f || projectile_it->get_position().y - h > 850.f) {
-            projectile_it = m_projectiles.erase(projectile_it);
-            continue;
-        }
-        ++projectile_it;
-    }
 
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
