@@ -220,7 +220,7 @@ bool Enemy::collides_with(const Projectile& projectile)
     float other_r = std::max(projectile.get_bounding_box().x, projectile.get_bounding_box().y);
     float my_r = std::max(physics.scale.x, physics.scale.y);
     float r = std::max(other_r, my_r);
-    r *= 0.6f;
+    r *= 0.9f;
     if (d_sq < r * r)
         return true;
     return false;
