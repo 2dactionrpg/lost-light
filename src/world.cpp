@@ -374,7 +374,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
     inputSystem.on_key(registry, key, action, mod);
 
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
+    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && (state == STATE_START || state == STATE_PAUSE))
         state = STATE_PLAYING;
 
     if (action == GLFW_PRESS && key == GLFW_KEY_R && state == STATE_GAMEOVER)
