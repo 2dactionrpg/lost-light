@@ -4,6 +4,7 @@
 #include "character.hpp"
 #include "common.hpp"
 #include "enemy.hpp"
+#include "menu.hpp"
 #include "shield.hpp"
 
 // #include "turtle.hpp"
@@ -50,6 +51,8 @@ public:
     // Should the game be over ?
     bool is_over() const;
 
+    int state;
+
 private:
     // generate enemies
     bool spawn_enemy(int& id);
@@ -78,6 +81,7 @@ private:
 
     // Game entities
     Character m_character;
+    Menu m_menu;
     Shield m_shield;
     Potion m_potion;
     std::vector<Projectile> m_projectiles;

@@ -49,6 +49,8 @@ set(SOURCE_FILES
 	src/world.hpp
   src/projectile.hpp
   src/shield.hpp
+  src/menu.cpp
+  src/menu.hpp
   src/entity.hpp
   src/enemy.hpp
   src/potion.hpp
