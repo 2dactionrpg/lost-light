@@ -117,6 +117,8 @@ bool World::init(vec2 screen)
 
     makeCharacter(registry);
     makeShield(registry);
+    spawn_enemy(enemy_number);
+    m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
     fprintf(stderr, "factory done\n");
 
     return m_character.init()
