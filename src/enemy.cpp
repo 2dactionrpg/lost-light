@@ -181,6 +181,11 @@ void Enemy::set_rotation(float radians)
     motion.radians = radians;
 }
 
+void Enemy::set_scale(vec2 scale)
+{
+    physics.scale = scale;
+}
+
 bool Enemy::is_alive() const
 {
     return m_is_alive;

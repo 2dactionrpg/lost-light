@@ -55,6 +55,6 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.5f, 0.05f };
+    ps.scale = { 0.4f, 0.4f };
     return entity;
 }
