@@ -53,6 +53,8 @@ public:
 
     int state;
 
+    bool closeFlag;
+
 private:
     // generate enemies
     bool spawn_enemy(int& id);
