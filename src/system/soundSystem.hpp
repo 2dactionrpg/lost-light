@@ -15,9 +15,9 @@ enum soundType {
 
 class SoundSystem {
 private:
-    Mix_Music* m_background_music;
-    Mix_Chunk* m_character_dead_sound;
-    Mix_Chunk* m_character_reflect_sound;
+    inline static Mix_Music* m_background_music;
+    inline static Mix_Chunk* m_character_dead_sound;
+    inline static Mix_Chunk* m_character_reflect_sound;
 
 public:
     bool init();

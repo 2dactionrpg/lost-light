@@ -162,7 +162,6 @@ bool World::update(float elapsed_ms)
 
         // check shield collision
         if (m_shield.collides_with(*projectile_it)) {
-            soundSystem.play_sound(C_REFLECT);
             vec2 shieldDirection = m_shield.get_direction();
             vec2 projectileDirection = projectile_it->get_direction();
             vec2 reflection = sub(
