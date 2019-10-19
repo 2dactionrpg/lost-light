@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common.hpp"
+#include "../data.hpp"
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
@@ -8,16 +9,12 @@
 
 using namespace std;
 
-enum soundType {
-    C_DEAD,
-    C_REFLECT,
-};
-
 class SoundSystem {
 private:
     inline static Mix_Music* m_background_music;
     inline static Mix_Chunk* m_character_dead_sound;
-    inline static Mix_Chunk* m_character_reflect_sound;
+    inline static Mix_Chunk* m_shield_reflect_sound;
+    inline static Mix_Chunk* m_menu_popup_sound;
 
 public:
     bool init();

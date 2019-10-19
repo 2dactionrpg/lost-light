@@ -174,6 +174,7 @@ bool World::update(float elapsed_ms)
 
         // check character collision
         if (m_character.collides_with(*projectile_it)) {
+            soundSystem.play_sound(C_DEAD);
             physicsSystem.setCharacterUnmovable(registry);
             m_projectiles.erase(projectile_it);
             menuSystem.sync(registry, STATE_GAMEOVER);

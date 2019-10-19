@@ -6,7 +6,11 @@ void MenuSystem::update(entt::registry& registry, Menu& m_menu)
 
     for (auto entity : menu) {
         auto& state = menu.get(entity).state;
-        m_menu.load_texture(state);
+        auto& old_state = menu.get(entity).old_state;
+        if (state != old_state) {
+            m_menu.load_texture(state);
+            old_state = state;
+        }
     }
 }
 
@@ -16,7 +20,10 @@ void MenuSystem::sync(entt::registry& registry, int m_state)
 
     for (auto entity : menu) {
         auto& state = menu.get(entity).state;
-        state = m_state;
+        auto& old_state = menu.get(entity).old_state;
+        if (state != m_state) {
+            state = m_state;
+        }
     }
 }
 

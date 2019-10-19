@@ -1,5 +1,6 @@
 #pragma once
 
+#include "data.hpp"
 #include "entity.hpp"
 
 class Menu : public Entity {
@@ -36,6 +37,4 @@ public:
 
     // Returns the menu' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
-
-    int oldState;
 };

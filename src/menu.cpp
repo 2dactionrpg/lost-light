@@ -7,7 +7,6 @@ Texture Menu::menu_texture;
 
 bool Menu::init()
 {
-    oldState = -1;
     // Load shared texture
     if (!menu_texture.is_valid()) {
         if (!menu_texture.load_from_file(textures_path("start.png"))) {
@@ -75,27 +74,24 @@ void Menu::destroy()
 
 void Menu::load_texture(int state)
 {
-    if (oldState != state) {
-        switch (state) {
-        case 0:
-            menu_texture.load_from_file(textures_path("start.png"));
-            break;
-        case 1:
-            menu_texture.load_from_file(textures_path("playing.png"));
-            break;
-        case 2:
-            menu_texture.load_from_file(textures_path("pause.png"));
-            break;
-        case 3:
-            menu_texture.load_from_file(textures_path("game-over.png"));
-            break;
-        case 4:
-            menu_texture.load_from_file(textures_path("win.png"));
-            break;
-        default:
-            break;
-        }
-        oldState = state;
+    switch (state) {
+    case STATE_START:
+        menu_texture.load_from_file(textures_path("start.png"));
+        break;
+    case STATE_PLAYING:
+        menu_texture.load_from_file(textures_path("playing.png"));
+        break;
+    case STATE_PAUSE:
+        menu_texture.load_from_file(textures_path("pause.png"));
+        break;
+    case STATE_GAMEOVER:
+        menu_texture.load_from_file(textures_path("game-over.png"));
+        break;
+    case STATE_WIN:
+        menu_texture.load_from_file(textures_path("win.png"));
+        break;
+    default:
+        break;
     }
 }
 

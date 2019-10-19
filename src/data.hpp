@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include "common.hpp"
 
 namespace {
 // SaveGameData {
@@ -27,4 +27,19 @@ float s_init_duration = 50.f;
 float s_init_cooldown = 100.f;
 
 // Others
+enum soundType {
+    C_DEAD,
+    S_REFLECT,
+    MENU_POPUP
+};
+
+enum gameState {
+    STATE_START,
+    STATE_PLAYING,
+    STATE_PAUSE,
+    STATE_GAMEOVER,
+    STATE_WIN,
+    STATE_TERMINATE,
+};
+
 }

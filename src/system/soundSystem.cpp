@@ -16,9 +16,13 @@ bool SoundSystem::init()
 
     m_background_music = Mix_LoadMUS(audio_path("music.wav"));
     m_character_dead_sound = Mix_LoadWAV(audio_path("character_dead.wav"));
-    m_character_reflect_sound = Mix_LoadWAV(audio_path("character_reflect.wav"));
+    m_shield_reflect_sound = Mix_LoadWAV(audio_path("shield_reflect.wav"));
+    m_menu_popup_sound = Mix_LoadWAV(audio_path("menu_popup.wav"));
 
-    if (m_background_music == nullptr || m_character_dead_sound == nullptr || m_character_reflect_sound == nullptr) {
+    if (m_background_music == nullptr
+        || m_menu_popup_sound == nullptr
+        || m_character_dead_sound == nullptr
+        || m_shield_reflect_sound == nullptr) {
         return false;
     }
 
@@ -33,11 +37,14 @@ void SoundSystem::play_background_music()
 void SoundSystem::play_sound(int type, int channel, int loops)
 {
     switch (type) {
-    case 0:
+    case C_DEAD:
         Mix_PlayChannel(channel, m_character_dead_sound, loops);
         break;
-    case 1:
-        Mix_PlayChannel(channel, m_character_reflect_sound, loops);
+    case S_REFLECT:
+        Mix_PlayChannel(channel, m_shield_reflect_sound, loops);
+        break;
+    case MENU_POPUP:
+        Mix_PlayChannel(channel, m_menu_popup_sound, loops);
         break;
     }
 }
@@ -48,8 +55,10 @@ void SoundSystem::destroy()
         Mix_FreeMusic(m_background_music);
     if (m_character_dead_sound != nullptr)
         Mix_FreeChunk(m_character_dead_sound);
-    if (m_character_reflect_sound != nullptr)
-        Mix_FreeChunk(m_character_reflect_sound);
+    if (m_shield_reflect_sound != nullptr)
+        Mix_FreeChunk(m_shield_reflect_sound);
+    if (m_menu_popup_sound != nullptr)
+        Mix_FreeChunk(m_menu_popup_sound);
 
     Mix_CloseAudio();
 }

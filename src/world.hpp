@@ -35,15 +35,6 @@ const size_t ENEMIES_THRESHOLD_1 = 2;
 const size_t MAX_BOSS_COUNT = 1;
 const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
-enum gameState {
-    STATE_START,
-    STATE_PLAYING,
-    STATE_PAUSE,
-    STATE_GAMEOVER,
-    STATE_WIN,
-    STATE_TERMINATE,
-};
-
 namespace {
     void glfw_err_cb(int error, const char* desc)
     {
