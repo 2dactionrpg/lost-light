@@ -3,12 +3,13 @@
 #include "../components/enemyComponent.hpp"
 #include "../components/motionComponent.hpp"
 #include "../enemy.hpp"
+#include "../factory.hpp"
 #include "../projectile.hpp"
-#include <entt/entity/registry.hpp>
 
 using namespace std;
 
 struct EnemyAISystem {
+    int proj_counter = 0;
     void set_direction(entt::registry& registry);
     void set_target(entt::registry& registry);
     void set_rotation(entt::registry& registry);

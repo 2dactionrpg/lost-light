@@ -56,7 +56,7 @@ bool Menu::init()
         return false;
 
     motion.position = { 600.f, 400.f };
-    setDirection({ 1.f, 1.f });
+    set_direction({ 1.f, 1.f });
 
     // Setting initial values, scale is negative to make it face the opposite way
     // 1.0 would be as big as the original texture.
@@ -105,18 +105,18 @@ void Menu::update(float ms, int state)
     oldState = state;
 }
 
-vec2 Menu::getDirection()
+vec2 Menu::get_direction()
 {
     return motion.direction;
 }
 
-void Menu::setDirection(vec2 direction)
+void Menu::set_direction(vec2 direction)
 {
     float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
     motion.direction = { direction.x / normal, direction.y / normal };
 }
 
-void Menu::setRotation(float rad)
+void Menu::set_rotation(float rad)
 {
     motion.radians = rad;
 }
