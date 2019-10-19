@@ -96,7 +96,6 @@ private:
     // id assigned to enemies
     int enemy_number;
 
-    float m_current_speed;
     float m_next_enemy_spawn;
 
     Mix_Music* m_background_music;
