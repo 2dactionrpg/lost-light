@@ -28,7 +28,7 @@ entt::entity makeShield(entt::registry& registry)
     mo.speed = 200.f;
     registry.assign<inputMouse>(entity, 0.0, 0.0);
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.5f, 0.05f };
+    ps.scale = { 0.5f, -0.5f };
     return entity;
 }
 

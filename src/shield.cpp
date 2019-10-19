@@ -180,8 +180,8 @@ vec2 Shield::get_bounding_box() const
 
 bool Shield::collides_with(const Projectile& projectile)
 {
-    vec3 brMul = { +shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
-    vec3 blMul = { -shield_texture.width / 2.f, +shield_texture.height / 2.f, 1.f };
+    vec3 brMul = { +shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
+    vec3 blMul = { -shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
 
     brMul = mul(transform.out, brMul);
     blMul = mul(transform.out, blMul);

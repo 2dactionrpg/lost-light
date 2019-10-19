@@ -237,7 +237,7 @@ void PhysicsSystem::resetCharacter(entt::registry& registry)
     auto viewShield = registry.view<shieldComponent, physicsScaleComponent>();
     for (auto entity : viewShield) {
         auto& scale = viewShield.get<physicsScaleComponent>(entity).scale;
-        scale = { 0.5f, 0.05f };
+        scale = { 0.5f, -0.5f };
     }
 }
 
