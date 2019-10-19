@@ -58,3 +58,17 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     ps.scale = { 0.4f, 0.4f };
     return entity;
 }
+
+entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos,vec2 dir, float rad)
+{
+    const entt::entity entity = registry.create();
+    registry.assign<projectileComponent>(entity, id, false, true);
+    auto& mo = registry.assign<motionComponent>(entity);
+    mo.position = pos;
+    mo.direction = dir;
+    mo.radians = rad;
+    mo.speed = 1000.f;
+    auto& ps = registry.assign<physicsScaleComponent>(entity);
+    ps.scale = { 0.4f, 0.4f };
+    return entity;
+}

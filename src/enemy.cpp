@@ -65,19 +65,7 @@ bool Enemy::init(int id)
     if (!effect.load_from_file(shader_path("enemy.vs.glsl"), shader_path("enemy.fs.glsl")))
         return false;
 
-    // Setting initial values
-    motion.position = { 0.f, 0.f };
-    motion.radians = 4.75f;
-    motion.speed = 200.f;
-
     enemy_id = id;
-
-    physics.scale = { 0.4f, 0.4f };
-
-    target = { 50.f, 300.f };
-
-    m_is_alive = true;
-    m_remain_dead_countdown_ms = -1.f;
 
     return true;
 }
@@ -153,23 +141,6 @@ void Enemy::set_position(vec2 pos)
 {
     motion.position = pos;
 }
-
-// void Enemy::move(vec2 off)
-// {
-//     motion.position.x += off.x;
-//     motion.position.y += off.y;
-//     if (motion.position.x > FRAME_X_MAX) {
-//         motion.position.x = FRAME_X_MAX;
-//     } else if (motion.position.x < FRAME_X_MIN) {
-//         motion.position.x = FRAME_X_MIN;
-//     }
-//     if (motion.position.y > FRAME_Y_MAX) {
-//         motion.position.y = FRAME_Y_MAX;
-//     } else if (motion.position.y < FRAME_Y_MIN) {
-//         motion.position.y = FRAME_Y_MIN;
-//     }
-// }
-
 void Enemy::set_target(vec2 character_pos)
 {
     if (target.x != character_pos.x || target.y != character_pos.y)
@@ -185,31 +156,6 @@ void Enemy::set_scale(vec2 scale)
 {
     physics.scale = scale;
 }
-
-bool Enemy::is_alive() const
-{
-    return m_is_alive;
-}
-
-void Enemy::kill()
-{
-    m_is_alive = false;
-    m_remain_dead_countdown_ms = 2000.f;
-}
-
-void Enemy::respawn()
-{
-    m_is_alive = true;
-    motion.position = { 0.f, 0.f };
-}
-
-Projectile Enemy::shoot_projectile()
-{
-    Projectile projectlie;
-    projectlie.setRotation(motion.radians + 1.2);
-    return projectlie;
-}
-
 vec2 Enemy::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile

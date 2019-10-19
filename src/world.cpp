@@ -16,7 +16,7 @@ enum gameState {
 // Same as static in c, local to compilation unit
 namespace {
 // change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 4;
+const size_t MAX_ENEMIES = 2;
 const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
@@ -193,18 +193,19 @@ bool World::update(float elapsed_ms)
         float w = projectile_it->get_bounding_box().x / 2;
         float h = projectile_it->get_bounding_box().y / 2;
         if (projectile_it->get_position().x + w < 0.f || projectile_it->get_position().x - w > 1200.f || projectile_it->get_position().y + h < 0.f || projectile_it->get_position().y - h > 850.f) {
-            projectile_it = m_projectiles.erase(projectile_it);
+            m_projectiles.erase(projectile_it);
             continue;
         }
 
         // check shield collision
         if (m_shield.collides_with(*projectile_it)) {
-            vec2 shieldDirection = m_shield.getDirection();
-            vec2 projectileDirection = projectile_it->getDirection();
+            vec2 shieldDirection = m_shield.get_direction();
+            vec2 projectileDirection = projectile_it->get_direction();
             vec2 reflection = sub(
                 projectileDirection,
                 mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
-            projectile_it->setDirection(reflection);
+            // projectile_it->set_direction(reflection);
+            physicsSystem.reflect_projectile(registry, projectile_it->get_id(), reflection);
             ++projectile_it;
             continue;
         }
@@ -212,7 +213,7 @@ bool World::update(float elapsed_ms)
         // check character collision
         if (m_character.collides_with(*projectile_it)) {
             physicsSystem.setCharacterUnmovable(registry);
-            projectile_it = m_projectiles.erase(projectile_it);
+            m_projectiles.erase(projectile_it);
             state = STATE_GAMEOVER;
             continue;
         }
@@ -231,9 +232,8 @@ bool World::update(float elapsed_ms)
         }
 
         if (hits_enemy) {
-            enemy_it->kill();
-            enemy_it = m_enemies.erase(enemy_it);
-            projectile_it = m_projectiles.erase(projectile_it);
+            m_enemies.erase(enemy_it);
+            m_projectiles.erase(projectile_it);
         } else {
             ++projectile_it;
         }
@@ -242,6 +242,7 @@ bool World::update(float elapsed_ms)
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
+    enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
     // Updating all entities, making the turtle and fish
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
@@ -250,11 +251,7 @@ bool World::update(float elapsed_ms)
     if(m_potion.is_alive())
         m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
-    physicsSystem.update(registry, m_character, m_shield, m_enemies);
-    for (auto& projectile : m_projectiles)
-        projectile.update(elapsed_ms * m_current_speed);
-
-    enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
+    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
     if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f) {

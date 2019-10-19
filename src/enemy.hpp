@@ -39,16 +39,7 @@ public:
     // Set enemy rotation in radians
     void set_rotation(float radians);
 
-    // True if the enemy is alive
-    bool is_alive() const;
-
-    // Kills the enemy, changing its alive state and triggering on death events
-    void kill();
-    void respawn();
-
     vec2 get_bounding_box() const;
-
-    Projectile shoot_projectile();
 
     vec2 target;
 
@@ -57,8 +48,6 @@ public:
     int get_id();
 
 private:
-    float m_remain_dead_countdown_ms; // Used to keep track for how long the enemy should be lit up
-    bool m_is_alive; // True if the enemy is alive
     int enemy_id;
 
     std::vector<Vertex> m_vertices;

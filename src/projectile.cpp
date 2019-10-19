@@ -5,7 +5,7 @@
 
 Texture Projectile::projectile_texture;
 
-bool Projectile::init()
+bool Projectile::init(int id)
 {
     // Load shared texture
     if (!projectile_texture.is_valid()) {
@@ -54,13 +54,7 @@ bool Projectile::init()
     if (!effect.load_from_file(shader_path("projectile.vs.glsl"), shader_path("projectile.fs.glsl")))
         return false;
 
-    // motion.radians = 0.f;
-    motion.speed = 200.f;
-    setDirection({ -1.f, 0.2f });
-
-    // Setting initial values, scale is negative to make it face the opposite way
-    // 1.0 would be as big as the original texture.
-    physics.scale = { -0.4f, 0.4f };
+    projectile_id = id;
 
     return true;
 }
@@ -77,26 +71,17 @@ void Projectile::destroy()
     glDeleteShader(effect.program);
 }
 
-void Projectile::update(float ms)
-{
-    // Move fish along -X based on how much time has passed, this is to (partially) avoid
-    // having entities move at different speed based on the machine.
-    float step = 5.0 * motion.speed * (ms / 1000);
-    motion.position.x += step * motion.direction.x;
-    motion.position.y += step * motion.direction.y;
-}
-
-vec2 Projectile::getDirection()
+vec2 Projectile::get_direction()
 {
     return motion.direction;
 }
 
-void Projectile::setDirection(vec2 direction)
+void Projectile::set_direction(vec2 direction)
 {
     motion.direction = normalize(direction);
 }
 
-void Projectile::setRotation(float rad)
+void Projectile::set_rotation(float rad)
 {
     motion.radians = rad;
 }
@@ -166,3 +151,14 @@ vec2 Projectile::get_bounding_box() const
     // fabs is to avoid negative scale due to the facing direction.
     return { std::fabs(physics.scale.x) * projectile_texture.width, std::fabs(physics.scale.y) * projectile_texture.height };
 }
+
+int Projectile::get_id() const
+{
+    return projectile_id;
+}
+
+void Projectile::set_scale(vec2 scale)
+{
+    physics.scale = scale;
+}
+
