@@ -17,6 +17,7 @@ enum gameState {
 namespace {
 // change these numbers for minimal difficulty control
 const size_t MAX_ENEMIES = 4;
+const size_t MAX_ENEMIES_TOTAL = 15;
 const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
@@ -42,6 +43,7 @@ World::~World()
 bool World::init(vec2 screen)
 {
     closeFlag = false;
+    enemiesCount = 0;
     state = STATE_START;
     //-------------------------------------------------------------------------
     // GLFW / OGL Initialization
@@ -257,7 +259,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
-    if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f) {
+    if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f && enemiesCount < MAX_ENEMIES_TOTAL) {
         if (spawn_enemy(enemy_number))
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
         else
@@ -358,6 +360,7 @@ bool World::spawn_enemy(int& id)
         m_enemies.emplace_back(enemy);
         makeEnemy(registry, id);
         id++;
+        enemiesCount++;
         return true;
     }
     fprintf(stderr, "Failed to spawn enemy");

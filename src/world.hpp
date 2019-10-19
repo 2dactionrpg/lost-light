@@ -54,6 +54,8 @@ public:
 
     bool closeFlag;
 
+    int enemiesCount;
+
 private:
     // generate enemies
     bool spawn_enemy(int& id);
