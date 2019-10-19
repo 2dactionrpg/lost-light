@@ -18,8 +18,8 @@ enum gameState {
 namespace {
 // change these numbers for minimal difficulty control
 const size_t MAX_ENEMIES = 4;
-const size_t MAX_ENEMIES_TOTAL = 2;
-const size_t MAX_BOSS_COUNT = 20;
+const size_t MAX_ENEMIES_TOTAL = 15;
+const size_t MAX_BOSS_COUNT = 2;
 const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
@@ -274,7 +274,6 @@ bool World::update(float elapsed_ms)
             fprintf(stderr, "%s\n", "couldn't spawn new enemy");
     }
 
-    fprintf(stderr, "%d\t%d\n", enemiesKilled, MAX_ENEMIES_TOTAL);
     if (enemiesKilled == MAX_ENEMIES_TOTAL && bossCount < MAX_BOSS_COUNT) {
         spawn_boss(enemy_number);
         bossCount++;
