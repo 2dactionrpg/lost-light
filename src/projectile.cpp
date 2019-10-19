@@ -83,9 +83,9 @@ void Projectile::update(float ms)
 {
     // Move fish along -X based on how much time has passed, this is to (partially) avoid
     // having entities move at different speed based on the machine.
-    float step = 5.0 * motion.speed * (ms / 1000);
-    motion.position.x += step * motion.direction.x;
-    motion.position.y += step * motion.direction.y;
+    // float step = 5.0 * motion.speed * (ms / 1000);
+    // motion.position.x += step * motion.direction.x;
+    // motion.position.y += step * motion.direction.y;
 }
 
 vec2 Projectile::get_direction()

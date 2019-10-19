@@ -203,13 +203,6 @@ void Enemy::respawn()
     motion.position = { 0.f, 0.f };
 }
 
-Projectile Enemy::shoot_projectile()
-{
-    // Projectile projectlie;
-    // projectlie.set_rotation(motion.radians + 1.2);
-    // return projectlie;
-}
-
 vec2 Enemy::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile

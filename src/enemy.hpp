@@ -48,8 +48,6 @@ public:
 
     vec2 get_bounding_box() const;
 
-    Projectile shoot_projectile();
-
     vec2 target;
 
     vec2 get_face_position();
