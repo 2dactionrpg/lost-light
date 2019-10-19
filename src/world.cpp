@@ -411,9 +411,3 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
     inputSystem.on_mouse_move(registry, xpos, ypos);
 }
-
-// Calculates the length of a vec2 vector
-float World::lengthVec2(vec2 v)
-{
-    return sqrt(pow(v.x, 2.f) + pow(v.y, 2.f));
-}

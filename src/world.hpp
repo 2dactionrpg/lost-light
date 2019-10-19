@@ -66,8 +66,6 @@ private:
     void on_key(GLFWwindow*, int key, int, int action, int mod);
     void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
     void on_mouse_key(GLFWwindow*, int key, int action, int mod);
-    // Calculates the length of a vec2 vector
-    float lengthVec2(vec2 v);
 
 private:
     // Window handle
