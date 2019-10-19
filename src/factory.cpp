@@ -88,6 +88,6 @@ entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir
     mo.radians = rad;
     mo.speed = 1000.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.4f, 0.4f };
+    ps.scale = { 0.22f, 0.22f };
     return entity;
 }
