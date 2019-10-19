@@ -68,8 +68,11 @@ void InputSystem::on_mouse_key(entt::registry& registry, int key, int action, in
     for (auto entity : shield) {
         auto& [is_reflectable, duration, cooldown] = shield.get(entity);
         if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
-            is_reflectable = true;
-            duration = 50.f;
+            if (cooldown < 0.f) {
+                is_reflectable = true;
+                duration = 50.f;
+                cooldown = duration + 100.f;
+            }
         }
     }
 }

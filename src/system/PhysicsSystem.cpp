@@ -54,6 +54,8 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
                     is_reflectable = false;
                 }
 
+                cooldown -= 1.f;
+
                 vec2 shieldVec = { 0.f, 1.f };
                 vec2 mouseVec = {
                     (float)xpos - position.x,
