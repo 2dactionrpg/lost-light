@@ -54,13 +54,13 @@ void EnemyAISystem::shoot(entt::registry& registry, float elapsed_ms, vector<Ene
         auto& [position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
         auto& [id, is_alive, shoot_delay_ms, destination, target] = enemies.get<enemyComponent>(enemy);
         if (is_alive && shoot_delay_ms < 0.f) {
-            vec2 proj_direction = { target.x - position.x, target.y - position.y };
             bool enemy_alive = false;
             for (auto& m_enemy : m_enemies) {
                 if (id == m_enemy.get_id()) {
                     Projectile projectile;
                     if (projectile.init(proj_counter)) {
                         vec2 face_pos = m_enemy.get_face_position();
+                        vec2 proj_direction = { target.x - face_pos.x, target.y - face_pos.y };
                         m_projectiles.emplace_back(projectile);
                         makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
                         proj_counter++;
