@@ -1,9 +1,6 @@
 // Header
 #include "character.hpp"
 
-#include "potion.hpp"
-#include "projectile.hpp"
-
 // stlib
 #include <algorithm>
 #include <string>

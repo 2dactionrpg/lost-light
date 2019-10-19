@@ -2,6 +2,7 @@
 
 #include "entity.hpp"
 #include "potion.hpp"
+#include "projectile.hpp"
 #include <entt/entity/registry.hpp>
 #include <vector>
 
