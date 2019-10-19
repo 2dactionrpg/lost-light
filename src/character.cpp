@@ -61,8 +61,6 @@ bool Character::init()
     if (!effect.load_from_file(shader_path("character.vs.glsl"), shader_path("character.fs.glsl")))
         return false;
 
-    m_is_alive = true;
-
     return true;
 }
 
@@ -158,17 +156,6 @@ void Character::set_rotation(float radians)
     motion.radians = radians;
 }
 
-bool Character::is_alive() const
-{
-    return m_is_alive;
-}
-
-// Called when the character collides with a turtle
-void Character::kill()
-{
-    m_is_alive = false;
-}
-
 vec2 Character::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
@@ -204,9 +191,4 @@ bool Character::collides_with(const Potion& potion)
     if (d_sq < r * r)
         return true;
     return false;
-}
-
-void Character::setAlive(bool status)
-{
-    m_is_alive = status;
 }

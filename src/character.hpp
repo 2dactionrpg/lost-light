@@ -38,13 +38,7 @@ public:
 
     void set_scale(vec2 scale);
 
-    bool is_alive() const;
-
-    void kill();
-
     vec2 get_bounding_box() const;
-
-    void setAlive(bool status);
 
     bool upKeyPressed;
     bool downKeyPressed;
@@ -52,8 +46,6 @@ public:
     bool rightKeyPressed;
 
 private:
-    bool m_is_alive; // True if the character is alive=
-
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;
     entt::registry registry;
