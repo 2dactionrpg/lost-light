@@ -1,13 +1,4 @@
-#include "InputSystem.hpp"
-
-enum gameState {
-    STATE_START,
-    STATE_PLAYING,
-    STATE_PAUSE,
-    STATE_GAMEOVER,
-    STATE_WIN,
-    STATE_TERMINATE,
-};
+#include "inputSystem.hpp"
 
 void InputSystem::on_key(entt::registry& registry, int key, int action, int mod)
 {
@@ -95,6 +86,7 @@ void InputSystem::on_mouse_key(entt::registry& registry, int key, int action, in
         auto& [is_reflectable, duration, cooldown] = shield.get(entity);
         if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
             if (cooldown < 0.f) {
+                soundSystem.play_sound(S_REFLECT, -1, 0);
                 is_reflectable = true;
                 duration = s_init_duration;
                 cooldown = duration + s_init_cooldown;

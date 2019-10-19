@@ -97,6 +97,6 @@ entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir
 entt::entity makeMenu(entt::registry& registry)
 {
     const entt::entity entity = registry.create();
-    registry.assign<menuComponent>(entity, 0);
+    registry.assign<menuComponent>(entity, STATE_START, STATE_START);
     return entity;
 }

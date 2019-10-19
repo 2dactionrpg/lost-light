@@ -6,31 +6,6 @@
 #include <sstream>
 #include <string.h>
 
-// Same as static in c, local to compilation unit
-namespace {
-// change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 2;
-const size_t ENEMIES_THRESHOLD_1 = 2;
-const size_t MAX_BOSS_COUNT = 1;
-const size_t ENEMY_SPAWN_DELAY_MS = 2500;
-
-enum gameState {
-    STATE_START,
-    STATE_PLAYING,
-    STATE_PAUSE,
-    STATE_GAMEOVER,
-    STATE_WIN,
-    STATE_TERMINATE,
-};
-
-namespace {
-    void glfw_err_cb(int error, const char* desc)
-    {
-        fprintf(stderr, "%d: %s", error, desc);
-    }
-} // namespace
-} // namespace
-
 World::World()
     : m_points(0)
 {
@@ -98,32 +73,14 @@ bool World::init(vec2 screen)
     // Initialize the screen texture
     m_screen_tex.create_from_screen(m_window);
 
-    //-------------------------------------------------------------------------
-    // Loading music and sounds
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return false;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
-        fprintf(stderr, "Failed to open audio device");
-        return false;
-    }
-
-    m_background_music = Mix_LoadMUS(audio_path("music.wav"));
-    m_character_dead_sound = Mix_LoadWAV(audio_path("character_dead.wav"));
-    m_character_eat_sound = Mix_LoadWAV(audio_path("character_eat.wav"));
-
-    if (m_background_music == nullptr || m_character_dead_sound == nullptr || m_character_eat_sound == nullptr) {
+    if (!soundSystem.init()) {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
             audio_path("music.wav"),
             audio_path("character_dead.wav"),
-            audio_path("character_eat.wav"));
-        return false;
+            audio_path("character_reflect.wav"));
     }
 
-    // Playing background music indefinitely
-    Mix_PlayMusic(m_background_music, -1);
+    soundSystem.play_background_music();
 
     fprintf(stderr, "Loaded music\n");
 
@@ -150,14 +107,7 @@ void World::destroy()
 {
     glDeleteFramebuffers(1, &m_frame_buffer);
 
-    if (m_background_music != nullptr)
-        Mix_FreeMusic(m_background_music);
-    if (m_character_dead_sound != nullptr)
-        Mix_FreeChunk(m_character_dead_sound);
-    if (m_character_eat_sound != nullptr)
-        Mix_FreeChunk(m_character_eat_sound);
-
-    Mix_CloseAudio();
+    soundSystem.destroy();
 
     m_character.destroy();
     m_potion.destroy();
@@ -217,7 +167,6 @@ bool World::update(float elapsed_ms)
             vec2 reflection = sub(
                 projectileDirection,
                 mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
-            // projectile_it->set_direction(reflection);
             physicsSystem.reflect_projectile(registry, projectile_it->get_id(), reflection);
             ++projectile_it;
             continue;
@@ -225,6 +174,7 @@ bool World::update(float elapsed_ms)
 
         // check character collision
         if (m_character.collides_with(*projectile_it)) {
+            soundSystem.play_sound(C_DEAD);
             physicsSystem.setCharacterUnmovable(registry);
             m_projectiles.erase(projectile_it);
             menuSystem.sync(registry, STATE_GAMEOVER);

@@ -9,11 +9,12 @@
 
 // #include "turtle.hpp"
 // #include "fish.hpp"
-#include "./system/InputSystem.hpp"
-#include "./system/PhysicsSystem.hpp"
 #include "./system/enemyAISystem.hpp"
 #include "./system/healthSystem.hpp"
+#include "./system/inputSystem.hpp"
 #include "./system/menuSystem.hpp"
+#include "./system/physicsSystem.hpp"
+#include "./system/soundSystem.hpp"
 #include "background.hpp"
 #include "factory.hpp"
 #include "potion.hpp"
@@ -26,9 +27,21 @@
 #include <random>
 #include <vector>
 
-#define SDL_MAIN_HANDLED
-#include <SDL.h>
-#include <SDL_mixer.h>
+// Same as static in c, local to compilation unit
+namespace {
+// change these numbers for minimal difficulty control
+const size_t MAX_ENEMIES = 2;
+const size_t ENEMIES_THRESHOLD_1 = 2;
+const size_t MAX_BOSS_COUNT = 1;
+const size_t ENEMY_SPAWN_DELAY_MS = 2500;
+
+namespace {
+    void glfw_err_cb(int error, const char* desc)
+    {
+        fprintf(stderr, "%d: %s", error, desc);
+    }
+}
+} // namespace
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
@@ -67,7 +80,6 @@ private:
     void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
     void on_mouse_key(GLFWwindow*, int key, int action, int mod);
 
-private:
     // Window handle
     GLFWwindow* m_window;
     float m_screen_scale; // Screen to pixel coordinates scale factor
@@ -96,10 +108,6 @@ private:
 
     float m_next_enemy_spawn;
 
-    Mix_Music* m_background_music;
-    Mix_Chunk* m_character_dead_sound;
-    Mix_Chunk* m_character_eat_sound;
-
     // C++ rng
     std::default_random_engine m_rng;
     std::uniform_real_distribution<float> m_dist; // default 0..1
@@ -109,5 +117,6 @@ private:
     EnemyAISystem enemyAI;
     HealthSystem healthSystem;
     MenuSystem menuSystem;
+    SoundSystem soundSystem;
     entt::registry registry;
 };

@@ -14,6 +14,7 @@
 #include "../enemy.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
+#include "soundSystem.hpp"
 #include <cmath>
 #include <entt/entity/registry.hpp>
 
@@ -21,6 +22,8 @@ using namespace std;
 
 class PhysicsSystem {
 private:
+    SoundSystem soundSystem;
+
 public:
     void update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles);
     void sync(entt::registry& registry, float elapsed_ms);

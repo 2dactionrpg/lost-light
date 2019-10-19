@@ -1,4 +1,4 @@
-#include "PhysicsSystem.hpp"
+#include "physicsSystem.hpp"
 
 void PhysicsSystem::sync(entt::registry& registry, float ms)
 {
