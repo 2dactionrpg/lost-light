@@ -69,13 +69,16 @@ bool Potion::init()
 void Potion::destroy()
 {
     m_is_alive = false;
-    glDeleteBuffers(1, &mesh.vbo);
-    glDeleteBuffers(1, &mesh.ibo);
-    glDeleteBuffers(1, &mesh.vao);
 
-    glDeleteShader(effect.vertex);
-    glDeleteShader(effect.fragment);
-    glDeleteShader(effect.program);
+    // TODO: Fix this to make sure we dont have unreleased memory allocation
+    
+    // glDeleteBuffers(1, &mesh.vbo);
+    // glDeleteBuffers(1, &mesh.ibo);
+    // glDeleteBuffers(1, &mesh.vao);
+
+    // glDeleteShader(effect.vertex);
+    // glDeleteShader(effect.fragment);
+    // glDeleteShader(effect.program);
 }
 
 void Potion::update(float ms)
