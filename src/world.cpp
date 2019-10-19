@@ -16,7 +16,7 @@ enum gameState {
 // Same as static in c, local to compilation unit
 namespace {
 // change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 4;
+const size_t MAX_ENEMIES = 2;
 const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
@@ -193,7 +193,7 @@ bool World::update(float elapsed_ms)
         float w = projectile_it->get_bounding_box().x / 2;
         float h = projectile_it->get_bounding_box().y / 2;
         if (projectile_it->get_position().x + w < 0.f || projectile_it->get_position().x - w > 1200.f || projectile_it->get_position().y + h < 0.f || projectile_it->get_position().y - h > 850.f) {
-            projectile_it = m_projectiles.erase(projectile_it);
+            m_projectiles.erase(projectile_it);
             continue;
         }
 
@@ -213,7 +213,7 @@ bool World::update(float elapsed_ms)
         // check character collision
         if (m_character.collides_with(*projectile_it)) {
             physicsSystem.setCharacterUnmovable(registry);
-            projectile_it = m_projectiles.erase(projectile_it);
+            m_projectiles.erase(projectile_it);
             state = STATE_GAMEOVER;
             continue;
         }
@@ -232,8 +232,8 @@ bool World::update(float elapsed_ms)
         }
 
         if (hits_enemy) {
-            enemy_it = m_enemies.erase(enemy_it);
-            projectile_it = m_projectiles.erase(projectile_it);
+            m_enemies.erase(enemy_it);
+            m_projectiles.erase(projectile_it);
         } else {
             ++projectile_it;
         }
