@@ -247,7 +247,7 @@ bool World::update(float elapsed_ms)
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
     // rather than by their class.
 
-    if(m_potion.is_alive())
+    if (m_potion.is_alive())
         m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
     physicsSystem.update(registry, m_character, m_shield, m_enemies);
