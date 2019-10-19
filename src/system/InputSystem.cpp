@@ -97,7 +97,7 @@ void InputSystem::on_mouse_key(entt::registry& registry, int key, int action, in
             if (cooldown < 0.f) {
                 is_reflectable = true;
                 // duration = 50.f;
-                duration = 1000.f;
+                duration = 50.f;
                 cooldown = duration + 100.f;
             }
         }
