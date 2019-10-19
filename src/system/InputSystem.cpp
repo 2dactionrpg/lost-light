@@ -1,7 +1,33 @@
 #include "InputSystem.hpp"
 
+enum gameState {
+    STATE_START,
+    STATE_PLAYING,
+    STATE_PAUSE,
+    STATE_GAMEOVER,
+    STATE_WIN,
+    STATE_TERMINATE,
+};
+
 void InputSystem::on_key(entt::registry& registry, int key, int action, int mod)
 {
+
+    auto menu = registry.view<menuComponent>();
+    for (auto entity : menu) {
+        auto& state = menu.get(entity).state;
+        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && (state == STATE_START || state == STATE_PAUSE))
+            state = STATE_PLAYING;
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_Q && state != STATE_PLAYING)
+            state = STATE_TERMINATE;
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_R && (state == STATE_GAMEOVER || state == STATE_WIN))
+            state = STATE_PLAYING;
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE && state == STATE_PLAYING)
+            state = STATE_PAUSE;
+    }
+
     auto view = registry.view<motionComponent, inputKeyboard>();
     for (auto entity : view) {
         auto& [upKeyPressed, downKeyPressed, leftKeyPressed, rightKeyPressed, resetKeyPressed] = view.get<inputKeyboard>(entity);
@@ -70,7 +96,8 @@ void InputSystem::on_mouse_key(entt::registry& registry, int key, int action, in
         if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
             if (cooldown < 0.f) {
                 is_reflectable = true;
-                duration = 50.f;
+                // duration = 50.f;
+                duration = 1000.f;
                 cooldown = duration + 100.f;
             }
         }

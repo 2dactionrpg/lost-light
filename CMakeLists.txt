@@ -43,6 +43,12 @@ set(SOURCE_FILES
     src/enemy.cpp
     src/menu.cpp
     src/potion.cpp
+    # System
+    src/system/InputSystem.cpp
+    src/system/PhysicsSystem.cpp
+    src/system/enemyAISystem.cpp
+    src/system/healthSystem.cpp
+    src/system/menuSystem.cpp
 
     src/project_path.hpp
 	src/character.hpp
@@ -63,10 +69,14 @@ set(SOURCE_FILES
     src/components/physicsScaleComponent.hpp
     src/components/shieldComponent.hpp
     src/components/enemyComponent.hpp
+    src/components/menuComponent.hpp
+    src/components/projectileComponent.hpp
     # System
-    src/system/InputSystem.cpp
-    src/system/PhysicsSystem.cpp
-    src/system/enemyAISystem.cpp
+    src/system/InputSystem.hpp
+    src/system/PhysicsSystem.hpp
+    src/system/enemyAISystem.hpp
+    src/system/healthSystem.hpp
+    src/system/menuSystem.hpp
 )
 
 if (IS_OS_MAC)

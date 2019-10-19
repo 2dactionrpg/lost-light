@@ -46,6 +46,7 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     auto& em = registry.assign<enemyComponent>(entity);
     em.id = id;
     em.is_alive = true;
+    em.health = 1;
     em.shoot_delay_ms = 3000.f;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
@@ -65,6 +66,7 @@ entt::entity makeBoss(entt::registry& registry, int id)
     auto& em = registry.assign<enemyComponent>(entity);
     em.id = id;
     em.is_alive = true;
+    em.health = 5;
     em.shoot_delay_ms = 3000.f;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
@@ -89,5 +91,12 @@ entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir
     mo.speed = 1000.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = { 0.22f, 0.22f };
+    return entity;
+}
+
+entt::entity makeMenu(entt::registry& registry)
+{
+    const entt::entity entity = registry.create();
+    registry.assign<menuComponent>(entity, 0);
     return entity;
 }

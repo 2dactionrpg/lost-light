@@ -32,13 +32,10 @@ public:
 
     // Sets the new menu position
     void set_position(vec2 position);
+    void load_texture(int state);
 
     // Returns the menu' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
-
-    bool is_alive() const;
-
-    bool m_is_alive;
 
     int oldState;
 };

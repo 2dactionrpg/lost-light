@@ -6,21 +6,22 @@
 #include <sstream>
 #include <string.h>
 
+// Same as static in c, local to compilation unit
+namespace {
+// change these numbers for minimal difficulty control
+const size_t MAX_ENEMIES = 2;
+const size_t ENEMIES_THRESHOLD_1 = 2;
+const size_t MAX_BOSS_COUNT = 1;
+const size_t ENEMY_SPAWN_DELAY_MS = 2500;
+
 enum gameState {
     STATE_START,
     STATE_PLAYING,
     STATE_PAUSE,
     STATE_GAMEOVER,
     STATE_WIN,
+    STATE_TERMINATE,
 };
-
-// Same as static in c, local to compilation unit
-namespace {
-// change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 2;
-const size_t ENEMIES_THRESHOLD_1 = 12;
-const size_t MAX_BOSS_COUNT = 1;
-const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
     void glfw_err_cb(int error, const char* desc)
@@ -44,11 +45,9 @@ World::~World()
 // World initialization
 bool World::init(vec2 screen)
 {
-    closeFlag = false;
     enemiesCount = 0;
     enemiesKilled = 0;
     bossCount = 0;
-    state = STATE_START;
     //-------------------------------------------------------------------------
     // GLFW / OGL Initialization
     // Core Opengl 3.
@@ -137,6 +136,7 @@ bool World::init(vec2 screen)
     makeCharacter(registry);
     makeShield(registry);
     spawn_enemy(enemy_number);
+    makeMenu(registry);
     m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
     fprintf(stderr, "factory done\n");
 
@@ -179,11 +179,18 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-    m_menu.update(elapsed_ms, state);
+    menuSystem.update(registry, m_menu);
 
+    state = menuSystem.get_state(registry);
     if (state != STATE_PLAYING) {
         return false;
     }
+
+    if (enemiesKilled >= ENEMIES_THRESHOLD_1 + MAX_BOSS_COUNT) {
+        menuSystem.sync(registry, STATE_WIN);
+        return false;
+    }
+
     int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
@@ -222,7 +229,7 @@ bool World::update(float elapsed_ms)
         if (m_character.collides_with(*projectile_it)) {
             physicsSystem.setCharacterUnmovable(registry);
             m_projectiles.erase(projectile_it);
-            state = STATE_GAMEOVER;
+            menuSystem.sync(registry, STATE_GAMEOVER);
             continue;
         }
 
@@ -240,11 +247,7 @@ bool World::update(float elapsed_ms)
         }
 
         if (hits_enemy) {
-            enemiesKilled++;
-            if (enemiesKilled == ENEMIES_THRESHOLD_1 + MAX_BOSS_COUNT) {
-                state = STATE_WIN;
-            }
-            m_enemies.erase(enemy_it);
+            healthSystem.damage(registry, enemy_it->get_id());
             m_projectiles.erase(projectile_it);
         } else {
             ++projectile_it;
@@ -264,6 +267,7 @@ bool World::update(float elapsed_ms)
         m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles);
+    healthSystem.update(registry, m_enemies, enemiesKilled);
 
     m_next_enemy_spawn -= elapsed_ms;
     if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f && enemiesCount < ENEMIES_THRESHOLD_1) {
@@ -361,7 +365,7 @@ void World::draw()
 // Should the game be over ?
 bool World::is_over() const
 {
-    return glfwWindowShouldClose(m_window) || closeFlag;
+    return glfwWindowShouldClose(m_window) || state == STATE_TERMINATE;
 }
 
 // create a new enemy
@@ -406,18 +410,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     }
 
     inputSystem.on_key(registry, key, action, mod);
-
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && (state == STATE_START || state == STATE_PAUSE))
-        state = STATE_PLAYING;
-
-    if (action == GLFW_PRESS && key == GLFW_KEY_Q && state != STATE_PLAYING)
-        closeFlag = true;
-
-    if (action == GLFW_PRESS && key == GLFW_KEY_R && (state == STATE_GAMEOVER || state == STATE_WIN))
-        state = STATE_PLAYING;
-
-    if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE && state == STATE_PLAYING)
-        state = STATE_PAUSE;
 
     // Control the current speed with `<` `>`
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA)

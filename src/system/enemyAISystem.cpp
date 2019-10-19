@@ -52,7 +52,7 @@ void EnemyAISystem::shoot(entt::registry& registry, float elapsed_ms, vector<Ene
     auto enemies = registry.view<enemyComponent, motionComponent>();
     for (auto enemy : enemies) {
         auto& [position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
-        auto& [id, is_alive, shoot_delay_ms, destination, target] = enemies.get<enemyComponent>(enemy);
+        auto& [id, health, is_alive, shoot_delay_ms, destination, target] = enemies.get<enemyComponent>(enemy);
         if (is_alive && shoot_delay_ms < 0.f) {
             bool enemy_alive = false;
             for (auto& m_enemy : m_enemies) {

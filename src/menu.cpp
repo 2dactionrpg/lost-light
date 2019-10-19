@@ -10,7 +10,7 @@ bool Menu::init()
     oldState = -1;
     // Load shared texture
     if (!menu_texture.is_valid()) {
-        if (!menu_texture.load_from_file(textures_path("game-over.png"))) {
+        if (!menu_texture.load_from_file(textures_path("start.png"))) {
             fprintf(stderr, "Failed to load menu texture!");
             return false;
         }
@@ -56,12 +56,7 @@ bool Menu::init()
         return false;
 
     motion.position = { 600.f, 400.f };
-    set_direction({ 1.f, 1.f });
-
-    // Setting initial values, scale is negative to make it face the opposite way
-    // 1.0 would be as big as the original texture.
-    physics.scale = { 1.f, 1.f };
-    m_is_alive = true;
+    physics.scale = { 0.6f, 0.75f };
 
     return true;
 }
@@ -69,7 +64,6 @@ bool Menu::init()
 // Releases all graphics resources
 void Menu::destroy()
 {
-    m_is_alive = false;
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
     glDeleteBuffers(1, &mesh.vao);
@@ -79,7 +73,7 @@ void Menu::destroy()
     glDeleteShader(effect.program);
 }
 
-void Menu::update(float ms, int state)
+void Menu::load_texture(int state)
 {
     if (oldState != state) {
         switch (state) {
@@ -101,8 +95,8 @@ void Menu::update(float ms, int state)
         default:
             break;
         }
+        oldState = state;
     }
-    oldState = state;
 }
 
 vec2 Menu::get_direction()
@@ -187,9 +181,4 @@ vec2 Menu::get_bounding_box() const
     // fabs is to avoid negative scale due to the facing direction.
     return { std::fabs(physics.scale.x) * menu_texture.width * 2,
         std::fabs(physics.scale.y) * menu_texture.height * 2 };
-}
-
-bool Menu::is_alive() const
-{
-    return m_is_alive;
 }

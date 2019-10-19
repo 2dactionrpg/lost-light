@@ -1,10 +1,10 @@
 #pragma once
 #include <common.hpp>
 
-struct enemyComponent
-{
+struct enemyComponent {
     /* data */
     int id;
+    int health;
     bool is_alive;
     float shoot_delay_ms;
     vec2 destination;

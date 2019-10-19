@@ -12,6 +12,8 @@
 #include "./system/InputSystem.hpp"
 #include "./system/PhysicsSystem.hpp"
 #include "./system/enemyAISystem.hpp"
+#include "./system/healthSystem.hpp"
+#include "./system/menuSystem.hpp"
 #include "background.hpp"
 #include "factory.hpp"
 #include "potion.hpp"
@@ -51,7 +53,6 @@ public:
     bool is_over() const;
 
     int state;
-    bool closeFlag;
     int enemiesCount;
     int enemiesKilled;
     int bossCount;
@@ -109,5 +110,7 @@ private:
     InputSystem inputSystem;
     PhysicsSystem physicsSystem;
     EnemyAISystem enemyAI;
+    HealthSystem healthSystem;
+    MenuSystem menuSystem;
     entt::registry registry;
 };
