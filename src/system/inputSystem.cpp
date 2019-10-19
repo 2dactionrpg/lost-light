@@ -1,4 +1,4 @@
-#include "InputSystem.hpp"
+#include "inputSystem.hpp"
 
 enum gameState {
     STATE_START,

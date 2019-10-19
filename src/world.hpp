@@ -9,11 +9,11 @@
 
 // #include "turtle.hpp"
 // #include "fish.hpp"
-#include "./system/InputSystem.hpp"
-#include "./system/PhysicsSystem.hpp"
 #include "./system/enemyAISystem.hpp"
 #include "./system/healthSystem.hpp"
+#include "./system/inputSystem.hpp"
 #include "./system/menuSystem.hpp"
+#include "./system/physicsSystem.hpp"
 #include "background.hpp"
 #include "factory.hpp"
 #include "potion.hpp"
@@ -98,7 +98,7 @@ private:
 
     Mix_Music* m_background_music;
     Mix_Chunk* m_character_dead_sound;
-    Mix_Chunk* m_character_eat_sound;
+    Mix_Chunk* m_character_reflect_sound;
 
     // C++ rng
     std::default_random_engine m_rng;

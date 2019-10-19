@@ -112,13 +112,13 @@ bool World::init(vec2 screen)
 
     m_background_music = Mix_LoadMUS(audio_path("music.wav"));
     m_character_dead_sound = Mix_LoadWAV(audio_path("character_dead.wav"));
-    m_character_eat_sound = Mix_LoadWAV(audio_path("character_eat.wav"));
+    m_character_reflect_sound = Mix_LoadWAV(audio_path("character_reflect.wav"));
 
-    if (m_background_music == nullptr || m_character_dead_sound == nullptr || m_character_eat_sound == nullptr) {
+    if (m_background_music == nullptr || m_character_dead_sound == nullptr || m_character_reflect_sound == nullptr) {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
             audio_path("music.wav"),
             audio_path("character_dead.wav"),
-            audio_path("character_eat.wav"));
+            audio_path("character_reflect.wav"));
         return false;
     }
 
@@ -154,8 +154,8 @@ void World::destroy()
         Mix_FreeMusic(m_background_music);
     if (m_character_dead_sound != nullptr)
         Mix_FreeChunk(m_character_dead_sound);
-    if (m_character_eat_sound != nullptr)
-        Mix_FreeChunk(m_character_eat_sound);
+    if (m_character_reflect_sound != nullptr)
+        Mix_FreeChunk(m_character_reflect_sound);
 
     Mix_CloseAudio();
 
@@ -217,8 +217,8 @@ bool World::update(float elapsed_ms)
             vec2 reflection = sub(
                 projectileDirection,
                 mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
-            // projectile_it->set_direction(reflection);
             physicsSystem.reflect_projectile(registry, projectile_it->get_id(), reflection);
+            Mix_PlayChannel(-1, m_character_reflect_sound, 0);
             ++projectile_it;
             continue;
         }

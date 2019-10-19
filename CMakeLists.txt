@@ -44,8 +44,8 @@ set(SOURCE_FILES
     src/menu.cpp
     src/potion.cpp
     # System
-    src/system/InputSystem.cpp
-    src/system/PhysicsSystem.cpp
+    src/system/inputSystem.cpp
+    src/system/physicsSystem.cpp
     src/system/enemyAISystem.cpp
     src/system/healthSystem.cpp
     src/system/menuSystem.cpp
@@ -73,8 +73,8 @@ set(SOURCE_FILES
     src/components/menuComponent.hpp
     src/components/projectileComponent.hpp
     # System
-    src/system/InputSystem.hpp
-    src/system/PhysicsSystem.hpp
+    src/system/inputSystem.hpp
+    src/system/physicsSystem.hpp
     src/system/enemyAISystem.hpp
     src/system/healthSystem.hpp
     src/system/menuSystem.hpp
