@@ -127,8 +127,6 @@ bool World::init(vec2 screen)
 
     fprintf(stderr, "Loaded music\n");
 
-    m_current_speed = 1.f;
-
     enemy_number = 0;
 
     m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
@@ -400,24 +398,7 @@ bool World::spawn_boss(int& id)
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-    // Resetting game
-    if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
-        int w, h;
-        glfwGetWindowSize(m_window, &w, &h);
-        m_projectiles.clear();
-        m_background.reset_character_dead_time();
-        m_current_speed = 1.f;
-    }
-
     inputSystem.on_key(registry, key, action, mod);
-
-    // Control the current speed with `<` `>`
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA)
-        m_current_speed -= 0.1f;
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD)
-        m_current_speed += 0.1f;
-
-    m_current_speed = fmax(0.f, m_current_speed);
 }
 
 // On key callback
@@ -429,10 +410,4 @@ void World::on_mouse_key(GLFWwindow*, int key, int action, int mod)
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
     inputSystem.on_mouse_move(registry, xpos, ypos);
-}
-
-// Calculates the length of a vec2 vector
-float World::lengthVec2(vec2 v)
-{
-    return sqrt(pow(v.x, 2.f) + pow(v.y, 2.f));
 }

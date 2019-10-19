@@ -7,11 +7,11 @@ entt::entity makeCharacter(entt::registry& registry)
     registry.assign<characterComponent>(entity, true);
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
-    mo.position = { 50.f, 300.f };
-    mo.radians = 20.f;
-    mo.speed = 200.f;
+    mo.position = c_init_pos;
+    mo.radians = c_init_radians;
+    mo.speed = c_init_speed;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.1f, 0.1f };
+    ps.scale = c_init_scale;
     registry.assign<inputKeyboard>(entity, false, false, false, false, false);
     registry.assign<inputMouse>(entity, 0.0, 0.0);
     return entity;
@@ -22,13 +22,13 @@ entt::entity makeShield(entt::registry& registry)
     const entt::entity entity = registry.create();
     registry.assign<shieldComponent>(entity, false, 0.f, 0.f);
     auto& mo = registry.assign<motionComponent>(entity);
-    // Setting initial values3
-    mo.position = { 50.f, 300.f };
-    mo.radians = 20.f;
-    mo.speed = 200.f;
+    // Setting initial values
+    mo.position = s_init_pos;
+    mo.radians = s_init_radians;
+    mo.speed = s_init_speed;
     registry.assign<inputMouse>(entity, 0.0, 0.0);
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.25f, -0.4f };
+    ps.scale = s_init_scale;
     return entity;
 }
 

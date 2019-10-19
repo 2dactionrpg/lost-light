@@ -6,6 +6,7 @@
 #include "../components/menuComponent.hpp"
 #include "../components/motionComponent.hpp"
 #include "../components/shieldComponent.hpp"
+#include "../data.hpp"
 #include <entt/entity/registry.hpp>
 
 struct InputSystem {

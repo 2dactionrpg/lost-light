@@ -61,6 +61,7 @@ set(SOURCE_FILES
     src/enemy.hpp
     src/menu.hpp
     src/potion.hpp
+    src/data.hpp
     # Component
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp

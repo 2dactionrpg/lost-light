@@ -1,5 +1,4 @@
 #include "PhysicsSystem.hpp"
-#include <iostream>
 
 void PhysicsSystem::sync(entt::registry& registry, float ms)
 {
@@ -19,18 +18,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
         }
         if (is_movable) {
             move(position, offset, true);
-            vec2 characterVector = { 0.f, 1.f };
-            vec2 mouseVec = {
-                (float)xpos - position.x,
-                (float)ypos - position.y
-            };
-
-            int factor = 1;
-            if (mouseVec.x > 0.f)
-                factor = -1;
-
-            float angle = acos(dot(mouseVec, characterVector) / (lengthVec2(mouseVec) * lengthVec2(characterVector)));
-            radians = factor * angle;
+            rotate(radians, xpos, ypos, position);
         }
     }
 
@@ -56,18 +44,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
 
                 cooldown -= 1.f;
 
-                vec2 shieldVec = { 0.f, 1.f };
-                vec2 mouseVec = {
-                    (float)xpos - position.x,
-                    (float)ypos - position.y
-                };
-
-                int factor = 1;
-                if (mouseVec.x > 0.f)
-                    factor = -1;
-
-                float angle = acos(dot(mouseVec, shieldVec) / (lengthVec2(mouseVec) * lengthVec2(shieldVec)));
-                radians = factor * angle;
+                rotate(radians, xpos, ypos, position);
             }
         }
     }
@@ -227,25 +204,44 @@ void PhysicsSystem::setCharacterUnmovable(entt::registry& registry)
 
 void PhysicsSystem::resetCharacter(entt::registry& registry)
 {
-    auto viewCharacter = registry.view<characterComponent, motionComponent>();
+    auto viewCharacter = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
     for (auto entity : viewCharacter) {
         auto& is_movable = viewCharacter.get<characterComponent>(entity).is_movable;
         is_movable = true;
 
         auto& position = viewCharacter.get<motionComponent>(entity).position;
-        position = { 250.f, 300.f };
+        position = c_init_pos;
+
+        auto& scale = viewCharacter.get<physicsScaleComponent>(entity).scale;
+        scale = c_init_scale;
     }
 
     auto viewShield = registry.view<shieldComponent, physicsScaleComponent>();
     for (auto entity : viewShield) {
+        auto& [is_reflectable, duration, cooldown] = viewShield.get<shieldComponent>(entity);
+        is_reflectable = false;
+        duration = 0.f;
+        cooldown = 0.f;
+
         auto& scale = viewShield.get<physicsScaleComponent>(entity).scale;
-        scale = { 0.25f, -0.4f };
+        scale = s_init_scale;
     }
 }
 
-void PhysicsSystem::rotate(float& radians, float newRadians)
+void PhysicsSystem::rotate(float& radians, float xpos, float ypos, vec2 position)
 {
-    radians = newRadians;
+    vec2 entityVector = { 0.f, 1.f };
+    vec2 mouseVec = {
+        (float)xpos - position.x,
+        (float)ypos - position.y
+    };
+
+    int factor = 1;
+    if (mouseVec.x > 0.f)
+        factor = -1;
+
+    float angle = acos(dot(mouseVec, entityVector) / (lengthVec2(mouseVec) * lengthVec2(entityVector)));
+    radians = factor * angle;
 }
 
 // Calculates the length of a vec2 vector

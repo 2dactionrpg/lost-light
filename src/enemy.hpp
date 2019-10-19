@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.hpp"
+#include "projectile.hpp"
 #include <vector>
 
 class Projectile;

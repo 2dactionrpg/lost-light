@@ -2,6 +2,7 @@
 
 #include "entity.hpp"
 #include "potion.hpp"
+#include "projectile.hpp"
 #include <entt/entity/registry.hpp>
 #include <vector>
 
@@ -39,11 +40,6 @@ public:
     void set_scale(vec2 scale);
 
     vec2 get_bounding_box() const;
-
-    bool upKeyPressed;
-    bool downKeyPressed;
-    bool leftKeyPressed;
-    bool rightKeyPressed;
 
 private:
     std::vector<Vertex> m_vertices;
