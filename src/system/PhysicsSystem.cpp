@@ -88,14 +88,26 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
                     direction.y = 0.f;
                 }
             }
-            // fprintf(stderr, "%f %f\n", direction.x, direction.y);
+            vec2 offset = mul(normalize(direction), step);
+            move(position, offset);
+        }
+    }
+
+    // Sync Projectile physics
+    auto viewProjectile = registry.view<projectileComponent, motionComponent>();
+    for (auto projectile : viewProjectile) {
+        auto& [position, direction, radians, speed] = viewProjectile.get<motionComponent>(projectile);
+        auto& is_alive = viewProjectile.get<projectileComponent>(projectile).is_alive;
+        float step = speed * (ms / 1000);
+        if (is_alive)
+        {
             vec2 offset = mul(normalize(direction), step);
             move(position, offset);
         }
     }
 }
 
-void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies)
+void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile> &m_projectiles)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -139,6 +151,23 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
                 m_enemy.set_position(position);
                 m_enemy.set_rotation(radians);
                 m_enemy.set_scale(scale);
+            }
+        }
+    }
+
+    // Projectile Physics Update
+    auto projectile = registry.view<enemyComponent, motionComponent, physicsScaleComponent>();
+
+    for (auto entity : projectile) {
+        auto& position = projectile.get<motionComponent>(entity).position;
+        auto& radians = projectile.get<motionComponent>(entity).radians;
+        auto& id = projectile.get<enemyComponent>(entity).id;
+        auto& scale = projectile.get<physicsScaleComponent>(entity).scale;
+        for (auto& m_projectile : m_projectiles) {
+            if (id == m_projectile.get_id()) {
+                m_projectile.set_position(position);
+                m_projectile.set_rotation(radians);
+                // m_projectile.set_scale(scale);
             }
         }
     }

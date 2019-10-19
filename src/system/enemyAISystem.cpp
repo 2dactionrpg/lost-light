@@ -58,11 +58,12 @@ void EnemyAISystem::shoot(entt::registry& registry, float elapsed_ms, vector<Ene
             bool enemy_alive = false;
             for (auto& m_enemy : m_enemies) {
                 if (id == m_enemy.get_id()) {
-                    Projectile projectile = m_enemy.shoot_projectile();
-                    if (projectile.init()) {
-                        projectile.set_position(m_enemy.get_face_position());
-                        projectile.setDirection(proj_direction);
+                    Projectile projectile;
+                    if (projectile.init(proj_counter)) {
+                        vec2 face_pos = m_enemy.get_face_position();
                         m_projectiles.emplace_back(projectile);
+                        makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
+                        proj_counter++;
                     } else {
                         fprintf(stderr, "Failed to spawn projectile");
                     }

@@ -6,6 +6,7 @@
 #include "../character.hpp"
 #include "../shield.hpp"
 #include "../enemy.hpp"
+#include "../projectile.hpp"
 #include "../components/inputMouse.hpp"
 #include "../components/inputKeyboard.hpp"
 #include "../components/motionComponent.hpp"
@@ -13,6 +14,8 @@
 #include "../components/characterComponent.hpp"
 #include "../components/shieldComponent.hpp"
 #include "../components/enemyComponent.hpp"
+#include "../components/projectileComponent.hpp"
+
 
 using namespace std;
 
@@ -20,7 +23,7 @@ class PhysicsSystem
 {
 private:
 public:
-    void update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies);
+    void update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Projectile> &m_projectiles);
     void sync(entt::registry &registry, float elapsed_ms);
     void move(vec2 &pos, vec2 off);
     void rotate(float &radians, float newRadians);

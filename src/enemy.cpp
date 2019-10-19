@@ -205,9 +205,9 @@ void Enemy::respawn()
 
 Projectile Enemy::shoot_projectile()
 {
-    Projectile projectlie;
-    projectlie.setRotation(motion.radians + 1.2);
-    return projectlie;
+    // Projectile projectlie;
+    // projectlie.set_rotation(motion.radians + 1.2);
+    // return projectlie;
 }
 
 vec2 Enemy::get_bounding_box() const

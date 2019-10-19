@@ -5,7 +5,7 @@
 
 Texture Projectile::projectile_texture;
 
-bool Projectile::init()
+bool Projectile::init(int id)
 {
     // Load shared texture
     if (!projectile_texture.is_valid()) {
@@ -54,9 +54,11 @@ bool Projectile::init()
     if (!effect.load_from_file(shader_path("projectile.vs.glsl"), shader_path("projectile.fs.glsl")))
         return false;
 
+    projectile_id = id;
+
     // motion.radians = 0.f;
     motion.speed = 200.f;
-    setDirection({ -1.f, 0.2f });
+    set_direction({ -1.f, 0.2f });
 
     // Setting initial values, scale is negative to make it face the opposite way
     // 1.0 would be as big as the original texture.
@@ -86,17 +88,17 @@ void Projectile::update(float ms)
     motion.position.y += step * motion.direction.y;
 }
 
-vec2 Projectile::getDirection()
+vec2 Projectile::get_direction()
 {
     return motion.direction;
 }
 
-void Projectile::setDirection(vec2 direction)
+void Projectile::set_direction(vec2 direction)
 {
     motion.direction = normalize(direction);
 }
 
-void Projectile::setRotation(float rad)
+void Projectile::set_rotation(float rad)
 {
     motion.radians = rad;
 }
@@ -165,4 +167,9 @@ vec2 Projectile::get_bounding_box() const
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
     return { std::fabs(physics.scale.x) * projectile_texture.width, std::fabs(physics.scale.y) * projectile_texture.height };
+}
+
+int Projectile::get_id() const
+{
+    return projectile_id;
 }

@@ -55,7 +55,7 @@ bool Potion::init()
         return false;
 
     motion.position = { 850.f, 600.f };
-    setDirection({ -1.f, 0.2f });
+    set_direction({ -1.f, 0.2f });
 
     // Setting initial values, scale is negative to make it face the opposite way
     // 1.0 would be as big as the original texture.
@@ -82,18 +82,18 @@ void Potion::update(float ms)
 {
 }
 
-vec2 Potion::getDirection()
+vec2 Potion::get_direction()
 {
     return motion.direction;
 }
 
-void Potion::setDirection(vec2 direction)
+void Potion::set_direction(vec2 direction)
 {
     float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
     motion.direction = { direction.x / normal, direction.y / normal };
 }
 
-void Potion::setRotation(float rad)
+void Potion::set_rotation(float rad)
 {
     motion.radians = rad;
 }
