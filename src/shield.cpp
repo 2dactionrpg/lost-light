@@ -1,8 +1,6 @@
 // Header
 #include "shield.hpp"
 
-#include "projectile.hpp"
-
 // stlib
 #include <algorithm>
 #include <string>

@@ -1,8 +1,6 @@
 // Header
 #include "enemy.hpp"
 
-#include "projectile.hpp"
-
 // stlib
 #include <algorithm>
 #include <string>
