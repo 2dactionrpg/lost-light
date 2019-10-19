@@ -49,6 +49,7 @@ set(SOURCE_FILES
     src/system/enemyAISystem.cpp
     src/system/healthSystem.cpp
     src/system/menuSystem.cpp
+    src/system/soundSystem.cpp
 
     src/project_path.hpp
 	src/character.hpp
@@ -78,6 +79,7 @@ set(SOURCE_FILES
     src/system/enemyAISystem.hpp
     src/system/healthSystem.hpp
     src/system/menuSystem.hpp
+    src/system/soundSystem.hpp
 )
 
 if (IS_OS_MAC)
