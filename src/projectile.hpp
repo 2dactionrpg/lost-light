@@ -13,10 +13,6 @@ class Projectile : public Entity {
         // Releases all the associated resources
         void destroy();
 
-        // Update projectile due to current
-        // ms represents the number of milliseconds elapsed from the previous update() call
-        void update(float ms);
-
         // Renders the projectile
         // projection is the 2D orthographic projection matrix
         void draw(const mat3& projection) override;
@@ -36,8 +32,9 @@ class Projectile : public Entity {
         // Returns the projectile' bounding box for collision detection, called by collides_with()
         vec2 get_bounding_box() const;
 
+        void set_scale(vec2 scale);
+
         int get_id() const;
     private:
         int projectile_id;
-
 };

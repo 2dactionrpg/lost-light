@@ -167,7 +167,7 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
                 m_projectile.set_position(position);
                 m_projectile.set_rotation(radians);
                 m_projectile.set_direction(direction);
-                // m_projectile.set_scale(scale);
+                m_projectile.set_scale(scale);
             }
         }
     }

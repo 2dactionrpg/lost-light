@@ -56,14 +56,6 @@ bool Projectile::init(int id)
 
     projectile_id = id;
 
-    // motion.radians = 0.f;
-    motion.speed = 200.f;
-    set_direction({ -1.f, 0.2f });
-
-    // Setting initial values, scale is negative to make it face the opposite way
-    // 1.0 would be as big as the original texture.
-    physics.scale = { -0.4f, 0.4f };
-
     return true;
 }
 
@@ -77,15 +69,6 @@ void Projectile::destroy()
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
     glDeleteShader(effect.program);
-}
-
-void Projectile::update(float ms)
-{
-    // Move fish along -X based on how much time has passed, this is to (partially) avoid
-    // having entities move at different speed based on the machine.
-    // float step = 5.0 * motion.speed * (ms / 1000);
-    // motion.position.x += step * motion.direction.x;
-    // motion.position.y += step * motion.direction.y;
 }
 
 vec2 Projectile::get_direction()
@@ -173,3 +156,9 @@ int Projectile::get_id() const
 {
     return projectile_id;
 }
+
+void Projectile::set_scale(vec2 scale)
+{
+    physics.scale = scale;
+}
+

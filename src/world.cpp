@@ -232,7 +232,6 @@ bool World::update(float elapsed_ms)
         }
 
         if (hits_enemy) {
-            enemy_it->kill();
             enemy_it = m_enemies.erase(enemy_it);
             projectile_it = m_projectiles.erase(projectile_it);
         } else {
