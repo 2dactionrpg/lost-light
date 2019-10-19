@@ -15,6 +15,7 @@ private:
     inline static Mix_Chunk* m_character_dead_sound;
     inline static Mix_Chunk* m_shield_reflect_sound;
     inline static Mix_Chunk* m_menu_popup_sound;
+    inline static Mix_Chunk* m_menu_close_sound;
 
 public:
     bool init();

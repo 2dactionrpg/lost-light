@@ -18,9 +18,11 @@ bool SoundSystem::init()
     m_character_dead_sound = Mix_LoadWAV(audio_path("character_dead.wav"));
     m_shield_reflect_sound = Mix_LoadWAV(audio_path("shield_reflect.wav"));
     m_menu_popup_sound = Mix_LoadWAV(audio_path("menu_popup.wav"));
+    m_menu_close_sound = Mix_LoadWAV(audio_path("menu_close.wav"));
 
     if (m_background_music == nullptr
         || m_menu_popup_sound == nullptr
+        || m_menu_close_sound == nullptr
         || m_character_dead_sound == nullptr
         || m_shield_reflect_sound == nullptr) {
         return false;
@@ -46,6 +48,9 @@ void SoundSystem::play_sound(int type, int channel, int loops)
     case MENU_POPUP:
         Mix_PlayChannel(channel, m_menu_popup_sound, loops);
         break;
+    case MENU_CLOSE:
+        Mix_PlayChannel(channel, m_menu_close_sound, loops);
+        break;
     }
 }
 
@@ -59,6 +64,8 @@ void SoundSystem::destroy()
         Mix_FreeChunk(m_shield_reflect_sound);
     if (m_menu_popup_sound != nullptr)
         Mix_FreeChunk(m_menu_popup_sound);
+    if (m_menu_close_sound != nullptr)
+        Mix_FreeChunk(m_menu_close_sound);
 
     Mix_CloseAudio();
 }

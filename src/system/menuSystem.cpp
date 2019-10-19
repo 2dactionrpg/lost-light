@@ -8,6 +8,12 @@ void MenuSystem::update(entt::registry& registry, Menu& m_menu)
         auto& state = menu.get(entity).state;
         auto& old_state = menu.get(entity).old_state;
         if (state != old_state) {
+            if (state == STATE_PAUSE) {
+                soundSystem.play_sound(MENU_POPUP);
+            }
+            if (old_state == STATE_PAUSE && state == STATE_PLAYING) {
+                soundSystem.play_sound(MENU_CLOSE);
+            }
             m_menu.load_texture(state);
             old_state = state;
         }

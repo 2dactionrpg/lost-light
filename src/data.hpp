@@ -30,7 +30,8 @@ float s_init_cooldown = 100.f;
 enum soundType {
     C_DEAD,
     S_REFLECT,
-    MENU_POPUP
+    MENU_POPUP,
+    MENU_CLOSE
 };
 
 enum gameState {
