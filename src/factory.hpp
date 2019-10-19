@@ -9,6 +9,7 @@
 #include "./components/physicsScaleComponent.hpp"
 #include "./components/projectileComponent.hpp"
 #include "./components/shieldComponent.hpp"
+#include "data.hpp"
 #include <entt/entity/registry.hpp>
 
 entt::entity makeCharacter(entt::registry& registry);

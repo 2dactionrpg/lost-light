@@ -1,5 +1,4 @@
 #include "menuSystem.hpp"
-#include <iostream>
 
 void MenuSystem::update(entt::registry& registry, Menu& m_menu)
 {
