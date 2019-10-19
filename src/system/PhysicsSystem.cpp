@@ -42,8 +42,17 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
         auto& is_movable = viewCharacter.get<characterComponent>(character).is_movable;
         if (is_movable) {
             for (auto shield : viewShield) {
+                auto& [is_reflectable, duration, cooldown] = viewShield.get<shieldComponent>(shield);
                 auto& radians = viewShield.get<motionComponent>(shield).radians;
                 auto& [xpos, ypos] = viewShield.get<inputMouse>(shield);
+
+                if (is_reflectable) {
+                    duration -= 1.f;
+                }
+
+                if (duration < 0.f) {
+                    is_reflectable = false;
+                }
 
                 vec2 shieldVec = { 0.f, 1.f };
                 vec2 mouseVec = {
@@ -125,7 +134,7 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
 
     for (auto entity : shield) {
         auto& radians = shield.get<motionComponent>(entity).radians;
-        auto& is_reflectable = shield.get<shieldComponent>(entity).is_reflectable;
+        auto& [is_reflectable, duration, cooldown] = shield.get<shieldComponent>(entity);
         auto& scale = shield.get<physicsScaleComponent>(entity).scale;
 
         m_shield.set_position(m_character.get_position());
