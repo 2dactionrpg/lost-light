@@ -17,9 +17,9 @@ enum gameState {
 // Same as static in c, local to compilation unit
 namespace {
 // change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 4;
-const size_t MAX_ENEMIES_TOTAL = 15;
-const size_t MAX_BOSS_COUNT = 2;
+const size_t MAX_ENEMIES = 2;
+const size_t ENEMIES_THRESHOLD_1 = 12;
+const size_t MAX_BOSS_COUNT = 1;
 const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
@@ -241,7 +241,7 @@ bool World::update(float elapsed_ms)
 
         if (hits_enemy) {
             enemiesKilled++;
-            if (enemiesKilled == MAX_ENEMIES_TOTAL + MAX_BOSS_COUNT) {
+            if (enemiesKilled == ENEMIES_THRESHOLD_1 + MAX_BOSS_COUNT) {
                 state = STATE_WIN;
             }
             m_enemies.erase(enemy_it);
@@ -266,14 +266,14 @@ bool World::update(float elapsed_ms)
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
-    if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f && enemiesCount < MAX_ENEMIES_TOTAL) {
+    if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f && enemiesCount < ENEMIES_THRESHOLD_1) {
         if (spawn_enemy(enemy_number))
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
         else
             fprintf(stderr, "%s\n", "couldn't spawn new enemy");
     }
 
-    if (enemiesKilled == MAX_ENEMIES_TOTAL && bossCount < MAX_BOSS_COUNT) {
+    if (enemiesKilled == ENEMIES_THRESHOLD_1 && bossCount < MAX_BOSS_COUNT) {
         spawn_boss(enemy_number);
         bossCount++;
     }
