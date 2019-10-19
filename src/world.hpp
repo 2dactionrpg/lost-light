@@ -51,14 +51,15 @@ public:
     bool is_over() const;
 
     int state;
-
     bool closeFlag;
-
     int enemiesCount;
+    int enemiesKilled;
+    int bossCount;
 
 private:
     // generate enemies
     bool spawn_enemy(int& id);
+    bool spawn_boss(int& id);
 
     // !!! INPUT CALLBACK FUNCTIONS
     void on_key(GLFWwindow*, int key, int, int action, int mod);

@@ -11,13 +11,15 @@ enum gameState {
     STATE_PLAYING,
     STATE_PAUSE,
     STATE_GAMEOVER,
+    STATE_WIN,
 };
 
 // Same as static in c, local to compilation unit
 namespace {
 // change these numbers for minimal difficulty control
 const size_t MAX_ENEMIES = 4;
-const size_t MAX_ENEMIES_TOTAL = 15;
+const size_t MAX_ENEMIES_TOTAL = 2;
+const size_t MAX_BOSS_COUNT = 20;
 const size_t ENEMY_SPAWN_DELAY_MS = 2500;
 
 namespace {
@@ -44,6 +46,8 @@ bool World::init(vec2 screen)
 {
     closeFlag = false;
     enemiesCount = 0;
+    enemiesKilled = 0;
+    bossCount = 0;
     state = STATE_START;
     //-------------------------------------------------------------------------
     // GLFW / OGL Initialization
@@ -234,6 +238,10 @@ bool World::update(float elapsed_ms)
 
         if (hits_enemy) {
             enemy_it->kill();
+            enemiesKilled++;
+            if (enemiesKilled == MAX_ENEMIES_TOTAL + MAX_BOSS_COUNT) {
+                state = STATE_WIN;
+            }
             enemy_it = m_enemies.erase(enemy_it);
             projectile_it = m_projectiles.erase(projectile_it);
         } else {
@@ -264,6 +272,12 @@ bool World::update(float elapsed_ms)
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
         else
             fprintf(stderr, "%s\n", "couldn't spawn new enemy");
+    }
+
+    fprintf(stderr, "%d\t%d\n", enemiesKilled, MAX_ENEMIES_TOTAL);
+    if (enemiesKilled == MAX_ENEMIES_TOTAL && bossCount < MAX_BOSS_COUNT) {
+        spawn_boss(enemy_number);
+        bossCount++;
     }
 
     enemyAI.destroy_dead_enemies(registry);
@@ -367,6 +381,20 @@ bool World::spawn_enemy(int& id)
     return false;
 }
 
+// create a new enemy
+bool World::spawn_boss(int& id)
+{
+    Enemy enemy;
+    if (enemy.init(id)) {
+        m_enemies.emplace_back(enemy);
+        makeBoss(registry, id);
+        id++;
+        return true;
+    }
+    fprintf(stderr, "Failed to spawn enemy");
+    return false;
+}
+
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
@@ -387,7 +415,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     if (action == GLFW_PRESS && key == GLFW_KEY_Q && state != STATE_PLAYING)
         closeFlag = true;
 
-    if (action == GLFW_PRESS && key == GLFW_KEY_R && state == STATE_GAMEOVER)
+    if (action == GLFW_PRESS && key == GLFW_KEY_R && (state == STATE_GAMEOVER || state == STATE_WIN))
         state = STATE_PLAYING;
 
     if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE && state == STATE_PLAYING)

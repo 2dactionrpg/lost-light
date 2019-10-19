@@ -10,3 +10,4 @@
 entt::entity makeCharacter(entt::registry& registry);
 entt::entity makeShield(entt::registry& registry);
 entt::entity makeEnemy(entt::registry& registry, int id);
+entt::entity makeBoss(entt::registry& registry, int id);

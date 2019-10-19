@@ -95,6 +95,9 @@ void Menu::update(float ms, int state)
         case 3:
             menu_texture.load_from_file(textures_path("game-over.png"));
             break;
+        case 4:
+            menu_texture.load_from_file(textures_path("win.png"));
+            break;
         default:
             break;
         }

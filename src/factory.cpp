@@ -55,6 +55,25 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
+    ps.scale = { 1.4f, 1.4f };
+    return entity;
+}
+
+entt::entity makeBoss(entt::registry& registry, int id)
+{
+    const entt::entity entity = registry.create();
+    auto& em = registry.assign<enemyComponent>(entity);
+    em.id = id;
+    em.is_alive = true;
+    em.shoot_delay_ms = 3000.f;
+    auto& mo = registry.assign<motionComponent>(entity);
+    // Setting initial values
+    float xpos = randomFloat(50.f, 1000.f);
+    float ypos = randomFloat(50.f, 500.f);
+    mo.position = { xpos, ypos };
+    mo.radians = 20.f;
+    mo.speed = 200.f;
+    auto& ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = { 0.4f, 0.4f };
     return entity;
 }
