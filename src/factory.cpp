@@ -1,4 +1,5 @@
 #include "factory.hpp"
+#include "data.hpp"
 
 entt::entity makeCharacter(entt::registry& registry)
 {
@@ -7,13 +8,22 @@ entt::entity makeCharacter(entt::registry& registry)
     registry.assign<characterComponent>(entity, true);
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
-    mo.position = { 50.f, 300.f };
-    mo.radians = 20.f;
-    mo.speed = 200.f;
+    mo.position = c_init_pos;
+    mo.radians = c_init_radians;
+    mo.speed = c_init_speed;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.1f, 0.1f };
-    registry.assign<inputKeyboard>(entity, false, false, false, false, false);
-    registry.assign<inputMouse>(entity, 0.0, 0.0);
+    ps.scale = c_init_scale;
+    registry.assign<inputKeyboard>(
+        entity,
+        c_init_keyboard_up,
+        c_init_keyboard_down,
+        c_init_keyboard_left,
+        c_init_keyboard_right,
+        c_init_keyboard_reset);
+    registry.assign<inputMouse>(
+        entity,
+        c_init_mouse_xpos,
+        c_init_mouse_ypos);
     return entity;
 }
 

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "./components/characterComponent.hpp"
 #include "./components/enemyComponent.hpp"
 #include "./components/inputKeyboard.hpp"
