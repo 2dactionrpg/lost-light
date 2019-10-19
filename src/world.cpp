@@ -204,7 +204,8 @@ bool World::update(float elapsed_ms)
             vec2 reflection = sub(
                 projectileDirection,
                 mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
-            projectile_it->set_direction(reflection);
+            // projectile_it->set_direction(reflection);
+            physicsSystem.reflect_projectile(registry, projectile_it->get_id(), reflection);
             ++projectile_it;
             continue;
         }
@@ -241,6 +242,7 @@ bool World::update(float elapsed_ms)
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
+    enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
     // Updating all entities, making the turtle and fish
     // faster based on current.
     // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
@@ -249,10 +251,6 @@ bool World::update(float elapsed_ms)
     m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles);
-    // for (auto& projectile : m_projectiles)
-    //     projectile.update(elapsed_ms * m_current_speed);
-
-    enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
     m_next_enemy_spawn -= elapsed_ms;
     if (m_enemies.size() < MAX_ENEMIES && m_next_enemy_spawn < 0.f) {

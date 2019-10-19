@@ -18,7 +18,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
             resetCharacter(registry);
         }
         if (is_movable) {
-            move(position, offset);
+            move(position, offset, true);
             vec2 characterVector = { 0.f, 1.f };
             vec2 mouseVec = {
                 (float)xpos - position.x,
@@ -89,7 +89,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
                 }
             }
             vec2 offset = mul(normalize(direction), step);
-            move(position, offset);
+            move(position, offset, true);
         }
     }
 
@@ -102,7 +102,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
         if (is_alive)
         {
             vec2 offset = mul(normalize(direction), step);
-            move(position, offset);
+            move(position, offset, false);
         }
     }
 }
@@ -156,24 +156,24 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
     }
 
     // Projectile Physics Update
-    auto projectile = registry.view<enemyComponent, motionComponent, physicsScaleComponent>();
+    auto projectile = registry.view<projectileComponent, motionComponent, physicsScaleComponent>();
 
     for (auto entity : projectile) {
-        auto& position = projectile.get<motionComponent>(entity).position;
-        auto& radians = projectile.get<motionComponent>(entity).radians;
-        auto& id = projectile.get<enemyComponent>(entity).id;
+        auto &[position, direction, radians, speed] = projectile.get<motionComponent>(entity);
+        auto& id = projectile.get<projectileComponent>(entity).id;
         auto& scale = projectile.get<physicsScaleComponent>(entity).scale;
         for (auto& m_projectile : m_projectiles) {
             if (id == m_projectile.get_id()) {
                 m_projectile.set_position(position);
                 m_projectile.set_rotation(radians);
+                m_projectile.set_direction(direction);
                 // m_projectile.set_scale(scale);
             }
         }
     }
 }
 
-void PhysicsSystem::move(vec2& pos, vec2 off)
+void PhysicsSystem::move(vec2& pos, vec2 off, bool is_bounded)
 {
     float C_FRAME_X_MAX = 1150;
     float C_FRAME_X_MIN = 50;
@@ -183,15 +183,17 @@ void PhysicsSystem::move(vec2& pos, vec2 off)
     pos.x += off.x;
     pos.y += off.y;
 
-    if (pos.x > C_FRAME_X_MAX) {
-        pos.x = C_FRAME_X_MAX;
-    } else if (pos.x < C_FRAME_X_MIN) {
-        pos.x = C_FRAME_X_MIN;
-    }
-    if (pos.y > C_FRAME_Y_MAX) {
-        pos.y = C_FRAME_Y_MAX;
-    } else if (pos.y < C_FRAME_Y_MIN) {
-        pos.y = C_FRAME_Y_MIN;
+    if (is_bounded) {
+        if (pos.x > C_FRAME_X_MAX) {
+            pos.x = C_FRAME_X_MAX;
+        } else if (pos.x < C_FRAME_X_MIN) {
+            pos.x = C_FRAME_X_MIN;
+        }
+        if (pos.y > C_FRAME_Y_MAX) {
+            pos.y = C_FRAME_Y_MAX;
+        } else if (pos.y < C_FRAME_Y_MIN) {
+            pos.y = C_FRAME_Y_MIN;
+        }
     }
 }
 
@@ -240,4 +242,18 @@ void PhysicsSystem::rotate(float& radians, float newRadians)
 float PhysicsSystem::lengthVec2(vec2 v)
 {
     return sqrt(pow(v.x, 2.f) + pow(v.y, 2.f));
+}
+
+void PhysicsSystem::reflect_projectile(entt::registry& registry, int m_id, vec2 angle)
+{
+    // Projectile Physics Update
+    auto projectile = registry.view<projectileComponent, motionComponent>();
+
+    for (auto entity : projectile) {
+        auto &[position, direction, radians, speed] = projectile.get<motionComponent>(entity);
+        auto& id = projectile.get<projectileComponent>(entity).id;
+        if (id == m_id) {
+            direction = angle;
+        }
+    }
 }
