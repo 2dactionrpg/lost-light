@@ -11,7 +11,7 @@ entt::entity makeCharacter(entt::registry& registry)
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.5f, 0.5f };
+    ps.scale = { 0.1f, 0.1f };
     registry.assign<inputKeyboard>(entity, false, false, false, false, false);
     registry.assign<inputMouse>(entity, 0.0, 0.0);
     return entity;
@@ -55,7 +55,7 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 0.4f, 0.4f };
+    ps.scale = { 0.08f, 0.08f };
     return entity;
 }
 
@@ -74,7 +74,7 @@ entt::entity makeBoss(entt::registry& registry, int id)
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { 1.0f, 1.0f };
+    ps.scale = { 0.2f, 0.2f };
     return entity;
 }
 

@@ -177,9 +177,9 @@ bool Enemy::collides_with(const Projectile& projectile)
 
 vec2 Enemy::get_face_position()
 {
-    vec3 tlMul = { 0, -enemy_texture.height / 2.f - 50, 1.f };
-    tlMul = mul(transform.out, tlMul);
-    return { tlMul.x, tlMul.y };
+    vec3 facePoint = { enemy_texture.width / 3.f, -enemy_texture.height / 2.f - 200, 1.f };
+    facePoint = mul(transform.out, facePoint);
+    return { facePoint.x, facePoint.y };
 }
 
 int Enemy::get_id()
