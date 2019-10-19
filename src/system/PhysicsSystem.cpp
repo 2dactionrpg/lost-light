@@ -99,15 +99,14 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
         auto& [position, direction, radians, speed] = viewProjectile.get<motionComponent>(projectile);
         auto& is_alive = viewProjectile.get<projectileComponent>(projectile).is_alive;
         float step = speed * (ms / 1000);
-        if (is_alive)
-        {
+        if (is_alive) {
             vec2 offset = mul(normalize(direction), step);
             move(position, offset, false);
         }
     }
 }
 
-void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile> &m_projectiles)
+void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -159,7 +158,7 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
     auto projectile = registry.view<projectileComponent, motionComponent, physicsScaleComponent>();
 
     for (auto entity : projectile) {
-        auto &[position, direction, radians, speed] = projectile.get<motionComponent>(entity);
+        auto& [position, direction, radians, speed] = projectile.get<motionComponent>(entity);
         auto& id = projectile.get<projectileComponent>(entity).id;
         auto& scale = projectile.get<physicsScaleComponent>(entity).scale;
         for (auto& m_projectile : m_projectiles) {
@@ -250,7 +249,7 @@ void PhysicsSystem::reflect_projectile(entt::registry& registry, int m_id, vec2 
     auto projectile = registry.view<projectileComponent, motionComponent>();
 
     for (auto entity : projectile) {
-        auto &[position, direction, radians, speed] = projectile.get<motionComponent>(entity);
+        auto& [position, direction, radians, speed] = projectile.get<motionComponent>(entity);
         auto& id = projectile.get<projectileComponent>(entity).id;
         if (id == m_id) {
             direction = angle;

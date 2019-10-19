@@ -20,7 +20,7 @@ entt::entity makeCharacter(entt::registry& registry)
 entt::entity makeShield(entt::registry& registry)
 {
     const entt::entity entity = registry.create();
-    registry.assign<shieldComponent>(entity, true);
+    registry.assign<shieldComponent>(entity, false);
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values3
     mo.position = { 50.f, 300.f };

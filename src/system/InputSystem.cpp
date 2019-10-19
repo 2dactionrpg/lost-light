@@ -61,7 +61,19 @@ void InputSystem::on_key(entt::registry& registry, int key, int action, int mod)
     }
 }
 
-void InputSystem::on_mouse(entt::registry& registry, double xpos_new, double ypos_new)
+void InputSystem::on_mouse_key(entt::registry& registry, int key, int action, int mod)
+{
+    auto shield = registry.view<shieldComponent>();
+
+    for (auto entity : shield) {
+        auto& is_reflectable = shield.get(entity).is_reflectable;
+        if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
+            is_reflectable = true;
+        }
+    }
+}
+
+void InputSystem::on_mouse_move(entt::registry& registry, double xpos_new, double ypos_new)
 {
     auto view = registry.view<inputMouse>();
     for (auto entity : view) {

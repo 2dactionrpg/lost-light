@@ -80,8 +80,10 @@ bool World::init(vec2 screen)
     // Input is handled using GLFW, for more info see
     glfwSetWindowUserPointer(m_window, this);
     auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+    auto mouse_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_key(wnd, _0, _1, _2); };
     auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
     glfwSetKeyCallback(m_window, key_redirect);
+    glfwSetMouseButtonCallback(m_window, mouse_redirect);
     glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 
     // Create a frame buffer
@@ -426,9 +428,15 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     m_current_speed = fmax(0.f, m_current_speed);
 }
 
+// On key callback
+void World::on_mouse_key(GLFWwindow*, int key, int action, int mod)
+{
+    inputSystem.on_mouse_key(registry, key, action, mod);
+}
+
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-    inputSystem.on_mouse(registry, xpos, ypos);
+    inputSystem.on_mouse_move(registry, xpos, ypos);
 }
 
 // Calculates the length of a vec2 vector
