@@ -21,11 +21,11 @@ public:
     // projection is the 2D orthographic projection matrix
     void draw(const mat3& projection) override;
 
-    vec2 getDirection();
+    vec2 get_direction();
 
-    void setDirection(vec2 direction);
+    void set_direction(vec2 direction);
 
-    void setRotation(float rad);
+    void set_rotation(float rad);
 
     // Returns the current potion position
     vec2 get_position() const;

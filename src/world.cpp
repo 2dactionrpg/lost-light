@@ -199,12 +199,12 @@ bool World::update(float elapsed_ms)
 
         // check shield collision
         if (m_shield.collides_with(*projectile_it)) {
-            vec2 shieldDirection = m_shield.getDirection();
-            vec2 projectileDirection = projectile_it->getDirection();
+            vec2 shieldDirection = m_shield.get_direction();
+            vec2 projectileDirection = projectile_it->get_direction();
             vec2 reflection = sub(
                 projectileDirection,
                 mul(mul(shieldDirection, 2.f), dot(shieldDirection, shieldDirection)));
-            projectile_it->setDirection(reflection);
+            projectile_it->set_direction(reflection);
             ++projectile_it;
             continue;
         }
@@ -250,9 +250,9 @@ bool World::update(float elapsed_ms)
     if(m_potion.is_alive())
         m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
-    physicsSystem.update(registry, m_character, m_shield, m_enemies);
-    for (auto& projectile : m_projectiles)
-        projectile.update(elapsed_ms * m_current_speed);
+    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles);
+    // for (auto& projectile : m_projectiles)
+    //     projectile.update(elapsed_ms * m_current_speed);
 
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
