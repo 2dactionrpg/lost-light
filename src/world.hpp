@@ -3,12 +3,11 @@
 // internal
 #include "character.hpp"
 #include "common.hpp"
+#include "data.hpp"
 #include "enemy.hpp"
 #include "menu.hpp"
 #include "shield.hpp"
 
-// #include "turtle.hpp"
-// #include "fish.hpp"
 #include "./system/enemyAISystem.hpp"
 #include "./system/healthSystem.hpp"
 #include "./system/inputSystem.hpp"
@@ -30,10 +29,10 @@
 // Same as static in c, local to compilation unit
 namespace {
 // change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = 2;
-const size_t ENEMIES_THRESHOLD_1 = 2;
-const size_t MAX_BOSS_COUNT = 1;
-const size_t ENEMY_SPAWN_DELAY_MS = 2500;
+const size_t MAX_ENEMIES = init_MAX_ENEMIES;
+const size_t ENEMIES_THRESHOLD_1 = init_ENEMIES_THRESHOLD_1;
+const size_t MAX_BOSS_COUNT = init_MAX_BOSS_COUNT;
+const size_t ENEMY_SPAWN_DELAY_MS = init_ENEMY_SPAWN_DELAY_MS;
 
 namespace {
     void glfw_err_cb(int error, const char* desc)

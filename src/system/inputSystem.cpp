@@ -19,10 +19,12 @@ void InputSystem::on_key(entt::registry& registry, int key, int action, int mod)
             state = STATE_PAUSE;
     }
 
-    auto view = registry.view<motionComponent, inputKeyboard>();
+    auto view = registry.view<characterComponent, motionComponent, inputKeyboard>();
     for (auto entity : view) {
         auto& [upKeyPressed, downKeyPressed, leftKeyPressed, rightKeyPressed, resetKeyPressed] = view.get<inputKeyboard>(entity);
         auto& [position, direction, radians, speed] = view.get<motionComponent>(entity);
+        auto& is_dashable = view.get<characterComponent>(entity).is_dashable;
+        auto& cooldown = view.get<characterComponent>(entity).cooldown;
 
         direction = { 0.f, 0.f };
 
@@ -33,6 +35,14 @@ void InputSystem::on_key(entt::registry& registry, int key, int action, int mod)
         if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
             direction = { 0.f, 0.f };
             resetKeyPressed = false;
+        }
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+            if (cooldown < 0.f) {
+                // soundSystem.play_sound(S_REFLECT, -1, 0);
+                is_dashable = true;
+                cooldown = c_init_cooldown;
+            }
         }
 
         if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_W)) {

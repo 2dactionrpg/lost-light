@@ -6,16 +6,25 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
     auto view = registry.view<characterComponent, motionComponent, inputKeyboard, inputMouse>();
     for (auto entity : view) {
         auto& [position, direction, radians, speed] = view.get<motionComponent>(entity);
-        auto& [is_movable] = view.get<characterComponent>(entity);
-        auto& [upKeyPressed, downKeyPressed, leftKeyPressed, rightKeyPressed, resetKeyPressed] = view.get<inputKeyboard>(entity);
+        auto& [is_movable, is_dashable, cooldown] = view.get<characterComponent>(entity);
+        auto& resetKeyPressed = view.get<inputKeyboard>(entity).resetKeyPressed;
         auto& [xpos, ypos] = view.get<inputMouse>(entity);
 
         float step = speed * (ms / 1000);
         vec2 offset = mul(normalize(direction), step);
 
+        if (is_dashable) {
+            vec2 dash_distance = mul(normalize(direction), c_init_dash_distance);
+            offset = add(offset, dash_distance);
+            is_dashable = false;
+        }
+
+        cooldown -= 1.f;
+
         if (resetKeyPressed) {
             resetCharacter(registry);
         }
+
         if (is_movable) {
             move(position, offset, true);
             rotate(radians, xpos, ypos, position);
@@ -206,10 +215,13 @@ void PhysicsSystem::resetCharacter(entt::registry& registry)
 {
     auto viewCharacter = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
     for (auto entity : viewCharacter) {
-        auto& is_movable = viewCharacter.get<characterComponent>(entity).is_movable;
+        auto& [is_movable, is_dashable, cooldown] = viewCharacter.get<characterComponent>(entity);
         is_movable = true;
+        is_dashable = false;
+        cooldown = 0.f;
 
-        auto& position = viewCharacter.get<motionComponent>(entity).position;
+        auto& position
+            = viewCharacter.get<motionComponent>(entity).position;
         position = c_init_pos;
 
         auto& scale = viewCharacter.get<physicsScaleComponent>(entity).scale;
