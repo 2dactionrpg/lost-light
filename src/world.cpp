@@ -146,7 +146,7 @@ bool World::update(float elapsed_ms)
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
     // Checking Character - Potion collisions
-    if (m_character.collides_with(m_potion)) {
+    if (m_character.collides_with(m_potion) && !m_potion.is_consumed()) {
         physicsSystem.consume_potion(registry, m_potion.get_id());
         physicsSystem.set_shield_scale_multiplier(registry, 2.0f, 1.0f);
     }

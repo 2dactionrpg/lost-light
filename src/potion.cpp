@@ -55,13 +55,9 @@ bool Potion::init(int id)
         return false;
 
     potion_id = id;
+    m_is_consumed = false;
 
     return true;
-}
-
-void Potion::consumed()
-{
-    physics.scale = { 0.f, 0.f };
 }
 
 // Releases all graphics resources
@@ -168,4 +164,14 @@ int Potion::get_id()
 void Potion::set_scale(vec2 scale)
 {
     physics.scale = scale;
+}
+
+bool Potion::is_consumed()
+{
+    return m_is_consumed;
+}
+
+void Potion::set_is_consumed(bool is_consumed)
+{
+    m_is_consumed = is_consumed;
 }

@@ -174,9 +174,11 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
     for (auto entity : potion) {
         auto& [position, direction, radians, speed] = potion.get<motionComponent>(entity);
         auto& id = potion.get<potionComponent>(entity).id;
+        auto& is_consumed = potion.get<potionComponent>(entity).is_consumed;
         auto& scale = potion.get<physicsScaleComponent>(entity).scale;
         m_potion.set_position(position);
         m_potion.set_scale(scale);
+        m_potion.set_is_consumed(is_consumed);
     }
 }
 
@@ -218,9 +220,11 @@ void PhysicsSystem::consume_potion(entt::registry& registry, int m_id)
     auto view = registry.view<potionComponent, physicsScaleComponent>();
     for (auto entity : view) {
         auto& id = view.get<potionComponent>(entity).id;
+        auto& is_consumed = view.get<potionComponent>(entity).is_consumed;
         auto& scale = view.get<physicsScaleComponent>(entity).scale;
         if (id == m_id) {
             scale = { 0.f, 0.f };
+            is_consumed = true;
         }
     }
 }

@@ -3,4 +3,5 @@
 
 struct potionComponent {
     int id;
+    bool is_consumed;
 };

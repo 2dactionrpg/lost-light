@@ -89,7 +89,7 @@ entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir
 entt::entity makePotion(entt::registry& registry, int id)
 {
     const entt::entity entity = registry.create();
-    registry.assign<potionComponent>(entity, id);
+    registry.assign<potionComponent>(entity, id, false);
     auto& mo = registry.assign<motionComponent>(entity);
     mo.position = { 850.f, 600.f };
     mo.radians = 0.f;

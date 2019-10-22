@@ -13,8 +13,6 @@ public:
     // Releases all the associated resources
     void destroy();
 
-    void consumed();
-
     // Renders the potion
     // projection is the 2D orthographic projection matrix
     void draw(const mat3& projection) override;
@@ -36,8 +34,13 @@ public:
     // Returns the potion' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
 
+    bool is_consumed();
+
+    void set_is_consumed(bool is_consumed);
+
     int get_id();
 
 private:
     int potion_id;
+    bool m_is_consumed;
 };
