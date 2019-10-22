@@ -48,6 +48,7 @@ set(SOURCE_FILES
     src/system/physicsSystem.cpp
     src/system/enemyAISystem.cpp
     src/system/healthSystem.cpp
+    src/system/collisionSystem.cpp
     src/system/menuSystem.cpp
     src/system/soundSystem.cpp
 
@@ -78,6 +79,7 @@ set(SOURCE_FILES
     src/system/inputSystem.hpp
     src/system/physicsSystem.hpp
     src/system/enemyAISystem.hpp
+    src/system/collisionSystem.hpp
     src/system/healthSystem.hpp
     src/system/menuSystem.hpp
     src/system/soundSystem.hpp
