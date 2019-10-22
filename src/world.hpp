@@ -8,6 +8,7 @@
 #include "menu.hpp"
 #include "shield.hpp"
 
+#include "./system/collisionSystem.hpp"
 #include "./system/enemyAISystem.hpp"
 #include "./system/healthSystem.hpp"
 #include "./system/inputSystem.hpp"
@@ -117,5 +118,6 @@ private:
     HealthSystem healthSystem;
     MenuSystem menuSystem;
     SoundSystem soundSystem;
+    CollisionSystem collisionSystem;
     entt::registry registry;
 };
