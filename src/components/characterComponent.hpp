@@ -1,7 +1,8 @@
 #pragma once
 
-struct characterComponent
-{
+struct characterComponent {
     /* data */
     bool is_movable;
+    bool is_dashable;
+    float cooldown;
 };
