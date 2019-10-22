@@ -22,7 +22,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
         cooldown -= 1.f;
 
         if (resetKeyPressed) {
-            resetCharacter(registry);
+            reset_character(registry);
         }
 
         if (is_movable) {
@@ -103,7 +103,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
     }
 }
 
-void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles)
+void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -167,6 +167,19 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
             }
         }
     }
+
+    // Potion Physics Update
+    auto potion = registry.view<potionComponent, motionComponent, physicsScaleComponent>();
+
+    for (auto entity : potion) {
+        auto& [position, direction, radians, speed] = potion.get<motionComponent>(entity);
+        auto& id = potion.get<potionComponent>(entity).id;
+        auto& is_consumed = potion.get<potionComponent>(entity).is_consumed;
+        auto& scale = potion.get<physicsScaleComponent>(entity).scale;
+        m_potion.set_position(position);
+        m_potion.set_scale(scale);
+        m_potion.set_is_consumed(is_consumed);
+    }
 }
 
 void PhysicsSystem::move(vec2& pos, vec2 off, bool is_bounded)
@@ -193,7 +206,7 @@ void PhysicsSystem::move(vec2& pos, vec2 off, bool is_bounded)
     }
 }
 
-void PhysicsSystem::setShieldScaleMultiplier(entt::registry& registry, float x, float y)
+void PhysicsSystem::set_shield_scale_multiplier(entt::registry& registry, float x, float y)
 {
     auto view = registry.view<shieldComponent, physicsScaleComponent>();
     for (auto entity : view) {
@@ -202,7 +215,21 @@ void PhysicsSystem::setShieldScaleMultiplier(entt::registry& registry, float x, 
     }
 }
 
-void PhysicsSystem::setCharacterUnmovable(entt::registry& registry)
+void PhysicsSystem::consume_potion(entt::registry& registry, int m_id)
+{
+    auto view = registry.view<potionComponent, physicsScaleComponent>();
+    for (auto entity : view) {
+        auto& id = view.get<potionComponent>(entity).id;
+        auto& is_consumed = view.get<potionComponent>(entity).is_consumed;
+        auto& scale = view.get<physicsScaleComponent>(entity).scale;
+        if (id == m_id) {
+            scale = { 0.f, 0.f };
+            is_consumed = true;
+        }
+    }
+}
+
+void PhysicsSystem::set_character_unmovable(entt::registry& registry)
 {
     auto view = registry.view<characterComponent>();
     for (auto entity : view) {
@@ -211,7 +238,7 @@ void PhysicsSystem::setCharacterUnmovable(entt::registry& registry)
     }
 }
 
-void PhysicsSystem::resetCharacter(entt::registry& registry)
+void PhysicsSystem::reset_character(entt::registry& registry)
 {
     auto viewCharacter = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
     for (auto entity : viewCharacter) {

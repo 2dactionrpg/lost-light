@@ -32,14 +32,6 @@ entt::entity makeShield(entt::registry& registry)
     return entity;
 }
 
-float randomFloat(float a, float b)
-{
-    float random = ((float)rand()) / (float)RAND_MAX;
-    float diff = b - a;
-    float r = random * diff;
-    return a + r;
-}
-
 entt::entity makeEnemy(entt::registry& registry, int id)
 {
     const entt::entity entity = registry.create();
@@ -91,6 +83,19 @@ entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir
     mo.speed = 1000.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = { 0.22f, 0.22f };
+    return entity;
+}
+
+entt::entity makePotion(entt::registry& registry, int id)
+{
+    const entt::entity entity = registry.create();
+    registry.assign<potionComponent>(entity, id, false);
+    auto& mo = registry.assign<motionComponent>(entity);
+    mo.position = { 850.f, 600.f };
+    mo.radians = 0.f;
+    mo.speed = 0.f;
+    auto& ps = registry.assign<physicsScaleComponent>(entity);
+    ps.scale = { -0.1f, 0.1f };
     return entity;
 }
 

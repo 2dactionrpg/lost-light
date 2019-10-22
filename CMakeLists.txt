@@ -73,6 +73,7 @@ set(SOURCE_FILES
     src/components/enemyComponent.hpp
     src/components/menuComponent.hpp
     src/components/projectileComponent.hpp
+    src/components/potionComponent.hpp
     # System
     src/system/inputSystem.hpp
     src/system/physicsSystem.hpp

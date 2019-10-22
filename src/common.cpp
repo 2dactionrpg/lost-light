@@ -100,3 +100,11 @@ vec2 normalize(vec2 v)
     float m = sqrtf(dot(v, v));
     return { v.x / m, v.y / m };
 }
+
+float randomFloat(float a, float b)
+{
+    float random = ((float)rand()) / (float)RAND_MAX;
+    float diff = b - a;
+    float r = random * diff;
+    return a + r;
+}

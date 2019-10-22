@@ -5,7 +5,7 @@
 
 Texture Potion::potion_texture;
 
-bool Potion::init()
+bool Potion::init(int id)
 {
     // Load shared texture
     if (!potion_texture.is_valid()) {
@@ -54,13 +54,8 @@ bool Potion::init()
     if (!effect.load_from_file(shader_path("potion.vs.glsl"), shader_path("potion.fs.glsl")))
         return false;
 
-    motion.position = { 850.f, 600.f };
-    set_direction({ -1.f, 0.2f });
-
-    // Setting initial values, scale is negative to make it face the opposite way
-    // 1.0 would be as big as the original texture.
-    physics.scale = { -0.1f, 0.1f };
-    m_is_alive = true;
+    potion_id = id;
+    m_is_consumed = false;
 
     return true;
 }
@@ -68,21 +63,13 @@ bool Potion::init()
 // Releases all graphics resources
 void Potion::destroy()
 {
-    m_is_alive = false;
+    glDeleteBuffers(1, &mesh.vbo);
+    glDeleteBuffers(1, &mesh.ibo);
+    glDeleteBuffers(1, &mesh.vao);
 
-    // TODO: Fix this to make sure we dont have unreleased memory allocation
-    
-    // glDeleteBuffers(1, &mesh.vbo);
-    // glDeleteBuffers(1, &mesh.ibo);
-    // glDeleteBuffers(1, &mesh.vao);
-
-    // glDeleteShader(effect.vertex);
-    // glDeleteShader(effect.fragment);
-    // glDeleteShader(effect.program);
-}
-
-void Potion::update(float ms)
-{
+    glDeleteShader(effect.vertex);
+    glDeleteShader(effect.fragment);
+    glDeleteShader(effect.program);
 }
 
 vec2 Potion::get_direction()
@@ -169,7 +156,22 @@ vec2 Potion::get_bounding_box() const
         std::fabs(physics.scale.y) * potion_texture.height * 2 };
 }
 
-bool Potion::is_alive() const
+int Potion::get_id()
 {
-    return m_is_alive;
+    return potion_id;
+}
+
+void Potion::set_scale(vec2 scale)
+{
+    physics.scale = scale;
+}
+
+bool Potion::is_consumed()
+{
+    return m_is_consumed;
+}
+
+void Potion::set_is_consumed(bool is_consumed)
+{
+    m_is_consumed = is_consumed;
 }
