@@ -80,7 +80,7 @@ entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir
     mo.position = pos;
     mo.direction = dir;
     mo.radians = rad;
-    mo.speed = 1000.f;
+    mo.speed = 700.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = { 0.22f, 0.22f };
     return entity;
@@ -91,7 +91,7 @@ entt::entity makePotion(entt::registry& registry, int id)
     const entt::entity entity = registry.create();
     registry.assign<potionComponent>(entity, id, false);
     auto& mo = registry.assign<motionComponent>(entity);
-    mo.position = { 850.f, 600.f };
+    mo.position = { 250.f, 600.f };
     mo.radians = 0.f;
     mo.speed = 0.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);

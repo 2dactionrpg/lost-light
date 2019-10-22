@@ -100,7 +100,7 @@ bool World::init(vec2 screen)
     return m_character.init()
         && m_background.init()
         && m_shield.init()
-        && m_potion.init(1)
+        // && m_potion.init(1)
         && m_menu.init();
 }
 
@@ -166,6 +166,7 @@ bool World::update(float elapsed_ms)
 
     if (enemiesKilled == ENEMIES_THRESHOLD_1 && bossCount < MAX_BOSS_COUNT) {
         spawn_boss(enemy_number);
+        m_potion.init(1);
         bossCount++;
     }
 

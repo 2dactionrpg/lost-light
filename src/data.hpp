@@ -24,9 +24,9 @@ float s_init_duration = 20.f;
 float s_init_cooldown = 50.f;
 
 // World Initial data
-const size_t init_MAX_ENEMIES = 3;
-const size_t init_ENEMIES_THRESHOLD_1 = 5;
-const size_t init_MAX_BOSS_COUNT = 2;
+const size_t init_MAX_ENEMIES = 2;
+const size_t init_ENEMIES_THRESHOLD_1 = 8;
+const size_t init_MAX_BOSS_COUNT = 1;
 const size_t init_ENEMY_SPAWN_DELAY_MS = 2500;
 
 // Others
