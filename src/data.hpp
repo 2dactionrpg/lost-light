@@ -36,6 +36,7 @@ enum soundType {
 
 enum gameState {
     STATE_START,
+    STATE_TUTORIAL,
     STATE_PLAYING,
     STATE_PAUSE,
     STATE_GAMEOVER,

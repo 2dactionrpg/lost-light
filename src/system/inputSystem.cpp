@@ -6,11 +6,17 @@ void InputSystem::on_key(entt::registry& registry, int key, int action, int mod)
     auto menu = registry.view<menuComponent>();
     for (auto entity : menu) {
         auto& state = menu.get(entity).state;
-        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && (state == STATE_START || state == STATE_PAUSE))
+        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && (state == STATE_TUTORIAL || state == STATE_PAUSE))
             state = STATE_PLAYING;
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && state == STATE_START)
+            state = STATE_TUTORIAL;
 
         if (action == GLFW_PRESS && key == GLFW_KEY_Q && state != STATE_PLAYING)
             state = STATE_TERMINATE;
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_T && state == STATE_PAUSE)
+            state = STATE_TUTORIAL;
 
         if (action == GLFW_PRESS && key == GLFW_KEY_R && (state == STATE_GAMEOVER || state == STATE_WIN))
             state = STATE_PLAYING;

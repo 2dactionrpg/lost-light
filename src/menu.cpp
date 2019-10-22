@@ -90,6 +90,9 @@ void Menu::load_texture(int state)
     case STATE_WIN:
         menu_texture.load_from_file(textures_path("win.png"));
         break;
+    case STATE_TUTORIAL:
+        menu_texture.load_from_file(textures_path("tutorial.png"));
+        break;
     default:
         break;
     }
