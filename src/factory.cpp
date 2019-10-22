@@ -95,7 +95,7 @@ entt::entity makePotion(entt::registry& registry, int id)
     mo.radians = 0.f;
     mo.speed = 0.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
-    ps.scale = { -0.1f, 0.1f };
+    ps.scale = { 0.07f, 0.07f };
     return entity;
 }
 
