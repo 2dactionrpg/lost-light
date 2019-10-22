@@ -43,6 +43,7 @@ set(SOURCE_FILES
     src/enemy.cpp
     src/menu.cpp
     src/potion.cpp
+    src/ground.cpp
     # System
     src/system/inputSystem.cpp
     src/system/physicsSystem.cpp
@@ -63,6 +64,7 @@ set(SOURCE_FILES
     src/enemy.hpp
     src/menu.hpp
     src/potion.hpp
+    src/ground.hpp
     src/data.hpp
     # Component
     src/components/inputKeyboard.hpp
@@ -75,6 +77,7 @@ set(SOURCE_FILES
     src/components/menuComponent.hpp
     src/components/projectileComponent.hpp
     src/components/potionComponent.hpp
+    src/components/groundComponent.hpp
     # System
     src/system/inputSystem.hpp
     src/system/physicsSystem.hpp

@@ -10,7 +10,7 @@ namespace {
 // Character Initial data
 vec2 c_init_pos = { 500.f, 300.f };
 float c_init_radians = 20.f;
-float c_init_speed = 200.f;
+float c_init_speed = 250.f;
 vec2 c_init_scale = { 0.1f, 0.1f };
 float c_init_cooldown = 50.f;
 float c_init_dash_distance = 100.f;

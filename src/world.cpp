@@ -92,6 +92,7 @@ bool World::init(vec2 screen)
     makeShield(registry);
     makePotion(registry, 1);
     makeMenu(registry);
+    makeGround(registry, 999);
 
     spawn_enemy(enemy_number);
     m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
@@ -100,7 +101,7 @@ bool World::init(vec2 screen)
     return m_character.init()
         && m_background.init()
         && m_shield.init()
-        // && m_potion.init(1)
+        && m_ground.init(999)
         && m_menu.init();
 }
 
@@ -153,7 +154,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
 
     physicsSystem.sync(registry, elapsed_ms);
-    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion);
+    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
     healthSystem.update(registry, m_enemies, enemiesKilled);
 
     m_next_enemy_spawn -= elapsed_ms;
@@ -216,6 +217,7 @@ void World::draw()
     mat3 projection_2D { { sx, 0.f, 0.f }, { 0.f, sy, 0.f }, { tx, ty, 1.f } };
 
     // Drawing entities
+    m_ground.draw(projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);

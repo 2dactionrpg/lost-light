@@ -103,7 +103,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
     }
 }
 
-void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion)
+void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, Ground& m_ground)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -179,6 +179,17 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
         m_potion.set_position(position);
         m_potion.set_scale(scale);
         m_potion.set_is_consumed(is_consumed);
+    }
+
+    // Ground Physics Update
+    auto ground = registry.view<groundComponent, motionComponent, physicsScaleComponent>();
+
+    for (auto entity : ground) {
+        auto& [position, direction, radians, speed] = ground.get<motionComponent>(entity);
+        auto& id = ground.get<groundComponent>(entity).id;
+        auto& scale = ground.get<physicsScaleComponent>(entity).scale;
+        m_ground.set_position(position);
+        m_ground.set_scale(scale);
     }
 }
 

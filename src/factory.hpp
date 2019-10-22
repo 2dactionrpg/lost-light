@@ -2,6 +2,7 @@
 
 #include "./components/characterComponent.hpp"
 #include "./components/enemyComponent.hpp"
+#include "./components/groundComponent.hpp"
 #include "./components/inputKeyboard.hpp"
 #include "./components/inputMouse.hpp"
 #include "./components/menuComponent.hpp"
@@ -18,5 +19,6 @@ entt::entity makeShield(entt::registry& registry);
 entt::entity makeEnemy(entt::registry& registry, int id);
 entt::entity makeBoss(entt::registry& registry, int id);
 entt::entity makePotion(entt::registry& registry, int id);
+entt::entity makeGround(entt::registry& registry, int id);
 entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir, float rad);
 entt::entity makeMenu(entt::registry& registry);

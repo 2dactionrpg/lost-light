@@ -4,6 +4,7 @@
 #include "../common.hpp"
 #include "../components/characterComponent.hpp"
 #include "../components/enemyComponent.hpp"
+#include "../components/groundComponent.hpp"
 #include "../components/inputKeyboard.hpp"
 #include "../components/inputMouse.hpp"
 #include "../components/motionComponent.hpp"
@@ -13,6 +14,7 @@
 #include "../components/shieldComponent.hpp"
 #include "../data.hpp"
 #include "../enemy.hpp"
+#include "../ground.hpp"
 #include "../potion.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
@@ -27,7 +29,7 @@ private:
     SoundSystem soundSystem;
 
 public:
-    void update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion);
+    void update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, Ground& m_ground);
     void sync(entt::registry& registry, float elapsed_ms);
     void move(vec2& pos, vec2 off, bool is_bounded);
     void rotate(float& radians, float xpos, float ypos, vec2 position);

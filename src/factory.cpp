@@ -99,6 +99,19 @@ entt::entity makePotion(entt::registry& registry, int id)
     return entity;
 }
 
+entt::entity makeGround(entt::registry& registry, int id)
+{
+    const entt::entity entity = registry.create();
+    registry.assign<groundComponent>(entity, id, false);
+    auto& mo = registry.assign<motionComponent>(entity);
+    mo.position = { 600.f, 400.f };
+    mo.radians = 0.f;
+    mo.speed = 0.f;
+    auto& ps = registry.assign<physicsScaleComponent>(entity);
+    ps.scale = { 0.8f, 0.8f };
+    return entity;
+}
+
 entt::entity makeMenu(entt::registry& registry)
 {
     const entt::entity entity = registry.create();

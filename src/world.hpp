@@ -17,8 +17,10 @@
 #include "./system/soundSystem.hpp"
 #include "background.hpp"
 #include "factory.hpp"
+#include "ground.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
+
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -100,6 +102,7 @@ private:
     Menu m_menu;
     Shield m_shield;
     Potion m_potion;
+    Ground m_ground;
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
 
