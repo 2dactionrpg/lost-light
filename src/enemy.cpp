@@ -154,6 +154,7 @@ void Enemy::set_scale(vec2 scale)
 {
     physics.scale = scale;
 }
+
 vec2 Enemy::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile

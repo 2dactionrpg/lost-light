@@ -90,15 +90,17 @@ bool World::init(vec2 screen)
 
     makeCharacter(registry);
     makeShield(registry);
-    spawn_enemy(enemy_number);
+    makePotion(registry, 1);
     makeMenu(registry);
+
+    spawn_enemy(enemy_number);
     m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
     fprintf(stderr, "factory done\n");
 
     return m_character.init()
         && m_background.init()
         && m_shield.init()
-        && m_potion.init()
+        && m_potion.init(1)
         && m_menu.init();
 }
 
@@ -144,9 +146,9 @@ bool World::update(float elapsed_ms)
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
     // Checking Character - Potion collisions
-    if (m_character.collides_with(m_potion) && m_potion.is_alive()) {
-        m_potion.destroy();
-        physicsSystem.setShieldScaleMultiplier(registry, 2.0f, 1.0f);
+    if (m_character.collides_with(m_potion)) {
+        physicsSystem.consume_potion(registry, m_potion.get_id());
+        physicsSystem.set_shield_scale_multiplier(registry, 2.0f, 1.0f);
     }
 
     auto projectile_it = m_projectiles.begin();
@@ -175,7 +177,7 @@ bool World::update(float elapsed_ms)
         // check character collision
         if (m_character.collides_with(*projectile_it)) {
             soundSystem.play_sound(C_DEAD);
-            physicsSystem.setCharacterUnmovable(registry);
+            physicsSystem.set_character_unmovable(registry);
             m_projectiles.erase(projectile_it);
             menuSystem.sync(registry, STATE_GAMEOVER);
             continue;
@@ -206,15 +208,9 @@ bool World::update(float elapsed_ms)
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
     enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
-    // Updating all entities, making the turtle and fish
-    // faster based on current.
-    // In a pure ECS engine we would classify entities by their bitmap tags during the update loop
-    // rather than by their class.
 
-    if (m_potion.is_alive())
-        m_potion.update(elapsed_ms);
     physicsSystem.sync(registry, elapsed_ms);
-    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles);
+    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion);
     healthSystem.update(registry, m_enemies, enemiesKilled);
 
     m_next_enemy_spawn -= elapsed_ms;
@@ -278,8 +274,7 @@ void World::draw()
     // Drawing entities
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
-    if (m_potion.is_alive())
-        m_potion.draw(projection_2D);
+    m_potion.draw(projection_2D);
     // if (m_enemy.is_alive())
     //     m_enemy.draw(projection_2D);
     for (auto& enemy : m_enemies)

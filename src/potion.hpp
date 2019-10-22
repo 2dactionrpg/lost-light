@@ -8,14 +8,12 @@ class Potion : public Entity {
 
 public:
     // Creates all the associated render resources and default transform
-    bool init();
+    bool init(int id);
 
     // Releases all the associated resources
     void destroy();
 
-    // Update potion due to current
-    // ms represents the number of milliseconds elapsed from the previous update() call
-    void update(float ms);
+    void consumed();
 
     // Renders the potion
     // projection is the 2D orthographic projection matrix
@@ -27,6 +25,8 @@ public:
 
     void set_rotation(float rad);
 
+    void set_scale(vec2 scale);
+
     // Returns the current potion position
     vec2 get_position() const;
 
@@ -36,7 +36,8 @@ public:
     // Returns the potion' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
 
-    bool is_alive() const;
+    int get_id();
 
-    bool m_is_alive;
+private:
+    int potion_id;
 };

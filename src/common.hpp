@@ -50,3 +50,5 @@ float len(vec2 a);
 // cleans error buffer
 void gl_flush_errors();
 bool gl_has_errors();
+
+float randomFloat(float a, float b);
