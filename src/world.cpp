@@ -141,7 +141,7 @@ bool World::update(float elapsed_ms)
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
-    enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
+    enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_projectiles);
 
     physicsSystem.sync(registry, elapsed_ms);
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
