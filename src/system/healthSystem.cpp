@@ -30,9 +30,13 @@ void HealthSystem::damage(entt::registry& registry, int m_id)
 
     for (auto entity : enemy) {
         auto& id = enemy.get(entity).id;
+        auto& is_alive = enemy.get(entity).is_alive;
         auto& health = enemy.get(entity).health;
         if (id == m_id) {
             health--;
+            if (health <= 0) {
+                is_alive = false;
+            }
         }
     }
 }

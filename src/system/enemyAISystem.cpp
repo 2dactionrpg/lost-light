@@ -54,39 +54,23 @@ void EnemyAISystem::shoot(entt::registry& registry, float elapsed_ms, vector<Ene
         auto& [position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
         auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target] = enemies.get<enemyComponent>(enemy);
         if (is_alive && shoot_cooldown < 0.f) {
-            bool enemy_alive = false;
             for (auto& m_enemy : m_enemies) {
                 if (id == m_enemy.get_id()) {
                     vec2 face_pos = m_enemy.get_face_position();
                     vec2 proj_direction = { target.x - face_pos.x, target.y - face_pos.y };
-                    enemy_alive = true;
                     if (enemy_type == BOSS) {
-                        Projectile projectile1;
-                        Projectile projectile2;
-                        Projectile projectile3;
-                        proj_direction = { proj_direction.x, proj_direction.y };
-                        if (projectile1.init(proj_counter)) {
-                            m_projectiles.emplace_back(projectile1);
-                            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
-                            proj_counter++;
-                        } else {
-                            fprintf(stderr, "Failed to spawn projectile");
-                        }
-                        proj_direction = { proj_direction.x + 100.f, proj_direction.y + 100.f };
-                        if (projectile2.init(proj_counter)) {
-                            m_projectiles.emplace_back(projectile2);
-                            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
-                            proj_counter++;
-                        } else {
-                            fprintf(stderr, "Failed to spawn projectile");
-                        }
-                        proj_direction = { proj_direction.x - 200.f, proj_direction.y - 200.f };
-                        if (projectile3.init(proj_counter)) {
-                            m_projectiles.emplace_back(projectile3);
-                            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
-                            proj_counter++;
-                        } else {
-                            fprintf(stderr, "Failed to spawn projectile");
+                        vec2 proj_addition = { -100.f, -100.f };
+                        for (int i = 0; i < 3; i++) {
+                            Projectile projectile;
+                            vec2 proj_direction_result = add(proj_direction, proj_addition);
+                            proj_addition = add(proj_addition, { 100.f, 100.f });
+                            if (projectile.init(proj_counter)) {
+                                m_projectiles.emplace_back(projectile);
+                                makeProjectile(registry, proj_counter, face_pos, proj_direction_result, radians + 1.2);
+                                proj_counter++;
+                            } else {
+                                fprintf(stderr, "Failed to spawn projectile");
+                            }
                         }
                     } else if (enemy_type == MINION) {
                         Projectile projectile;
@@ -101,7 +85,6 @@ void EnemyAISystem::shoot(entt::registry& registry, float elapsed_ms, vector<Ene
                 }
             }
             shoot_cooldown = shoot_frequency;
-            is_alive = enemy_alive;
         } else {
             shoot_cooldown -= elapsed_ms;
         }
