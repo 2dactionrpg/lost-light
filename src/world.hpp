@@ -77,8 +77,8 @@ public:
 
 private:
     // generate enemies
-    bool spawn_enemy(int& id);
-    bool spawn_boss(int& id);
+    bool spawn_enemy();
+    bool spawn_boss();
 
     // !!! INPUT CALLBACK FUNCTIONS
     void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -108,9 +108,6 @@ private:
     Ground m_ground;
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
-
-    // id assigned to enemies
-    int enemy_id;
 
     float m_next_enemy_spawn;
 

@@ -83,7 +83,6 @@ bool World::init(vec2 screen)
 
     fprintf(stderr, "Loaded music\n");
     m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
-    enemy_id = 0;
 
     makeCharacter(registry);
     makeShield(registry);
@@ -96,7 +95,7 @@ bool World::init(vec2 screen)
 
     levelSystem.load_level_info(registry, m_lvl_num, m_minion_max_on_screen, m_boss_max_on_screen, m_minion_num, m_boss_num, m_enemy_total, m_enemy_killed);
 
-    spawn_enemy(enemy_id);
+    spawn_enemy();
 
     fprintf(stderr, "factory done\n");
 
@@ -162,14 +161,14 @@ bool World::update(float elapsed_ms)
 
     m_next_enemy_spawn -= elapsed_ms;
     if (m_enemies.size() < m_minion_max_on_screen && m_next_enemy_spawn < 0.f && minion_count < m_minion_num) {
-        if (spawn_enemy(enemy_id))
+        if (spawn_enemy())
             m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
         else
             fprintf(stderr, "%s\n", "couldn't spawn new enemy");
     }
 
     if (m_enemy_killed == m_minion_num && boss_count < m_boss_num) {
-        spawn_boss(enemy_id);
+        spawn_boss();
         m_potion.init(1);
         boss_count++;
     }
@@ -259,14 +258,14 @@ bool World::is_over() const
 }
 
 // create a new enemy
-bool World::spawn_enemy(int& id)
+bool World::spawn_enemy()
 {
     Enemy enemy;
+    int id = levelSystem.get_next_enemy_id();
     if (enemy.init(id)) {
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_minion_pos();
         makeEnemy(registry, id, pos);
-        id++;
         minion_count++;
         return true;
     }
@@ -275,14 +274,14 @@ bool World::spawn_enemy(int& id)
 }
 
 // create a new enemy
-bool World::spawn_boss(int& id)
+bool World::spawn_boss()
 {
     Enemy enemy;
+    int id = levelSystem.get_next_enemy_id();
     if (enemy.init(id)) {
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_boss_pos();
         makeBoss(registry, id, pos);
-        id++;
         return true;
     }
     fprintf(stderr, "Failed to spawn enemy");

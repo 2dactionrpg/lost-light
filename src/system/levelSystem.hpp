@@ -8,6 +8,7 @@ using namespace std;
 
 class LevelSystem {
 private:
+    int enemy_id = 0;
     int lvl_num;
     int minion_max_on_screen;
     int boss_max_on_screen;
@@ -23,6 +24,7 @@ public:
         int& m_boss_max_on_screen, int& m_minion_num, int& m_boss_num, int& m_enemy_total, int& m_enemy_killed);
     void update(entt::registry& registry, int& m_enemy_killed);
     void increment_enemy_killed(entt::registry& registry);
+    int get_next_enemy_id();
     vec2 get_next_minion_pos();
     vec2 get_next_boss_pos();
 };
