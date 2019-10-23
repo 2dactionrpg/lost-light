@@ -86,7 +86,6 @@ bool World::init(vec2 screen)
 
     makeCharacter(registry);
     makeShield(registry);
-    makePotion(registry, 1);
     makeMenu(registry);
     makeGround(registry, 999);
     makeLevel(registry);
@@ -169,6 +168,7 @@ bool World::update(float elapsed_ms)
 
     if (m_enemy_killed == m_minion_num && boss_count < m_boss_num) {
         spawn_boss();
+        makePotion(registry, 1);
         m_potion.init(1);
         boss_count++;
     }
