@@ -13,6 +13,7 @@
 #include "../enemy.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
+#include "levelSystem.hpp"
 #include <cmath>
 #include <entt/entity/registry.hpp>
 
@@ -20,7 +21,9 @@ using namespace std;
 
 class HealthSystem {
 private:
+    LevelSystem levelSystem;
+
 public:
-    void update(entt::registry& registry, vector<Enemy>& m_enemies, int& enemiesKilled);
+    void update(entt::registry& registry, vector<Enemy>& m_enemies);
     void damage(entt::registry& registry, int m_id);
 };

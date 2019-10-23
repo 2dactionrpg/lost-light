@@ -32,7 +32,7 @@ entt::entity makeShield(entt::registry& registry)
     return entity;
 }
 
-entt::entity makeEnemy(entt::registry& registry, int id)
+entt::entity makeEnemy(entt::registry& registry, int id, vec2 pos, bool is_movable)
 {
     const entt::entity entity = registry.create();
     auto& em = registry.assign<enemyComponent>(entity);
@@ -40,11 +40,12 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     em.is_alive = true;
     em.health = 1;
     em.shoot_delay_ms = 3000.f;
+    em.is_movable = is_movable;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
-    float xpos = randomFloat(50.f, 1000.f);
-    float ypos = randomFloat(50.f, 500.f);
-    mo.position = { xpos, ypos };
+    // float xpos = randomFloat(50.f, 1000.f);
+    // float ypos = randomFloat(50.f, 500.f);
+    mo.position = { pos.x, pos.y };
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
@@ -52,7 +53,7 @@ entt::entity makeEnemy(entt::registry& registry, int id)
     return entity;
 }
 
-entt::entity makeBoss(entt::registry& registry, int id)
+entt::entity makeBoss(entt::registry& registry, int id, vec2 pos, bool is_movable)
 {
     const entt::entity entity = registry.create();
     auto& em = registry.assign<enemyComponent>(entity);
@@ -60,11 +61,12 @@ entt::entity makeBoss(entt::registry& registry, int id)
     em.is_alive = true;
     em.health = 5;
     em.shoot_delay_ms = 3000.f;
+    em.is_movable = is_movable;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
-    float xpos = randomFloat(50.f, 1000.f);
-    float ypos = randomFloat(50.f, 500.f);
-    mo.position = { xpos, ypos };
+    // float xpos = randomFloat(50.f, 1000.f);
+    // float ypos = randomFloat(50.f, 500.f);
+    mo.position = { pos.x, pos.y };
     mo.radians = 20.f;
     mo.speed = 200.f;
     auto& ps = registry.assign<physicsScaleComponent>(entity);
@@ -116,5 +118,14 @@ entt::entity makeMenu(entt::registry& registry)
 {
     const entt::entity entity = registry.create();
     registry.assign<menuComponent>(entity, STATE_START, STATE_START);
+    return entity;
+}
+
+entt::entity makeLevel(entt::registry& registry)
+{
+    const entt::entity entity = registry.create();
+    auto& level = registry.assign<levelComponent>(entity);
+    level.minion_killed = 0;
+    level.boss_killed = 0;
     return entity;
 }
