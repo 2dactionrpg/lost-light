@@ -26,7 +26,7 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
             boss_killed = 0;
             boss_max_on_screen = 1;
             boss_init_pos.push_back({ 1000.f, 500.f });
-            boss_is_movable.push_back(false);
+            boss_is_movable.push_back(true);
 
             // global info
             lvl_num = 1;

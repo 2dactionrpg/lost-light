@@ -23,12 +23,21 @@ vec2 s_init_scale = { 0.25f, -0.4f };
 float s_init_duration = 20.f;
 float s_init_cooldown = 50.f;
 
+// Enemy Initial data
+float e_minion_init_shoot_frequency = 3000.f;
+float e_boss_init_shoot_frequency = 1000.f;
+
 // Others
 enum soundType {
     C_DEAD,
     S_REFLECT,
     MENU_POPUP,
     MENU_CLOSE
+};
+
+enum enemyType {
+    MINION,
+    BOSS
 };
 
 enum gameState {

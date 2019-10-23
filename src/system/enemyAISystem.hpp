@@ -4,6 +4,7 @@
 #include "../components/characterComponent.hpp"
 #include "../components/enemyComponent.hpp"
 #include "../components/motionComponent.hpp"
+#include "../data.hpp"
 #include "../enemy.hpp"
 #include "../factory.hpp"
 #include "../projectile.hpp"

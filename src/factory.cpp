@@ -37,9 +37,11 @@ entt::entity makeMinion(entt::registry& registry, int id, vec2 pos, bool is_mova
     const entt::entity entity = registry.create();
     auto& em = registry.assign<enemyComponent>(entity);
     em.id = id;
+    em.enemy_type = MINION;
     em.is_alive = true;
     em.health = 1;
-    em.shoot_delay_ms = 3000.f;
+    em.shoot_frequency = e_minion_init_shoot_frequency;
+    em.shoot_cooldown = e_minion_init_shoot_frequency;
     em.is_movable = is_movable;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
@@ -58,9 +60,11 @@ entt::entity makeBoss(entt::registry& registry, int id, vec2 pos, bool is_movabl
     const entt::entity entity = registry.create();
     auto& em = registry.assign<enemyComponent>(entity);
     em.id = id;
+    em.enemy_type = BOSS;
     em.is_alive = true;
     em.health = 5;
-    em.shoot_delay_ms = 3000.f;
+    em.shoot_frequency = e_boss_init_shoot_frequency;
+    em.shoot_cooldown = e_boss_init_shoot_frequency;
     em.is_movable = is_movable;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values

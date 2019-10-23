@@ -52,28 +52,58 @@ void EnemyAISystem::shoot(entt::registry& registry, float elapsed_ms, vector<Ene
     auto enemies = registry.view<enemyComponent, motionComponent>();
     for (auto enemy : enemies) {
         auto& [position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
-        auto& [id, health, is_alive, is_movable, shoot_delay_ms, destination, target] = enemies.get<enemyComponent>(enemy);
-        if (is_alive && shoot_delay_ms < 0.f) {
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target] = enemies.get<enemyComponent>(enemy);
+        if (is_alive && shoot_cooldown < 0.f) {
             bool enemy_alive = false;
             for (auto& m_enemy : m_enemies) {
                 if (id == m_enemy.get_id()) {
-                    Projectile projectile;
-                    if (projectile.init(proj_counter)) {
-                        vec2 face_pos = m_enemy.get_face_position();
-                        vec2 proj_direction = { target.x - face_pos.x, target.y - face_pos.y };
-                        m_projectiles.emplace_back(projectile);
-                        makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
-                        proj_counter++;
-                    } else {
-                        fprintf(stderr, "Failed to spawn projectile");
-                    }
+                    vec2 face_pos = m_enemy.get_face_position();
+                    vec2 proj_direction = { target.x - face_pos.x, target.y - face_pos.y };
                     enemy_alive = true;
+                    if (enemy_type == BOSS) {
+                        Projectile projectile1;
+                        Projectile projectile2;
+                        Projectile projectile3;
+                        proj_direction = { proj_direction.x, proj_direction.y };
+                        if (projectile1.init(proj_counter)) {
+                            m_projectiles.emplace_back(projectile1);
+                            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
+                            proj_counter++;
+                        } else {
+                            fprintf(stderr, "Failed to spawn projectile");
+                        }
+                        proj_direction = { proj_direction.x + 100.f, proj_direction.y + 100.f };
+                        if (projectile2.init(proj_counter)) {
+                            m_projectiles.emplace_back(projectile2);
+                            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
+                            proj_counter++;
+                        } else {
+                            fprintf(stderr, "Failed to spawn projectile");
+                        }
+                        proj_direction = { proj_direction.x - 200.f, proj_direction.y - 200.f };
+                        if (projectile3.init(proj_counter)) {
+                            m_projectiles.emplace_back(projectile3);
+                            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
+                            proj_counter++;
+                        } else {
+                            fprintf(stderr, "Failed to spawn projectile");
+                        }
+                    } else if (enemy_type == MINION) {
+                        Projectile projectile;
+                        if (projectile.init(proj_counter)) {
+                            m_projectiles.emplace_back(projectile);
+                            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
+                            proj_counter++;
+                        } else {
+                            fprintf(stderr, "Failed to spawn projectile");
+                        }
+                    }
                 }
             }
-            shoot_delay_ms = 3000.f;
+            shoot_cooldown = shoot_frequency;
             is_alive = enemy_alive;
         } else {
-            shoot_delay_ms -= elapsed_ms;
+            shoot_cooldown -= elapsed_ms;
         }
     }
 }
