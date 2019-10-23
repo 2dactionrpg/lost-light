@@ -24,7 +24,7 @@ float s_init_duration = 20.f;
 float s_init_cooldown = 50.f;
 
 // World Initial data
-const size_t init_ENEMY_SPAWN_DELAY_MS = 2500;
+const size_t init_ENEMY_SPAWN_DELAY_MS = 0;
 
 // Others
 enum soundType {

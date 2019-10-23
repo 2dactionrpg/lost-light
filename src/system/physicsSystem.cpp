@@ -64,9 +64,10 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
         auto& [position, direction, radians, speed] = viewEnemy.get<motionComponent>(enemy);
         // auto &destination = viewEnemy.get<enemyComponent>(enemy).is_alive;
         auto& is_alive = viewEnemy.get<enemyComponent>(enemy).is_alive;
+        auto& is_movable = viewEnemy.get<enemyComponent>(enemy).is_movable;
         auto& destination = viewEnemy.get<enemyComponent>(enemy).destination;
         float step = speed * (ms / 1000);
-        if (is_alive) {
+        if (is_alive && is_movable) {
             if (direction.x > 0) {
                 if (position.x + direction.x > destination.x) {
                     direction.x = 0.f;

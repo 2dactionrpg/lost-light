@@ -16,7 +16,9 @@ private:
     int boss_num;
     int enemy_total;
     vector<vec2> minion_init_pos;
+    vector<bool> minion_is_movable;
     vector<vec2> boss_init_pos;
+    vector<bool> boss_is_movable;
 
 public:
     bool init_level(entt::registry& registry, int m_lvl_num);
@@ -26,5 +28,7 @@ public:
     void increment_enemy_killed(entt::registry& registry);
     int get_next_enemy_id();
     vec2 get_next_minion_pos();
+    bool get_next_minion_is_movable();
     vec2 get_next_boss_pos();
+    bool get_next_boss_is_movable();
 };

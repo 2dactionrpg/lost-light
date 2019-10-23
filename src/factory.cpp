@@ -32,7 +32,7 @@ entt::entity makeShield(entt::registry& registry)
     return entity;
 }
 
-entt::entity makeEnemy(entt::registry& registry, int id, vec2 pos)
+entt::entity makeEnemy(entt::registry& registry, int id, vec2 pos, bool is_movable)
 {
     const entt::entity entity = registry.create();
     auto& em = registry.assign<enemyComponent>(entity);
@@ -40,6 +40,7 @@ entt::entity makeEnemy(entt::registry& registry, int id, vec2 pos)
     em.is_alive = true;
     em.health = 1;
     em.shoot_delay_ms = 3000.f;
+    em.is_movable = is_movable;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
     // float xpos = randomFloat(50.f, 1000.f);
@@ -52,7 +53,7 @@ entt::entity makeEnemy(entt::registry& registry, int id, vec2 pos)
     return entity;
 }
 
-entt::entity makeBoss(entt::registry& registry, int id, vec2 pos)
+entt::entity makeBoss(entt::registry& registry, int id, vec2 pos, bool is_movable)
 {
     const entt::entity entity = registry.create();
     auto& em = registry.assign<enemyComponent>(entity);
@@ -60,6 +61,7 @@ entt::entity makeBoss(entt::registry& registry, int id, vec2 pos)
     em.is_alive = true;
     em.health = 5;
     em.shoot_delay_ms = 3000.f;
+    em.is_movable = is_movable;
     auto& mo = registry.assign<motionComponent>(entity);
     // Setting initial values
     // float xpos = randomFloat(50.f, 1000.f);

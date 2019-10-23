@@ -16,10 +16,14 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
             enemy_total = minion_num + boss_num;
             minion_killed = 0;
             boss_killed = 0;
-            minion_init_pos.push_back({ 1000.f, 1000.f });
+            minion_init_pos.push_back({ 50.f, 50.f });
             minion_init_pos.push_back({ 500.f, 500.f });
-            minion_init_pos.push_back({ 0.f, 0.f });
+            minion_init_pos.push_back({ 1000.f, 100.f });
+            minion_is_movable.push_back(false);
+            minion_is_movable.push_back(true);
+            minion_is_movable.push_back(false);
             boss_init_pos.push_back({ 400.f, 400.f });
+            boss_is_movable.push_back(false);
             break;
         case 2:
             break;
@@ -80,11 +84,27 @@ vec2 LevelSystem::get_next_minion_pos()
     return result;
 }
 
+bool LevelSystem::get_next_minion_is_movable()
+{
+    bool result = minion_is_movable[0];
+    auto init_pos = minion_is_movable.begin();
+    minion_is_movable.erase(init_pos);
+    return result;
+}
+
 vec2 LevelSystem::get_next_boss_pos()
 {
     vec2 result = boss_init_pos[0];
     auto init_pos = boss_init_pos.begin();
     boss_init_pos.erase(init_pos);
+    return result;
+}
+
+bool LevelSystem::get_next_boss_is_movable()
+{
+    bool result = boss_is_movable[0];
+    auto init_pos = boss_is_movable.begin();
+    boss_is_movable.erase(init_pos);
     return result;
 }
 

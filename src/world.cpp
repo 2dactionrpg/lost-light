@@ -265,7 +265,8 @@ bool World::spawn_enemy()
     if (enemy.init(id)) {
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_minion_pos();
-        makeEnemy(registry, id, pos);
+        bool is_movable = levelSystem.get_next_minion_is_movable();
+        makeEnemy(registry, id, pos, is_movable);
         minion_count++;
         return true;
     }
@@ -281,7 +282,8 @@ bool World::spawn_boss()
     if (enemy.init(id)) {
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_boss_pos();
-        makeBoss(registry, id, pos);
+        bool is_movable = levelSystem.get_next_boss_is_movable();
+        makeBoss(registry, id, pos, is_movable);
         return true;
     }
     fprintf(stderr, "Failed to spawn enemy");
