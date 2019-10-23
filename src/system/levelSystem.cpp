@@ -8,22 +8,32 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
         auto& [minion_killed, boss_killed] = level.get(entity);
         switch (m_lvl_num) {
         case 1:
-            lvl_num = 1;
-            minion_max_on_screen = 3;
-            boss_max_on_screen = 1;
+            // minion info
             minion_num = 3;
-            boss_num = 1;
-            enemy_total = minion_num + boss_num;
+            minion_count = 0;
             minion_killed = 0;
-            boss_killed = 0;
+            minion_max_on_screen = 3;
             minion_init_pos.push_back({ 50.f, 50.f });
             minion_init_pos.push_back({ 500.f, 500.f });
             minion_init_pos.push_back({ 1000.f, 100.f });
             minion_is_movable.push_back(false);
             minion_is_movable.push_back(true);
             minion_is_movable.push_back(false);
+
+            // boss info
+            boss_num = 1;
+            boss_count = 0;
+            boss_killed = 0;
+            boss_max_on_screen = 1;
             boss_init_pos.push_back({ 400.f, 400.f });
             boss_is_movable.push_back(false);
+
+            // global info
+            lvl_num = 1;
+            enemy_killed = 0;
+            enemy_total = minion_num + boss_num;
+            enemy_spawn_delay = 1000.f;
+            next_enemy_spawn_counter = 0.f;
             break;
         case 2:
             break;
@@ -39,43 +49,23 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
     return true;
 }
 
-void LevelSystem::load_level_info(entt::registry& registry, int& m_lvl_num, int& m_minion_max_on_screen,
-    int& m_boss_max_on_screen, int& m_minion_num, int& m_boss_num, int& m_enemy_total, int& m_enemy_killed)
+void LevelSystem::update(entt::registry& registry, float elapsed_ms)
 {
+    next_enemy_spawn_counter -= elapsed_ms;
+
     auto level = registry.view<levelComponent>();
 
     for (auto entity : level) {
         auto& [minion_killed, boss_killed] = level.get(entity);
-        minion_killed = m_enemy_killed;
-    }
-    m_lvl_num = lvl_num;
-    m_minion_max_on_screen = minion_max_on_screen;
-    m_boss_max_on_screen = boss_max_on_screen;
-    m_minion_num = minion_num;
-    m_boss_num = boss_num;
-    m_enemy_total = enemy_total;
-}
+        enemy_killed = minion_killed + boss_killed;
 
-void LevelSystem::update(entt::registry& registry, int& m_enemy_killed)
-{
-    auto level = registry.view<levelComponent>();
-
-    for (auto entity : level) {
-        auto& [minion_killed, boss_killed] = level.get(entity);
-        m_enemy_killed = minion_killed;
+        if (enemy_killed >= enemy_total) {
+            menuSystem.sync(registry, STATE_WIN);
+        }
     }
 }
 
-void LevelSystem::increment_enemy_killed(entt::registry& registry)
-{
-    auto level = registry.view<levelComponent>();
-
-    for (auto entity : level) {
-        auto& [minion_killed, boss_killed] = level.get(entity);
-        minion_killed++;
-    }
-}
-
+// Minion functions
 vec2 LevelSystem::get_next_minion_pos()
 {
     vec2 result = minion_init_pos[0];
@@ -92,6 +82,18 @@ bool LevelSystem::get_next_minion_is_movable()
     return result;
 }
 
+bool LevelSystem::should_spawn_minion(int enemy_size)
+{
+    if (enemy_size < minion_max_on_screen && next_enemy_spawn_counter < 0.f && minion_count < minion_num) {
+        minion_count++;
+        next_enemy_spawn_counter = enemy_spawn_delay;
+        return true;
+    }
+
+    return false;
+}
+
+// Boss functions
 vec2 LevelSystem::get_next_boss_pos()
 {
     vec2 result = boss_init_pos[0];
@@ -108,7 +110,28 @@ bool LevelSystem::get_next_boss_is_movable()
     return result;
 }
 
+bool LevelSystem::should_spawn_boss()
+{
+    if (enemy_killed == minion_num && boss_count < boss_num) {
+        boss_count++;
+        return true;
+    }
+
+    return false;
+}
+
+// Enemy shared functions
 int LevelSystem::get_next_enemy_id()
 {
     return enemy_id++;
+}
+
+void LevelSystem::increment_enemy_killed(entt::registry& registry)
+{
+    auto level = registry.view<levelComponent>();
+
+    for (auto entity : level) {
+        auto& [minion_killed, boss_killed] = level.get(entity);
+        minion_killed++;
+    }
 }
