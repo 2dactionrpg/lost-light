@@ -135,6 +135,8 @@ if (IS_OS_LINUX OR IS_OS_MAC)
        target_link_libraries(${PROJECT_NAME} PUBLIC ${COCOA_LIBRARY} ${CF_LIBRARY})
     endif()
 elseif (IS_OS_WINDOWS)
+    find_package(EnTT CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC EnTT)
 # https://stackoverflow.com/questions/17126860/cmake-link-precompiled-library-depending-on-os-and-architecture
     set(GLFW_FOUND TRUE)
     set(SDL2_FOUND TRUE)
