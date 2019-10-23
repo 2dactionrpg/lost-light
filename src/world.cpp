@@ -207,11 +207,14 @@ void World::draw()
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
-    m_menu.draw(projection_2D);
+
     for (auto& enemy : m_enemies)
         enemy.draw(projection_2D);
+
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
+
+    m_menu.draw(projection_2D);
 
     /////////////////////
     // Truely render to the screen
