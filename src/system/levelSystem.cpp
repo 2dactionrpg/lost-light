@@ -13,11 +13,11 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
             minion_count = 0;
             minion_killed = 0;
             minion_max_on_screen = 3;
-            minion_init_pos.push_back({ 50.f, 50.f });
-            minion_init_pos.push_back({ 500.f, 500.f });
             minion_init_pos.push_back({ 1000.f, 100.f });
+            minion_init_pos.push_back({ 1000.f, 400.f });
+            minion_init_pos.push_back({ 1000.f, 700.f });
             minion_is_movable.push_back(false);
-            minion_is_movable.push_back(true);
+            minion_is_movable.push_back(false);
             minion_is_movable.push_back(false);
 
             // boss info
@@ -25,14 +25,14 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
             boss_count = 0;
             boss_killed = 0;
             boss_max_on_screen = 1;
-            boss_init_pos.push_back({ 400.f, 400.f });
+            boss_init_pos.push_back({ 1000.f, 500.f });
             boss_is_movable.push_back(false);
 
             // global info
             lvl_num = 1;
             enemy_killed = 0;
             enemy_total = minion_num + boss_num;
-            enemy_spawn_delay = 1000.f;
+            enemy_spawn_delay = 10.f;
             next_enemy_spawn_counter = 0.f;
             break;
         case 2:
