@@ -32,7 +32,7 @@ entt::entity makeShield(entt::registry& registry)
     return entity;
 }
 
-entt::entity makeEnemy(entt::registry& registry, int id, vec2 pos, bool is_movable)
+entt::entity makeMinion(entt::registry& registry, int id, vec2 pos, bool is_movable)
 {
     const entt::entity entity = registry.create();
     auto& em = registry.assign<enemyComponent>(entity);

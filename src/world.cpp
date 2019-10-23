@@ -20,8 +20,6 @@ World::~World()
 // World initialization
 bool World::init(vec2 screen)
 {
-    minion_count = 0;
-    boss_count = 0;
     //-------------------------------------------------------------------------
     // GLFW / OGL Initialization
     // Core Opengl 3.
@@ -82,7 +80,6 @@ bool World::init(vec2 screen)
     soundSystem.play_background_music();
 
     fprintf(stderr, "Loaded music\n");
-    m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
 
     makeCharacter(registry);
     makeShield(registry);
@@ -91,10 +88,6 @@ bool World::init(vec2 screen)
     makeLevel(registry);
 
     levelSystem.init_level(registry, 1);
-
-    levelSystem.load_level_info(registry, m_lvl_num, m_minion_max_on_screen, m_boss_max_on_screen, m_minion_num, m_boss_num, m_enemy_total, m_enemy_killed);
-
-    spawn_enemy();
 
     fprintf(stderr, "factory done\n");
 
@@ -131,15 +124,11 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    levelSystem.update(registry, m_enemy_killed);
+    levelSystem.update(registry, elapsed_ms);
 
     state = menuSystem.get_state(registry);
-    if (state != STATE_PLAYING) {
-        return false;
-    }
 
-    if (m_enemy_killed >= m_enemy_total) {
-        menuSystem.sync(registry, STATE_WIN);
+    if (state != STATE_PLAYING) {
         return false;
     }
 
@@ -158,19 +147,14 @@ bool World::update(float elapsed_ms)
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
     healthSystem.update(registry, m_enemies);
 
-    m_next_enemy_spawn -= elapsed_ms;
-    if (m_enemies.size() < m_minion_max_on_screen && m_next_enemy_spawn < 0.f && minion_count < m_minion_num) {
-        if (spawn_enemy())
-            m_next_enemy_spawn = ENEMY_SPAWN_DELAY_MS;
-        else
-            fprintf(stderr, "%s\n", "couldn't spawn new enemy");
+    if (levelSystem.should_spawn_minion(m_enemies.size())) {
+        spawn_minion();
     }
 
-    if (m_enemy_killed == m_minion_num && boss_count < m_boss_num) {
+    if (levelSystem.should_spawn_boss()) {
         spawn_boss();
         makePotion(registry, 1);
         m_potion.init(1);
-        boss_count++;
     }
 
     enemyAI.destroy_dead_enemies(registry);
@@ -257,8 +241,8 @@ bool World::is_over() const
     return glfwWindowShouldClose(m_window) || state == STATE_TERMINATE;
 }
 
-// create a new enemy
-bool World::spawn_enemy()
+// create a new minion
+bool World::spawn_minion()
 {
     Enemy enemy;
     int id = levelSystem.get_next_enemy_id();
@@ -266,8 +250,7 @@ bool World::spawn_enemy()
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_minion_pos();
         bool is_movable = levelSystem.get_next_minion_is_movable();
-        makeEnemy(registry, id, pos, is_movable);
-        minion_count++;
+        makeMinion(registry, id, pos, is_movable);
         return true;
     }
     fprintf(stderr, "Failed to spawn enemy");

@@ -23,9 +23,6 @@ vec2 s_init_scale = { 0.25f, -0.4f };
 float s_init_duration = 20.f;
 float s_init_cooldown = 50.f;
 
-// World Initial data
-const size_t init_ENEMY_SPAWN_DELAY_MS = 0;
-
 // Others
 enum soundType {
     C_DEAD,

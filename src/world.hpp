@@ -31,8 +31,6 @@
 
 // Same as static in c, local to compilation unit
 namespace {
-const size_t ENEMY_SPAWN_DELAY_MS = init_ENEMY_SPAWN_DELAY_MS;
-
 namespace {
     void glfw_err_cb(int error, const char* desc)
     {
@@ -63,21 +61,11 @@ public:
     // Should the game be over ?
     bool is_over() const;
 
-    int minion_count;
-    int boss_count;
     int state;
-
-    int m_lvl_num;
-    int m_minion_max_on_screen;
-    int m_boss_max_on_screen;
-    int m_minion_num;
-    int m_boss_num;
-    int m_enemy_total;
-    int m_enemy_killed;
 
 private:
     // generate enemies
-    bool spawn_enemy();
+    bool spawn_minion();
     bool spawn_boss();
 
     // !!! INPUT CALLBACK FUNCTIONS
@@ -108,8 +96,6 @@ private:
     Ground m_ground;
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
-
-    float m_next_enemy_spawn;
 
     // C++ rng
     std::default_random_engine m_rng;
