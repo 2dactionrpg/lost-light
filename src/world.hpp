@@ -12,6 +12,7 @@
 #include "./system/enemyAISystem.hpp"
 #include "./system/healthSystem.hpp"
 #include "./system/inputSystem.hpp"
+#include "./system/levelSystem.hpp"
 #include "./system/menuSystem.hpp"
 #include "./system/physicsSystem.hpp"
 #include "./system/soundSystem.hpp"
@@ -20,7 +21,6 @@
 #include "ground.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
-
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -31,10 +31,6 @@
 
 // Same as static in c, local to compilation unit
 namespace {
-// change these numbers for minimal difficulty control
-const size_t MAX_ENEMIES = init_MAX_ENEMIES;
-const size_t ENEMIES_THRESHOLD_1 = init_ENEMIES_THRESHOLD_1;
-const size_t MAX_BOSS_COUNT = init_MAX_BOSS_COUNT;
 const size_t ENEMY_SPAWN_DELAY_MS = init_ENEMY_SPAWN_DELAY_MS;
 
 namespace {
@@ -67,10 +63,17 @@ public:
     // Should the game be over ?
     bool is_over() const;
 
+    int minion_count;
+    int boss_count;
     int state;
-    int enemiesCount;
-    int enemiesKilled;
-    int bossCount;
+
+    int m_lvl_num;
+    int m_minion_max_on_screen;
+    int m_boss_max_on_screen;
+    int m_minion_num;
+    int m_boss_num;
+    int m_enemy_total;
+    int m_enemy_killed;
 
 private:
     // generate enemies
@@ -107,7 +110,7 @@ private:
     std::vector<Enemy> m_enemies;
 
     // id assigned to enemies
-    int enemy_number;
+    int enemy_id;
 
     float m_next_enemy_spawn;
 
@@ -122,5 +125,6 @@ private:
     MenuSystem menuSystem;
     SoundSystem soundSystem;
     CollisionSystem collisionSystem;
+    LevelSystem levelSystem;
     entt::registry registry;
 };

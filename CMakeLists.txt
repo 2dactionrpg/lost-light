@@ -31,11 +31,11 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/project_path.hpp.in" "${CMAKE_CU
 # file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
 
 set(SOURCE_FILES
-	src/main.cpp
-	src/character.cpp
-	src/common.cpp
-	src/background.cpp
-	src/world.cpp
+    src/main.cpp
+    src/character.cpp
+    src/common.cpp
+    src/background.cpp
+    src/world.cpp
     src/projectile.cpp
     src/shield.cpp
     src/entity.cpp
@@ -52,12 +52,13 @@ set(SOURCE_FILES
     src/system/collisionSystem.cpp
     src/system/menuSystem.cpp
     src/system/soundSystem.cpp
+    src/system/levelSystem.cpp
 
     src/project_path.hpp
-	src/character.hpp
-	src/common.hpp
-	src/background.hpp
-	src/world.hpp
+    src/character.hpp
+    src/common.hpp
+    src/background.hpp
+    src/world.hpp
     src/projectile.hpp
     src/shield.hpp
     src/entity.hpp
@@ -78,6 +79,7 @@ set(SOURCE_FILES
     src/components/projectileComponent.hpp
     src/components/potionComponent.hpp
     src/components/groundComponent.hpp
+    src/components/levelComponent.hpp
     # System
     src/system/inputSystem.hpp
     src/system/physicsSystem.hpp
@@ -86,6 +88,7 @@ set(SOURCE_FILES
     src/system/healthSystem.hpp
     src/system/menuSystem.hpp
     src/system/soundSystem.hpp
+    src/system/levelSystem.hpp
 )
 
 if (IS_OS_MAC)

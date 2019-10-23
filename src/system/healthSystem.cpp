@@ -1,7 +1,7 @@
 #include "healthSystem.hpp"
 #include <iostream>
 
-void HealthSystem::update(entt::registry& registry, vector<Enemy>& m_enemies, int& enemiesKilled)
+void HealthSystem::update(entt::registry& registry, vector<Enemy>& m_enemies)
 {
     // Enemy Physics Update
     auto enemy = registry.view<enemyComponent>();
@@ -13,7 +13,7 @@ void HealthSystem::update(entt::registry& registry, vector<Enemy>& m_enemies, in
             auto enemy_it = m_enemies.begin();
             while (enemy_it != m_enemies.end()) {
                 if (enemy_it->get_id() == id) {
-                    enemiesKilled++;
+                    levelSystem.increment_enemy_killed(registry);
                     m_enemies.erase(enemy_it);
                     break;
                 }
