@@ -47,33 +47,51 @@ void EnemyAISystem::set_rotation(entt::registry& registry)
     }
 }
 
-void EnemyAISystem::shoot(entt::registry& registry, float elapsed_ms, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles)
+void EnemyAISystem::shoot(entt::registry& registry, int enemy_type, vec2 proj_direction, vec2 face_pos, float radians, vector<Projectile>& m_projectiles)
+{
+    if (enemy_type == BOSS) {
+        vec2 proj_addition = { -100.f, -100.f };
+        for (int i = 0; i < 3; i++) {
+            Projectile projectile;
+            vec2 proj_direction_result = add(proj_direction, proj_addition);
+            proj_addition = add(proj_addition, { 100.f, 100.f });
+            if (projectile.init(proj_counter)) {
+                m_projectiles.emplace_back(projectile);
+                makeProjectile(registry, proj_counter, face_pos, proj_direction_result, radians + 1.2);
+                proj_counter++;
+            } else {
+                fprintf(stderr, "Failed to spawn projectile");
+            }
+        }
+    } else if (enemy_type == MINION) {
+        Projectile projectile;
+        if (projectile.init(proj_counter)) {
+            m_projectiles.emplace_back(projectile);
+            makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
+            proj_counter++;
+        } else {
+            fprintf(stderr, "Failed to spawn projectile");
+        }
+    }
+}
+
+void EnemyAISystem::shoot_manager(entt::registry& registry, float elapsed_ms, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles)
 {
     auto enemies = registry.view<enemyComponent, motionComponent>();
     for (auto enemy : enemies) {
         auto& [position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
-        auto& [id, health, is_alive, is_movable, shoot_delay_ms, destination, target] = enemies.get<enemyComponent>(enemy);
-        if (is_alive && shoot_delay_ms < 0.f) {
-            bool enemy_alive = false;
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target] = enemies.get<enemyComponent>(enemy);
+        if (is_alive && shoot_cooldown < 0.f) {
             for (auto& m_enemy : m_enemies) {
                 if (id == m_enemy.get_id()) {
-                    Projectile projectile;
-                    if (projectile.init(proj_counter)) {
-                        vec2 face_pos = m_enemy.get_face_position();
-                        vec2 proj_direction = { target.x - face_pos.x, target.y - face_pos.y };
-                        m_projectiles.emplace_back(projectile);
-                        makeProjectile(registry, proj_counter, face_pos, proj_direction, radians + 1.2);
-                        proj_counter++;
-                    } else {
-                        fprintf(stderr, "Failed to spawn projectile");
-                    }
-                    enemy_alive = true;
+                    vec2 face_pos = m_enemy.get_face_position();
+                    vec2 proj_direction = { target.x - face_pos.x, target.y - face_pos.y };
+                    shoot(registry, enemy_type, proj_direction, face_pos, radians, m_projectiles);
                 }
             }
-            shoot_delay_ms = 3000.f;
-            is_alive = enemy_alive;
+            shoot_cooldown = shoot_frequency;
         } else {
-            shoot_delay_ms -= elapsed_ms;
+            shoot_cooldown -= elapsed_ms;
         }
     }
 }

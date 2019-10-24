@@ -15,7 +15,7 @@ void CollisionSystem::update(entt::registry& registry, Character& m_character, S
         float w = projectile_it->get_bounding_box().x / 2;
         float h = projectile_it->get_bounding_box().y / 2;
         if (projectile_it->get_position().x + w < 0.f || projectile_it->get_position().x - w > 1200.f || projectile_it->get_position().y + h < 0.f || projectile_it->get_position().y - h > 850.f) {
-            projectile_it= m_projectiles.erase(projectile_it);
+            projectile_it = m_projectiles.erase(projectile_it);
             continue;
         }
 

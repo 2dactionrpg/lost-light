@@ -141,7 +141,7 @@ bool World::update(float elapsed_ms)
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
-    enemyAI.shoot(registry, elapsed_ms, m_enemies, m_projectiles);
+    enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_projectiles);
 
     physicsSystem.sync(registry, elapsed_ms);
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
@@ -207,11 +207,14 @@ void World::draw()
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
-    m_menu.draw(projection_2D);
+
     for (auto& enemy : m_enemies)
         enemy.draw(projection_2D);
+
     for (auto& projectile : m_projectiles)
         projectile.draw(projection_2D);
+
+    m_menu.draw(projection_2D);
 
     /////////////////////
     // Truely render to the screen
