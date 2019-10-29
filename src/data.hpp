@@ -14,6 +14,7 @@ float c_init_speed = 250.f;
 vec2 c_init_scale = { 0.1f, 0.1f };
 float c_init_cooldown = 50.f;
 float c_init_dash_distance = 100.f;
+vec2 c_boss_init_pos = {1000.f,500.f};
 
 static const vec2 init_pos_array[] = {{1000.f,100.f},{1000.f, 400.f}, {1000.f, 700.f}};
 // Shield Initial data

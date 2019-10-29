@@ -5,6 +5,7 @@
 #include "../factory.hpp"
 #include "../potion.hpp"
 #include "menuSystem.hpp"
+#include "../enemy.hpp"
 
 #include <entt/entity/registry.hpp>
 
@@ -39,7 +40,7 @@ private:
 
 public:
     bool init_level(entt::registry& registry, int m_lvl_num);
-    void update(entt::registry& registry, float elapsed_ms);
+    void update(entt::registry& registry, float elapsed_ms, std::vector<Enemy> *m_enemies);
     void increment_enemy_killed(entt::registry& registry);
     int get_next_enemy_id();
     vec2 get_next_minion_pos();

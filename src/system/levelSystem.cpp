@@ -25,7 +25,7 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
             boss_count = 0;
             boss_killed = 0;
             boss_max_on_screen = 1;
-            boss_init_pos.push_back({ 1000.f, 500.f });
+            boss_init_pos.push_back(c_boss_init_pos);
             boss_is_movable.push_back(true);
 
             // global info
@@ -49,7 +49,7 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
     return true;
 }
 
-void LevelSystem::update(entt::registry& registry, float elapsed_ms)
+void LevelSystem::update(entt::registry& registry, float elapsed_ms, std::vector<Enemy> *m_enemies)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
@@ -67,6 +67,12 @@ void LevelSystem::update(entt::registry& registry, float elapsed_ms)
     for (auto entity : view) {
         auto& resetKeyPressed = view.get<inputKeyboard>(entity).resetKeyPressed;
         if (resetKeyPressed) {
+            m_enemies->clear();
+            boss_count=0;
+            if (boss_init_pos.size() != boss_max_on_screen) {
+                boss_init_pos.emplace_back(c_boss_init_pos);
+            }
+            //enemy_killed=0;
             reset_enemy(registry);
         }
     }
