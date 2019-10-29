@@ -12,6 +12,8 @@
 #include "../components/potionComponent.hpp"
 #include "../components/projectileComponent.hpp"
 #include "../components/shieldComponent.hpp"
+#include "../components/levelComponent.hpp"
+#include "../system/menuSystem.hpp"
 #include "../data.hpp"
 #include "../enemy.hpp"
 #include "../ground.hpp"
@@ -37,6 +39,8 @@ public:
     void set_shield_scale_multiplier(entt::registry& registry, float x, float y);
     void set_character_unmovable(entt::registry& registry);
     void reset_character(entt::registry& registry);
+    void reset_enemy(entt::registry& registry);
+    void reset_potion(entt::registry& registry);
     void reflect_projectile(entt::registry& registry, int m_id, vec2 angle);
     void consume_potion(entt::registry& registry, int m_id);
 };
