@@ -1,5 +1,6 @@
 #pragma once
 #include "../common.hpp"
+#include "../data.hpp"
 #include "../components/levelComponent.hpp"
 #include "../factory.hpp"
 #include "../potion.hpp"
@@ -45,6 +46,7 @@ public:
     bool get_next_minion_is_movable();
     vec2 get_next_boss_pos();
     bool get_next_boss_is_movable();
+    void reset_enemy(entt::registry& registry);
     bool should_spawn_minion(int enemy_size);
     bool should_spawn_boss();
 };
