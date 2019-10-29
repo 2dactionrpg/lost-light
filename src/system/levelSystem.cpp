@@ -126,6 +126,7 @@ bool LevelSystem::get_next_boss_is_movable()
 void LevelSystem::reset_enemy(entt::registry& registry) {
     //enemy_size < minion_max_on_screen && next_enemy_spawn_counter < 0.f && minion_count < minion_num
     minion_count=0;
+    enemy_killed=0;
     next_enemy_spawn_counter=0.f;
     auto viewEnemy = registry.view<enemyComponent, physicsScaleComponent, motionComponent>();
     int i = 0;
@@ -161,9 +162,18 @@ void LevelSystem::reset_enemy(entt::registry& registry) {
         state= STATE_PLAYING;
     }
 }
-bool LevelSystem::should_spawn_boss()
+bool LevelSystem::should_spawn_boss(entt::registry& registry)
 {
     if (enemy_killed == minion_num && boss_count < boss_num) {
+        auto view = registry.view<potionComponent, physicsScaleComponent>();
+        for (auto entity : view) {
+            auto& id = view.get<potionComponent>(entity).id;
+            auto& is_consumed = view.get<potionComponent>(entity).is_consumed;
+            auto& scale = view.get<physicsScaleComponent>(entity).scale;
+            scale = { 0.07f, 0.07f };
+            is_consumed = false;
+            
+        }
         boss_count++;
         return true;
     }

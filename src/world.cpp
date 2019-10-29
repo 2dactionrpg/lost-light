@@ -151,7 +151,7 @@ bool World::update(float elapsed_ms)
         spawn_minion();
     }
 
-    if (levelSystem.should_spawn_boss()) {
+    if (levelSystem.should_spawn_boss(registry)) {
         spawn_boss();
         makePotion(registry, 1);
         m_potion.init(1);
