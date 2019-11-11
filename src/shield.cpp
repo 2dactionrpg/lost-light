@@ -12,10 +12,8 @@ Texture Shield::shield_texture;
 bool Shield::init()
 {
     // Load shared texture
-    if (!shield_texture.is_valid())
-    {
-        if (!shield_texture.load_from_file(textures_path("shield.png")))
-        {
+    if (!shield_texture.is_valid()) {
+        if (!shield_texture.load_from_file(textures_path("shield.png"))) {
             fprintf(stderr, "Failed to load projectile texture!");
             return false;
         }
@@ -26,17 +24,17 @@ bool Shield::init()
     float hr = shield_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
-    vertices[0].position = {-wr, +hr, -0.02f};
-    vertices[0].texcoord = {0.f, 1.f};
-    vertices[1].position = {+wr, +hr, -0.02f};
-    vertices[1].texcoord = {1.f, 1.f};
-    vertices[2].position = {+wr, -hr, -0.02f};
-    vertices[2].texcoord = {1.f, 0.f};
-    vertices[3].position = {-wr, -hr, -0.02f};
-    vertices[3].texcoord = {0.f, 0.f};
+    vertices[0].position = { -wr, +hr, -0.02f };
+    vertices[0].texcoord = { 0.f, 1.f };
+    vertices[1].position = { +wr, +hr, -0.02f };
+    vertices[1].texcoord = { 1.f, 1.f };
+    vertices[2].position = { +wr, -hr, -0.02f };
+    vertices[2].texcoord = { 1.f, 0.f };
+    vertices[3].position = { -wr, -hr, -0.02f };
+    vertices[3].texcoord = { 0.f, 0.f };
 
     // Counterclockwise as it's the default opengl front winding direction
-    uint16_t indices[] = {0, 3, 1, 1, 3, 2};
+    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
 
     // Clearing errors
     gl_flush_errors();
@@ -70,21 +68,21 @@ void Shield::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
-    glDeleteVertexArrays(1, &mesh.vao);
+    glDeleteBuffers(1, &mesh.vao);
 
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
     glDeleteShader(effect.program);
 }
 
-void Shield::draw(const mat3 &projection)
+void Shield::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
     transform.translate(motion.position);
     transform.rotate(motion.radians);
-    transform.translate({0.f, 80.f});
+    transform.translate({ 0.f, 80.f });
     transform.scale(physics.scale);
     transform.end();
 
@@ -111,18 +109,18 @@ void Shield::draw(const mat3 &projection)
     GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
     glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)0);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)sizeof(vec3));
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, shield_texture.id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
-    float color[] = {1.f, 1.f, 1.f};
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
+    float color[] = { 1.f, 1.f, 1.f };
     glUniform3fv(color_uloc, 1, color);
-    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -140,7 +138,7 @@ void Shield::set_scale(vec2 scale)
 
 void Shield::hide()
 {
-    physics.scale = {0.f, 0.f};
+    physics.scale = { 0.f, 0.f };
 }
 
 vec2 Shield::get_position() const
@@ -165,9 +163,9 @@ void Shield::set_rotation(float radians)
 
 vec2 Shield::get_direction()
 {
-    vec2 direction = {sinf(motion.radians), -cosf(motion.radians)};
+    vec2 direction = { sinf(motion.radians), -cosf(motion.radians) };
     float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
-    direction = {direction.x / normal, direction.y / normal};
+    direction = { direction.x / normal, direction.y / normal };
     return direction;
 }
 
@@ -175,37 +173,41 @@ vec2 Shield::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return {std::fabs(physics.scale.x) * shield_texture.width, std::fabs(physics.scale.y) * shield_texture.height};
+    return { std::fabs(physics.scale.x) * shield_texture.width, std::fabs(physics.scale.y) * shield_texture.height };
 }
 
-bool Shield::collides_with(const Projectile &projectile)
+bool Shield::collides_with(const Projectile& projectile)
 {
-    vec3 brMul = {+shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
-    vec3 blMul = {-shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
+    vec3 brMul = { +shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
+    vec3 blMul = { -shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f };
 
     brMul = mul(transform.out, brMul);
     blMul = mul(transform.out, blMul);
 
-    vec2 shieldBR = {brMul.x, brMul.y};
-    vec2 shieldBL = {blMul.x, blMul.y};
+    vec2 shieldBR = { brMul.x, brMul.y };
+    vec2 shieldBL = { blMul.x, blMul.y };
 
     vec2 position = projectile.get_position();
-    vec2 projectileTL = {position.x - projectile.get_bounding_box().x / 2.0f,
-                         position.y - projectile.get_bounding_box().y / 2.0f};
-    vec2 projectileTR = {position.x + projectile.get_bounding_box().x / 2.0f,
-                         position.y - projectile.get_bounding_box().y / 2.0f};
-    vec2 projectileBL = {position.x - projectile.get_bounding_box().x / 2.0f,
-                         position.y + projectile.get_bounding_box().y / 2.0f};
-    vec2 projectileBR = {position.x + projectile.get_bounding_box().x / 2.0f,
-                         position.y + projectile.get_bounding_box().y / 2.0f};
+    vec2 projectileTL = { position.x - projectile.get_bounding_box().x / 2.0f,
+        position.y - projectile.get_bounding_box().y / 2.0f };
+    vec2 projectileTR = { position.x + projectile.get_bounding_box().x / 2.0f,
+        position.y - projectile.get_bounding_box().y / 2.0f };
+    vec2 projectileBL = { position.x - projectile.get_bounding_box().x / 2.0f,
+        position.y + projectile.get_bounding_box().y / 2.0f };
+    vec2 projectileBR = { position.x + projectile.get_bounding_box().x / 2.0f,
+        position.y + projectile.get_bounding_box().y / 2.0f };
 
-    return doIntersect(shieldBL, shieldBR, projectileBL, projectileBR) || doIntersect(shieldBL, shieldBR, projectileBR, projectileTR) || doIntersect(shieldBL, shieldBR, projectileTR, projectileTL) || doIntersect(shieldBL, shieldBR, projectileTL, projectileBL);
+    return doIntersect(shieldBL, shieldBR, projectileBL, projectileBR)
+        || doIntersect(shieldBL, shieldBR, projectileBR, projectileTR)
+        || doIntersect(shieldBL, shieldBR, projectileTR, projectileTL)
+        || doIntersect(shieldBL, shieldBR, projectileTL, projectileBL);
 }
 
 // Formulas from https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
 bool Shield::onSegment(vec2 p, vec2 q, vec2 r)
 {
-    return q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y);
+    return q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x)
+        && q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y);
 }
 
 int Shield::orientation(vec2 p, vec2 q, vec2 r)
@@ -213,8 +215,7 @@ int Shield::orientation(vec2 p, vec2 q, vec2 r)
     // From https://www.geeksforgeeks.org/orientation-3-ordered-points/
     int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 
-    if (val == 0)
-    {
+    if (val == 0) {
         return 0;
     }
 

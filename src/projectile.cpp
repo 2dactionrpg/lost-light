@@ -8,10 +8,8 @@ Texture Projectile::projectile_texture;
 bool Projectile::init(int id)
 {
     // Load shared texture
-    if (!projectile_texture.is_valid())
-    {
-        if (!projectile_texture.load_from_file(textures_path("projectile.png")))
-        {
+    if (!projectile_texture.is_valid()) {
+        if (!projectile_texture.load_from_file(textures_path("projectile.png"))) {
             fprintf(stderr, "Failed to load projectile texture!");
             return false;
         }
@@ -22,17 +20,17 @@ bool Projectile::init(int id)
     float hr = projectile_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
-    vertices[0].position = {-wr, +hr, -0.02f};
-    vertices[0].texcoord = {0.f, 1.f};
-    vertices[1].position = {+wr, +hr, -0.02f};
-    vertices[1].texcoord = {1.f, 1.f};
-    vertices[2].position = {+wr, -hr, -0.02f};
-    vertices[2].texcoord = {1.f, 0.f};
-    vertices[3].position = {-wr, -hr, -0.02f};
-    vertices[3].texcoord = {0.f, 0.f};
+    vertices[0].position = { -wr, +hr, -0.02f };
+    vertices[0].texcoord = { 0.f, 1.f };
+    vertices[1].position = { +wr, +hr, -0.02f };
+    vertices[1].texcoord = { 1.f, 1.f };
+    vertices[2].position = { +wr, -hr, -0.02f };
+    vertices[2].texcoord = { 1.f, 0.f };
+    vertices[3].position = { -wr, -hr, -0.02f };
+    vertices[3].texcoord = { 0.f, 0.f };
 
     // Counterclockwise as it's the default opengl front winding direction
-    uint16_t indices[] = {0, 3, 1, 1, 3, 2};
+    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
 
     // Clearing errors
     gl_flush_errors();
@@ -66,7 +64,7 @@ void Projectile::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
-    glDeleteVertexArrays(1, &mesh.vao);
+    glDeleteBuffers(1, &mesh.vao);
 
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
@@ -87,7 +85,7 @@ void Projectile::set_rotation(float rad)
 {
     motion.radians = rad;
 }
-void Projectile::draw(const mat3 &projection)
+void Projectile::draw(const mat3& projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -120,18 +118,18 @@ void Projectile::draw(const mat3 &projection)
     GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
     glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)0);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)sizeof(vec3));
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, projectile_texture.id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
-    float color[] = {1.f, 1.f, 1.f};
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
+    float color[] = { 1.f, 1.f, 1.f };
     glUniform3fv(color_uloc, 1, color);
-    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -151,7 +149,7 @@ vec2 Projectile::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return {std::fabs(physics.scale.x) * projectile_texture.width, std::fabs(physics.scale.y) * projectile_texture.height};
+    return { std::fabs(physics.scale.x) * projectile_texture.width, std::fabs(physics.scale.y) * projectile_texture.height };
 }
 
 int Projectile::get_id() const
@@ -163,3 +161,4 @@ void Projectile::set_scale(vec2 scale)
 {
     physics.scale = scale;
 }
+

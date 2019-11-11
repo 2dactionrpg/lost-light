@@ -18,6 +18,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
         {
             if (dash_duration > 0.f)
             {
+                fprintf(stderr, "im dashed\n");
                 float dash_step = dash_speed * (ms / 1000);
                 offset = add(offset, mul(normalize(dash_direction), dash_step));
                 dash_duration -= ms;
