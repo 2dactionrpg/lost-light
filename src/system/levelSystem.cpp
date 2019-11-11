@@ -1,16 +1,14 @@
 #include "levelSystem.hpp"
 
-bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
+bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
 {
     reset_enemy(registry);
 
     auto level = registry.view<levelComponent>();
 
-    for (auto entity : level)
-    {
-        auto &[minion_killed, boss_killed] = level.get(entity);
-        switch (m_lvl_num)
-        {
+    for (auto entity : level) {
+        auto& [minion_killed, boss_killed] = level.get(entity);
+        switch (m_lvl_num) {
         case 1:
             // minion info
             minion_num = 3;
@@ -53,29 +51,25 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
     return true;
 }
 
-void LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles)
+void LevelSystem::update(entt::registry& registry, float elapsed_ms, vector<Enemy>* m_enemies, vector<Projectile>* m_projectiles)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
     auto level = registry.view<levelComponent>();
 
-    for (auto entity : level)
-    {
-        auto &[minion_killed, boss_killed] = level.get(entity);
+    for (auto entity : level) {
+        auto& [minion_killed, boss_killed] = level.get(entity);
         enemy_killed = minion_killed + boss_killed;
 
-        if (enemy_killed >= enemy_total)
-        {
+        if (enemy_killed >= enemy_total) {
             menuSystem.sync(registry, STATE_WIN);
         }
     }
 
     auto view = registry.view<inputKeyboard, inputMouse>();
-    for (auto entity : view)
-    {
-        auto &resetKeyPressed = view.get<inputKeyboard>(entity).resetKeyPressed;
-        if (resetKeyPressed)
-        {
+    for (auto entity : view) {
+        auto& resetKeyPressed = view.get<inputKeyboard>(entity).resetKeyPressed;
+        if (resetKeyPressed) {
             m_enemies->clear();
             m_projectiles->clear();
             init_level(registry, 1);
@@ -102,8 +96,7 @@ bool LevelSystem::get_next_minion_is_movable()
 
 bool LevelSystem::should_spawn_minion(int enemy_size)
 {
-    if (enemy_size < minion_max_on_screen && next_enemy_spawn_counter < 0.f && minion_count < minion_num)
-    {
+    if (enemy_size < minion_max_on_screen && next_enemy_spawn_counter < 0.f && minion_count < minion_num) {
         minion_count++;
         next_enemy_spawn_counter = enemy_spawn_delay;
         return true;
@@ -129,7 +122,7 @@ bool LevelSystem::get_next_boss_is_movable()
     return result;
 }
 
-void LevelSystem::reset_enemy(entt::registry &registry)
+void LevelSystem::reset_enemy(entt::registry& registry)
 {
     minion_init_pos.clear();
     minion_is_movable.clear();
@@ -138,40 +131,34 @@ void LevelSystem::reset_enemy(entt::registry &registry)
 
     auto viewEnemy = registry.view<enemyComponent, physicsScaleComponent, motionComponent>();
 
-    for (auto entity : viewEnemy)
-    {
-        auto &is_alive = viewEnemy.get<enemyComponent>(entity).is_alive;
+    for (auto entity : viewEnemy) {
+        auto& is_alive = viewEnemy.get<enemyComponent>(entity).is_alive;
         is_alive = false;
     }
 
     auto level = registry.view<levelComponent>();
 
-    for (auto entity : level)
-    {
-        auto &[minion_killed, boss_killed] = level.get(entity);
+    for (auto entity : level) {
+        auto& [minion_killed, boss_killed] = level.get(entity);
         minion_killed = 0;
         boss_killed = 0;
     }
 
     auto menu = registry.view<menuComponent>();
-    for (auto entity : menu)
-    {
-        auto &state = menu.get(entity).state;
-        state = STATE_PLAYING;
+    for (auto entity : menu) {
+        auto& state = menu.get(entity).state;
     }
 }
 
-bool LevelSystem::should_spawn_boss(entt::registry &registry)
+bool LevelSystem::should_spawn_boss(entt::registry& registry)
 {
-    if (enemy_killed == minion_num && boss_count < boss_num)
-    {
+    if (enemy_killed == minion_num && boss_count < boss_num) {
         auto view = registry.view<potionComponent, physicsScaleComponent>();
-        for (auto entity : view)
-        {
-            auto &id = view.get<potionComponent>(entity).id;
-            auto &is_consumed = view.get<potionComponent>(entity).is_consumed;
-            auto &scale = view.get<physicsScaleComponent>(entity).scale;
-            scale = {0.07f, 0.07f};
+        for (auto entity : view) {
+            auto& id = view.get<potionComponent>(entity).id;
+            auto& is_consumed = view.get<potionComponent>(entity).is_consumed;
+            auto& scale = view.get<physicsScaleComponent>(entity).scale;
+            scale = { 0.07f, 0.07f };
             is_consumed = false;
         }
         boss_count++;
@@ -187,13 +174,12 @@ int LevelSystem::get_next_enemy_id()
     return enemy_id++;
 }
 
-void LevelSystem::increment_enemy_killed(entt::registry &registry)
+void LevelSystem::increment_enemy_killed(entt::registry& registry)
 {
     auto level = registry.view<levelComponent>();
 
-    for (auto entity : level)
-    {
-        auto &[minion_killed, boss_killed] = level.get(entity);
+    for (auto entity : level) {
+        auto& [minion_killed, boss_killed] = level.get(entity);
         minion_killed++;
     }
 }
