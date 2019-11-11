@@ -56,7 +56,7 @@ bool Wall::init(float xPos, float yPos)
     if (!effect.load_from_file(shader_path("wall.vs.glsl"), shader_path("wall.fs.glsl")))
         return false;
 
-    fprintf(stderr, "%f\t%f\n", xPos, yPos);
+    //fprintf(stderr, "%f\t%f\n", xPos, yPos);
 
     motion.position = { xPos, yPos};
     motion.radians = 0;
@@ -178,7 +178,6 @@ bool Wall::is_alive() const
     return m_is_alive;
 }
 
-
 bool Wall::collides_with(const Projectile& projectile)
 {
     vec2 box = get_bounding_box();
@@ -189,4 +188,43 @@ bool Wall::collides_with(const Projectile& projectile)
     if (d_sq < maxRadius * maxRadius)
         return true;
     return false;
+}
+
+void Wall::collides_with(vec2 position, vec2 offset, bool &right_moveable, bool &left_moveable, bool &up_moveable, bool &down_moveable)
+{
+    float grace = 30.f;
+    float objPosX = position.x;
+    float objPosY = position.y;
+    float finalObjPosx = objPosX + offset.x;
+    float finalObjPosy = objPosY + offset.y;
+    float wallPosLeftX = motion.position.x-grace;
+    float wallPosRightX = wallPosLeftX + wall_texture.width * -physics.scale.x + grace;
+    float wallPosTopY = motion.position.y - grace;
+    float wallPosBottomY = wallPosTopY + wall_texture.height * physics.scale.y +grace;
+    float wallMiddleX = wallPosLeftX  +  (wall_texture.width * -physics.scale.x) / 2;
+    float wallMiddleY  = wallPosTopY + (wall_texture.height * physics.scale.y) / 2;
+
+    if (right_moveable) {
+        if (objPosX < wallMiddleX && objPosY > wallPosTopY && objPosY < wallPosBottomY && finalObjPosx > wallPosLeftX)  {
+            right_moveable = false;
+        }
+    }
+
+    if (left_moveable) {
+        if (objPosX > wallMiddleX && objPosY > wallPosTopY && objPosY < wallPosBottomY && finalObjPosx < wallPosRightX) {
+            left_moveable = false;
+        }
+    }
+
+    if (up_moveable) {
+        if(objPosY > wallMiddleY && objPosX < wallPosRightX && objPosX > wallPosLeftX && finalObjPosy < wallPosBottomY) {
+            up_moveable = false;
+        }
+    }
+
+    if (down_moveable) {
+        if (objPosY < wallMiddleY && objPosX < wallPosRightX && objPosX > wallPosLeftX && finalObjPosy > wallPosTopY) {
+            down_moveable = false;
+        }
+    }
 }

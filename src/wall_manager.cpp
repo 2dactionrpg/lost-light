@@ -8,7 +8,7 @@ bool WallManager::init(std::vector<vec2> coords, vector<Wall> &walls, int lvl)
 
         Wall w;
         // TODO: findout the correct coeffitient 
-        float coef = 45.f;
+        float coef = 41.8f;
         retVal &= w.init(coord.x * coef,coord.y * coef);
         walls.emplace_back(w);
     }

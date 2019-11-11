@@ -1,12 +1,6 @@
 #include "collisionSystem.hpp"
 
-vec2 CollisionSystem::getOffset(vec2 position, vec2 offset, vector<Wall> &walls) {
-    for (Wall wall: walls) {
-        
-    }
-}
-
-void CollisionSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, unsigned int& m_points)
+void CollisionSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, unsigned int& m_points, vector<Wall>& m_walls)
 {
     // Checking Character - Potion collisions
     if (m_character.collides_with(m_potion) && !m_potion.is_consumed()) {
@@ -23,6 +17,20 @@ void CollisionSystem::update(entt::registry& registry, Character& m_character, S
         if (projectile_it->get_position().x + w < 0.f || projectile_it->get_position().x - w > 1200.f || projectile_it->get_position().y + h < 0.f || projectile_it->get_position().y - h > 850.f) {
             projectile_it = m_projectiles.erase(projectile_it);
             continue;
+        }
+
+        // check wall collision
+        bool shouldBreak = false;
+        auto wall_it = m_walls.begin();
+        for (Wall wall  :  m_walls) {
+            if (wall.collides_with(*projectile_it)){
+                projectile_it = m_projectiles.erase(projectile_it);
+                shouldBreak = true;
+                break;
+            }
+        }
+        if (shouldBreak) { 
+            break;
         }
 
         // check shield collision

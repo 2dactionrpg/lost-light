@@ -137,7 +137,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
 
-    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points);
+    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points, m_walls);
 
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);

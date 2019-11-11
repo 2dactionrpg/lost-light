@@ -20,7 +20,8 @@
 #include "../potion.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
-#include "collisionSystem.hpp"
+#include "../wall.hpp"
+//#include "collisionSystem.hpp"
 #include "soundSystem.hpp"
 #include <cmath>
 #include <entt/entity/registry.hpp>
@@ -43,4 +44,6 @@ public:
     void reset_potion(entt::registry& registry);
     void reflect_projectile(entt::registry& registry, int m_id, vec2 angle);
     void consume_potion(entt::registry& registry, int m_id);
+    vec2 getOffset(vec2 position, vec2 offset, vector<Wall> &walls);
+
 };
