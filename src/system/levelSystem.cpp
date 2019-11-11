@@ -2,6 +2,8 @@
 
 bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
 {
+    reset_enemy(registry);
+
     auto level = registry.view<levelComponent>();
 
     for (auto entity : level) {
@@ -32,7 +34,7 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
             lvl_num = 1;
             enemy_killed = 0;
             enemy_total = minion_num + boss_num;
-            enemy_spawn_delay = 10.f;
+            enemy_spawn_delay = 0.f;
             next_enemy_spawn_counter = 0.f;
             break;
         case 2:
@@ -49,7 +51,7 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
     return true;
 }
 
-void LevelSystem::update(entt::registry& registry, float elapsed_ms, std::vector<Enemy> *m_enemies)
+void LevelSystem::update(entt::registry& registry, float elapsed_ms, vector<Enemy>* m_enemies, vector<Projectile>* m_projectiles)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
@@ -63,20 +65,16 @@ void LevelSystem::update(entt::registry& registry, float elapsed_ms, std::vector
             menuSystem.sync(registry, STATE_WIN);
         }
     }
-    auto view = registry.view< inputKeyboard, inputMouse>();
+
+    auto view = registry.view<inputKeyboard, inputMouse>();
     for (auto entity : view) {
         auto& resetKeyPressed = view.get<inputKeyboard>(entity).resetKeyPressed;
         if (resetKeyPressed) {
             m_enemies->clear();
-            boss_count=0;
-            if (boss_init_pos.size() != boss_max_on_screen) {
-                boss_init_pos.emplace_back(c_boss_init_pos);
-            }
-            //enemy_killed=0;
-            reset_enemy(registry);
+            m_projectiles->clear();
+            init_level(registry, 1);
         }
     }
-
 }
 
 // Minion functions
@@ -123,31 +121,20 @@ bool LevelSystem::get_next_boss_is_movable()
     boss_is_movable.erase(init_pos);
     return result;
 }
-void LevelSystem::reset_enemy(entt::registry& registry) {
-    //enemy_size < minion_max_on_screen && next_enemy_spawn_counter < 0.f && minion_count < minion_num
-    minion_count=0;
-    enemy_killed=0;
-    next_enemy_spawn_counter=0.f;
-    auto viewEnemy = registry.view<enemyComponent, physicsScaleComponent, motionComponent>();
-    int i = 0;
+
+void LevelSystem::reset_enemy(entt::registry& registry)
+{
     minion_init_pos.clear();
-    minion_init_pos.push_back(init_pos_array[0]);
-    minion_init_pos.push_back(init_pos_array[1]);
-    minion_init_pos.push_back(init_pos_array[2]);
     minion_is_movable.clear();
-    minion_is_movable.push_back(false);
-    minion_is_movable.push_back(false);
-    minion_is_movable.push_back(false);
+    boss_init_pos.clear();
+    boss_is_movable.clear();
+
+    auto viewEnemy = registry.view<enemyComponent, physicsScaleComponent, motionComponent>();
 
     for (auto entity : viewEnemy) {
-        auto& [id,health,enemy_type,is_alive,is_movable,shoot_cooldown,shoot_frequency,destination,target] = viewEnemy.get<enemyComponent>(entity);
-        is_alive = true;
-        auto& position = viewEnemy.get<motionComponent>(entity).position;
-        auto& scale = viewEnemy.get<physicsScaleComponent>(entity).scale;
-        position = init_pos_array[i];
-        i++;
-        scale = c_init_scale;
-    } 
+        auto& is_alive = viewEnemy.get<enemyComponent>(entity).is_alive;
+        is_alive = false;
+    }
 
     auto level = registry.view<levelComponent>();
 
@@ -156,12 +143,13 @@ void LevelSystem::reset_enemy(entt::registry& registry) {
         minion_killed = 0;
         boss_killed = 0;
     }
+
     auto menu = registry.view<menuComponent>();
     for (auto entity : menu) {
         auto& state = menu.get(entity).state;
-        state= STATE_PLAYING;
     }
 }
+
 bool LevelSystem::should_spawn_boss(entt::registry& registry)
 {
     if (enemy_killed == minion_num && boss_count < boss_num) {
@@ -172,7 +160,6 @@ bool LevelSystem::should_spawn_boss(entt::registry& registry)
             auto& scale = view.get<physicsScaleComponent>(entity).scale;
             scale = { 0.07f, 0.07f };
             is_consumed = false;
-            
         }
         boss_count++;
         return true;

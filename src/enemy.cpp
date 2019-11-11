@@ -17,8 +17,10 @@ float FRAME_Y_MIN = 100;
 bool Enemy::init(int id)
 {
     // Load shared texture
-    if (!enemy_texture.is_valid()) {
-        if (!enemy_texture.load_from_file(textures_path("enemy.png"))) {
+    if (!enemy_texture.is_valid())
+    {
+        if (!enemy_texture.load_from_file(textures_path("enemy.png")))
+        {
             fprintf(stderr, "Failed to load projectile texture!");
             return false;
         }
@@ -29,17 +31,17 @@ bool Enemy::init(int id)
     float hr = enemy_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
-    vertices[0].position = { -wr, +hr, -0.02f };
-    vertices[0].texcoord = { 0.f, 1.f };
-    vertices[1].position = { +wr, +hr, -0.02f };
-    vertices[1].texcoord = { 1.f, 1.f };
-    vertices[2].position = { +wr, -hr, -0.02f };
-    vertices[2].texcoord = { 1.f, 0.f };
-    vertices[3].position = { -wr, -hr, -0.02f };
-    vertices[3].texcoord = { 0.f, 0.f };
+    vertices[0].position = {-wr, +hr, -0.02f};
+    vertices[0].texcoord = {0.f, 1.f};
+    vertices[1].position = {+wr, +hr, -0.02f};
+    vertices[1].texcoord = {1.f, 1.f};
+    vertices[2].position = {+wr, -hr, -0.02f};
+    vertices[2].texcoord = {1.f, 0.f};
+    vertices[3].position = {-wr, -hr, -0.02f};
+    vertices[3].texcoord = {0.f, 0.f};
 
     // Counterclockwise as it's the default opengl front winding direction
-    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+    uint16_t indices[] = {0, 3, 1, 1, 3, 2};
 
     // Clearing errors
     gl_flush_errors();
@@ -73,14 +75,14 @@ void Enemy::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
-    glDeleteBuffers(1, &mesh.vao);
+    glDeleteVertexArrays(1, &mesh.vao);
 
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
     glDeleteShader(effect.program);
 }
 
-void Enemy::draw(const mat3& projection)
+void Enemy::draw(const mat3 &projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -113,18 +115,18 @@ void Enemy::draw(const mat3& projection)
     GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
     glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)sizeof(vec3));
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, enemy_texture.id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
-    float color[] = { 1.f, 1.f, 1.f };
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
+    float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
-    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -159,10 +161,10 @@ vec2 Enemy::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the projectile
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * enemy_texture.width, std::fabs(physics.scale.y) * enemy_texture.height };
+    return {std::fabs(physics.scale.x) * enemy_texture.width, std::fabs(physics.scale.y) * enemy_texture.height};
 }
 
-bool Enemy::collides_with(const Projectile& projectile)
+bool Enemy::collides_with(const Projectile &projectile)
 {
     vec2 box = get_bounding_box();
     float dx = motion.position.x - projectile.get_position().x;
@@ -176,9 +178,9 @@ bool Enemy::collides_with(const Projectile& projectile)
 
 vec2 Enemy::get_face_position()
 {
-    vec3 facePoint = { enemy_texture.width / 3.f, -enemy_texture.height / 2.f - 200, 1.f };
+    vec3 facePoint = {enemy_texture.width / 3.f, -enemy_texture.height / 2.f - 200, 1.f};
     facePoint = mul(transform.out, facePoint);
-    return { facePoint.x, facePoint.y };
+    return {facePoint.x, facePoint.y};
 }
 
 int Enemy::get_id()
