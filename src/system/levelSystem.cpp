@@ -36,7 +36,7 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
             lvl_num = 1;
             enemy_killed = 0;
             enemy_total = minion_num + boss_num;
-            enemy_spawn_delay = 50.f;
+            enemy_spawn_delay = 0.f;
             next_enemy_spawn_counter = 0.f;
             break;
         case 2:
