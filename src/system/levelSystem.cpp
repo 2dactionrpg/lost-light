@@ -67,6 +67,7 @@ void LevelSystem::update(entt::registry &registry, float elapsed_ms, std::vector
             menuSystem.sync(registry, STATE_WIN);
         }
     }
+
     auto view = registry.view<inputKeyboard, inputMouse>();
     for (auto entity : view)
     {
@@ -74,13 +75,8 @@ void LevelSystem::update(entt::registry &registry, float elapsed_ms, std::vector
         if (resetKeyPressed)
         {
             m_enemies->clear();
-            boss_count = 0;
-            if (boss_init_pos.size() != boss_max_on_screen)
-            {
-                boss_init_pos.emplace_back(c_boss_init_pos);
-            }
-            //enemy_killed=0;
             reset_enemy(registry);
+            init_level(registry, 1);
         }
     }
 }
@@ -130,32 +126,15 @@ bool LevelSystem::get_next_boss_is_movable()
     boss_is_movable.erase(init_pos);
     return result;
 }
+
 void LevelSystem::reset_enemy(entt::registry &registry)
 {
-    //enemy_size < minion_max_on_screen && next_enemy_spawn_counter < 0.f && minion_count < minion_num
-    minion_count = 0;
-    enemy_killed = 0;
-    next_enemy_spawn_counter = 0.f;
     auto viewEnemy = registry.view<enemyComponent, physicsScaleComponent, motionComponent>();
-    int i = 0;
-    minion_init_pos.clear();
-    minion_init_pos.push_back(init_pos_array[0]);
-    minion_init_pos.push_back(init_pos_array[1]);
-    minion_init_pos.push_back(init_pos_array[2]);
-    minion_is_movable.clear();
-    minion_is_movable.push_back(false);
-    minion_is_movable.push_back(false);
-    minion_is_movable.push_back(false);
 
     for (auto entity : viewEnemy)
     {
-        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target] = viewEnemy.get<enemyComponent>(entity);
-        is_alive = true;
-        auto &position = viewEnemy.get<motionComponent>(entity).position;
-        auto &scale = viewEnemy.get<physicsScaleComponent>(entity).scale;
-        position = init_pos_array[i];
-        i++;
-        scale = c_init_scale;
+        auto &is_alive = viewEnemy.get<enemyComponent>(entity).is_alive;
+        is_alive = false;
     }
 
     auto level = registry.view<levelComponent>();
@@ -166,6 +145,7 @@ void LevelSystem::reset_enemy(entt::registry &registry)
         minion_killed = 0;
         boss_killed = 0;
     }
+
     auto menu = registry.view<menuComponent>();
     for (auto entity : menu)
     {
@@ -173,6 +153,7 @@ void LevelSystem::reset_enemy(entt::registry &registry)
         state = STATE_PLAYING;
     }
 }
+
 bool LevelSystem::should_spawn_boss(entt::registry &registry)
 {
     if (enemy_killed == minion_num && boss_count < boss_num)
