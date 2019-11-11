@@ -52,7 +52,6 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
         {
             if (enemy_it->collides_with(*projectile_it))
             {
-                fprintf(stderr, "im hit\n");
                 m_points++;
                 hits_enemy = true;
                 break;
