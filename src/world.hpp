@@ -7,6 +7,8 @@
 #include "enemy.hpp"
 #include "menu.hpp"
 #include "shield.hpp"
+#include "wall.hpp"
+#include "wall_manager.hpp"
 
 #include "./system/collisionSystem.hpp"
 #include "./system/enemyAISystem.hpp"
@@ -94,8 +96,12 @@ private:
     Shield m_shield;
     Potion m_potion;
     Ground m_ground;
+    
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
+    WallManager m_wall_manager;
+    std::vector<Wall> m_walls;
+
 
     // C++ rng
     std::default_random_engine m_rng;
