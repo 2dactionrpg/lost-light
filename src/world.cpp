@@ -122,7 +122,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    levelSystem.update(registry, elapsed_ms, &m_enemies);
+    levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
 
     state = menuSystem.get_state(registry);
 

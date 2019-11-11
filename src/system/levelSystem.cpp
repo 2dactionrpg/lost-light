@@ -2,6 +2,8 @@
 
 bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
 {
+    reset_enemy(registry);
+
     auto level = registry.view<levelComponent>();
 
     for (auto entity : level)
@@ -34,7 +36,7 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
             lvl_num = 1;
             enemy_killed = 0;
             enemy_total = minion_num + boss_num;
-            enemy_spawn_delay = 10.f;
+            enemy_spawn_delay = 50.f;
             next_enemy_spawn_counter = 0.f;
             break;
         case 2:
@@ -51,7 +53,7 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
     return true;
 }
 
-void LevelSystem::update(entt::registry &registry, float elapsed_ms, std::vector<Enemy> *m_enemies)
+void LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
@@ -75,7 +77,7 @@ void LevelSystem::update(entt::registry &registry, float elapsed_ms, std::vector
         if (resetKeyPressed)
         {
             m_enemies->clear();
-            reset_enemy(registry);
+            m_projectiles->clear();
             init_level(registry, 1);
         }
     }
@@ -129,6 +131,11 @@ bool LevelSystem::get_next_boss_is_movable()
 
 void LevelSystem::reset_enemy(entt::registry &registry)
 {
+    minion_init_pos.clear();
+    minion_is_movable.clear();
+    boss_init_pos.clear();
+    boss_is_movable.clear();
+
     auto viewEnemy = registry.view<enemyComponent, physicsScaleComponent, motionComponent>();
 
     for (auto entity : viewEnemy)

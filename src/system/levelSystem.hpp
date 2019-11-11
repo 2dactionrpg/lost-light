@@ -41,7 +41,7 @@ private:
 
 public:
     bool init_level(entt::registry &registry, int m_lvl_num);
-    void update(entt::registry &registry, float elapsed_ms, std::vector<Enemy> *m_enemies);
+    void update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles);
     void increment_enemy_killed(entt::registry &registry);
     int get_next_enemy_id();
     vec2 get_next_minion_pos();
