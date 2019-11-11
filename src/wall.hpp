@@ -43,5 +43,5 @@ public:
 
     bool collides_with(const Projectile& projectile);
 
-    void collides_with(vec2 position, vec2 offset, bool &right_moveable, bool &left_moveable, bool &up_moveable, bool &down_moveable);
+    void wall_offset(bool isBoss, vec2 position, vec2 offset, bool &right_moveable, bool &left_moveable, bool &up_moveable, bool &down_moveable);
 };

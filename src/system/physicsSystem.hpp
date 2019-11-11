@@ -44,6 +44,6 @@ public:
     void reset_potion(entt::registry& registry);
     void reflect_projectile(entt::registry& registry, int m_id, vec2 angle);
     void consume_potion(entt::registry& registry, int m_id);
-    vec2 getOffset(vec2 position, vec2 offset, vector<Wall> &walls);
+    vec2 getOffset(bool isBoss, vec2 position, vec2 offset, vector<Wall> &walls);
 
 };

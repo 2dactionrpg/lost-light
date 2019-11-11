@@ -190,9 +190,12 @@ bool Wall::collides_with(const Projectile& projectile)
     return false;
 }
 
-void Wall::collides_with(vec2 position, vec2 offset, bool &right_moveable, bool &left_moveable, bool &up_moveable, bool &down_moveable)
+void Wall::wall_offset(bool isBoss, vec2 position, vec2 offset, bool &right_moveable, bool &left_moveable, bool &up_moveable, bool &down_moveable)
 {
     float grace = 30.f;
+    if (isBoss) {
+        grace *=2;
+    }
     float objPosX = position.x;
     float objPosY = position.y;
     float finalObjPosx = objPosX + offset.x;

@@ -28,7 +28,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
                 dash_cooldown -= ms;
             }
         }
-        offset = getOffset(position, offset, walls);
+        offset = getOffset(false, position, offset, walls);
 
         if (resetKeyPressed)
         {
@@ -115,7 +115,8 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
                 }
             }
             vec2 offset = mul(normalize(direction), step);
-            offset = getOffset(position, offset, walls);
+            auto &enemyType = viewEnemy.get<enemyComponent>(enemy).enemy_type;
+            offset = getOffset((enemyType  == BOSS),position, offset, walls);
             move(position, offset, true);
         }
     }
@@ -374,13 +375,13 @@ void PhysicsSystem::reflect_projectile(entt::registry &registry, int m_id, vec2 
     }
 }
 
-vec2 PhysicsSystem::getOffset(vec2 position, vec2 offset, vector<Wall> &walls) {
+vec2 PhysicsSystem::getOffset(bool isBoss, vec2 position, vec2 offset, vector<Wall> &walls) {
     bool moving_down = offset.y>0;
     bool moving_up = offset.y<0;
     bool moving_left = offset.x<0;
     bool moving_right = offset.x>0;
     for (Wall wall: walls) {
-        wall.collides_with(position, offset, moving_right, moving_left, moving_up, moving_down);
+        wall.wall_offset(isBoss, position, offset, moving_right, moving_left, moving_up, moving_down);
     }
     if (!moving_down && !moving_up) {
         offset.y = 0;
