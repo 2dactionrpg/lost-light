@@ -55,9 +55,9 @@ bool Menu::init()
     // Loading shaders
     if (!effect.load_from_file(shader_path("menu.vs.glsl"), shader_path("menu.fs.glsl")))
         return false;
-
-    motion.position = {600.f, 400.f};
-    physics.scale = {0.6f, 0.75f};
+  
+    motion.position = { 600.f, 400.f };
+    physics.scale = { 0.47f, 0.53f };
 
     return true;
 }
