@@ -8,8 +8,10 @@ Texture Menu::menu_texture;
 bool Menu::init()
 {
     // Load shared texture
-    if (!menu_texture.is_valid()) {
-        if (!menu_texture.load_from_file(textures_path("start.png"))) {
+    if (!menu_texture.is_valid())
+    {
+        if (!menu_texture.load_from_file(textures_path("start.png")))
+        {
             fprintf(stderr, "Failed to load menu texture!");
             return false;
         }
@@ -20,17 +22,17 @@ bool Menu::init()
     float hr = menu_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
-    vertices[0].position = { -wr, +hr, -0.02f };
-    vertices[0].texcoord = { 0.f, 1.f };
-    vertices[1].position = { +wr, +hr, -0.02f };
-    vertices[1].texcoord = { 1.f, 1.f };
-    vertices[2].position = { +wr, -hr, -0.02f };
-    vertices[2].texcoord = { 1.f, 0.f };
-    vertices[3].position = { -wr, -hr, -0.02f };
-    vertices[3].texcoord = { 0.f, 0.f };
+    vertices[0].position = {-wr, +hr, -0.02f};
+    vertices[0].texcoord = {0.f, 1.f};
+    vertices[1].position = {+wr, +hr, -0.02f};
+    vertices[1].texcoord = {1.f, 1.f};
+    vertices[2].position = {+wr, -hr, -0.02f};
+    vertices[2].texcoord = {1.f, 0.f};
+    vertices[3].position = {-wr, -hr, -0.02f};
+    vertices[3].texcoord = {0.f, 0.f};
 
     // Counterclockwise as it's the default opengl front winding direction
-    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+    uint16_t indices[] = {0, 3, 1, 1, 3, 2};
 
     // Clearing errors
     gl_flush_errors();
@@ -53,7 +55,7 @@ bool Menu::init()
     // Loading shaders
     if (!effect.load_from_file(shader_path("menu.vs.glsl"), shader_path("menu.fs.glsl")))
         return false;
-
+  
     motion.position = { 600.f, 400.f };
     physics.scale = { 0.47f, 0.53f };
 
@@ -65,7 +67,7 @@ void Menu::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
-    glDeleteBuffers(1, &mesh.vao);
+    glDeleteVertexArrays(1, &mesh.vao);
 
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
@@ -74,7 +76,8 @@ void Menu::destroy()
 
 void Menu::load_texture(int state)
 {
-    switch (state) {
+    switch (state)
+    {
     case STATE_START:
         menu_texture.load_from_file(textures_path("start.png"));
         break;
@@ -106,7 +109,7 @@ vec2 Menu::get_direction()
 void Menu::set_direction(vec2 direction)
 {
     float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
-    motion.direction = { direction.x / normal, direction.y / normal };
+    motion.direction = {direction.x / normal, direction.y / normal};
 }
 
 void Menu::set_rotation(float rad)
@@ -114,7 +117,7 @@ void Menu::set_rotation(float rad)
     motion.radians = rad;
 }
 
-void Menu::draw(const mat3& projection)
+void Menu::draw(const mat3 &projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -147,18 +150,18 @@ void Menu::draw(const mat3& projection)
     GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
     glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)sizeof(vec3));
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, menu_texture.id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
-    float color[] = { 1.f, 1.f, 1.f };
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
+    float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
-    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -178,6 +181,6 @@ vec2 Menu::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the menu
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * menu_texture.width * 2,
-        std::fabs(physics.scale.y) * menu_texture.height * 2 };
+    return {std::fabs(physics.scale.x) * menu_texture.width * 2,
+            std::fabs(physics.scale.y) * menu_texture.height * 2};
 }

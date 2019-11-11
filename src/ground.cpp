@@ -8,8 +8,10 @@ Texture Ground::ground_texture;
 bool Ground::init(int id)
 {
     // Load shared texture
-    if (!ground_texture.is_valid()) {
-        if (!ground_texture.load_from_file(textures_path("ground.png"))) {
+    if (!ground_texture.is_valid())
+    {
+        if (!ground_texture.load_from_file(textures_path("ground.png")))
+        {
             fprintf(stderr, "Failed to load ground texture!");
             return false;
         }
@@ -20,17 +22,17 @@ bool Ground::init(int id)
     float hr = ground_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
-    vertices[0].position = { -wr, +hr, -0.02f };
-    vertices[0].texcoord = { 0.f, 1.f };
-    vertices[1].position = { +wr, +hr, -0.02f };
-    vertices[1].texcoord = { 1.f, 1.f };
-    vertices[2].position = { +wr, -hr, -0.02f };
-    vertices[2].texcoord = { 1.f, 0.f };
-    vertices[3].position = { -wr, -hr, -0.02f };
-    vertices[3].texcoord = { 0.f, 0.f };
+    vertices[0].position = {-wr, +hr, -0.02f};
+    vertices[0].texcoord = {0.f, 1.f};
+    vertices[1].position = {+wr, +hr, -0.02f};
+    vertices[1].texcoord = {1.f, 1.f};
+    vertices[2].position = {+wr, -hr, -0.02f};
+    vertices[2].texcoord = {1.f, 0.f};
+    vertices[3].position = {-wr, -hr, -0.02f};
+    vertices[3].texcoord = {0.f, 0.f};
 
     // Counterclockwise as it's the default opengl front winding direction
-    uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+    uint16_t indices[] = {0, 3, 1, 1, 3, 2};
 
     // Clearing errors
     gl_flush_errors();
@@ -64,7 +66,7 @@ void Ground::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
-    glDeleteBuffers(1, &mesh.vao);
+    glDeleteVertexArrays(1, &mesh.vao);
 
     glDeleteShader(effect.vertex);
     glDeleteShader(effect.fragment);
@@ -79,7 +81,7 @@ vec2 Ground::get_direction()
 void Ground::set_direction(vec2 direction)
 {
     float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
-    motion.direction = { direction.x / normal, direction.y / normal };
+    motion.direction = {direction.x / normal, direction.y / normal};
 }
 
 void Ground::set_rotation(float rad)
@@ -87,7 +89,7 @@ void Ground::set_rotation(float rad)
     motion.radians = rad;
 }
 
-void Ground::draw(const mat3& projection)
+void Ground::draw(const mat3 &projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -120,18 +122,18 @@ void Ground::draw(const mat3& projection)
     GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
     glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)sizeof(vec3));
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, ground_texture.id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform.out);
-    float color[] = { 1.f, 1.f, 1.f };
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
+    float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
-    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -151,8 +153,8 @@ vec2 Ground::get_bounding_box() const
 {
     // Returns the local bounding coordinates scaled by the current size of the ground
     // fabs is to avoid negative scale due to the facing direction.
-    return { std::fabs(physics.scale.x) * ground_texture.width * 2,
-        std::fabs(physics.scale.y) * ground_texture.height * 2 };
+    return {std::fabs(physics.scale.x) * ground_texture.width * 2,
+            std::fabs(physics.scale.y) * ground_texture.height * 2};
 }
 
 int Ground::get_id()
