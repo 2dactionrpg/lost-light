@@ -55,7 +55,7 @@ bool Menu::init()
         return false;
 
     motion.position = { 600.f, 400.f };
-    physics.scale = { 0.6f, 0.75f };
+    physics.scale = { 0.47f, 0.53f };
 
     return true;
 }
