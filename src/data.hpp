@@ -21,6 +21,7 @@ float c_init_dash_cooldown = 500.f;
 vec2 c_boss_init_pos = {1000.f, 500.f};
 
 static const vec2 init_pos_array[] = {{1000.f, 100.f}, {1000.f, 400.f}, {1000.f, 700.f}};
+static const vec2 wall_level1_pos_array[] = {{2.f, 3.f}, {2.f, 4.f}, {2.f, 5.f}};
 // Shield Initial data
 vec2 s_init_pos = {50.f, 300.f};
 float s_init_radians = 20.f;

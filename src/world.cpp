@@ -88,7 +88,7 @@ bool World::init(vec2 screen)
     makeLevel(registry);
 
     levelSystem.init_level(registry, 1);
-
+    m_wall_manager.init(levelSystem.get_wall_orientation(),m_walls,1);
     fprintf(stderr, "factory done\n");
 
     return m_character.init()
@@ -109,6 +109,7 @@ void World::destroy()
     m_potion.destroy();
     m_menu.destroy();
     m_shield.destroy();
+    m_wall_manager.destroy(m_walls);
     for (auto& projectile : m_projectiles)
         projectile.destroy();
     m_projectiles.clear();
@@ -125,7 +126,7 @@ bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
     levelSystem.update(registry, elapsed_ms,&m_enemies);
-
+    m_wall_manager.update(m_walls,levelSystem.getLevel(), levelSystem.get_wall_orientation());
     state = menuSystem.get_state(registry);
 
     if (state != STATE_PLAYING) {
@@ -143,7 +144,7 @@ bool World::update(float elapsed_ms)
     enemyAI.set_rotation(registry);
     enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_projectiles);
 
-    physicsSystem.sync(registry, elapsed_ms);
+    physicsSystem.sync(registry, elapsed_ms, m_walls);
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
     healthSystem.update(registry, m_enemies);
 
@@ -204,10 +205,10 @@ void World::draw()
 
     // Drawing entities
     m_ground.draw(projection_2D);
+    m_wall_manager.draw(m_walls,projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
-
     for (auto& enemy : m_enemies)
         enemy.draw(projection_2D);
 

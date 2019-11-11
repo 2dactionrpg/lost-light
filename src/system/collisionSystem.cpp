@@ -1,5 +1,11 @@
 #include "collisionSystem.hpp"
 
+vec2 CollisionSystem::getOffset(vec2 position, vec2 offset, vector<Wall> &walls) {
+    for (Wall wall: walls) {
+        
+    }
+}
+
 void CollisionSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, unsigned int& m_points)
 {
     // Checking Character - Potion collisions

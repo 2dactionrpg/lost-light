@@ -8,6 +8,7 @@
 #include "../potion.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
+#include "../wall.hpp"
 #include "enemyAISystem.hpp"
 #include "healthSystem.hpp"
 #include "inputSystem.hpp"
@@ -27,5 +28,6 @@ private:
 
 public:
     // void update(entt::registry& registry, Menu& m_menu);
+    static vec2 getOffset(vec2 position, vec2 offset, vector<Wall> &walls);
     void update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, unsigned int& m_points);
 };

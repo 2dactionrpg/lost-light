@@ -1,6 +1,6 @@
 #include "physicsSystem.hpp"
 
-void PhysicsSystem::sync(entt::registry &registry, float ms)
+void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls)
 {
     // Character Physics Sync
     auto view = registry.view<characterComponent, motionComponent, inputKeyboard, inputMouse>();
@@ -28,6 +28,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
                 dash_cooldown -= ms;
             }
         }
+        offset = CollisionSystem::getOffset(position, offset, walls);
 
         if (resetKeyPressed)
         {
@@ -114,6 +115,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms)
                 }
             }
             vec2 offset = mul(normalize(direction), step);
+            offset = CollisionSystem::getOffset(position, offset, walls);
             move(position, offset, true);
         }
     }
