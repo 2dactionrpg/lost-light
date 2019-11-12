@@ -1,6 +1,6 @@
 #include "physicsSystem.hpp"
 
-void PhysicsSystem::sync(entt::registry& registry, float ms)
+void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls)
 {
     // Character Physics Sync
     auto view = registry.view<characterComponent, motionComponent, inputKeyboard, inputMouse>();
@@ -22,6 +22,7 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
                 dash_cooldown -= ms;
             }
         }
+        offset = getOffset(false, position, offset, walls);
 
         if (resetKeyPressed) {
             reset_character(registry);
@@ -89,6 +90,8 @@ void PhysicsSystem::sync(entt::registry& registry, float ms)
                 }
             }
             vec2 offset = mul(normalize(direction), step);
+            auto &enemyType = viewEnemy.get<enemyComponent>(enemy).enemy_type;
+            offset = getOffset((enemyType  == BOSS),position, offset, walls);
             move(position, offset, true);
         }
     }
@@ -316,4 +319,21 @@ void PhysicsSystem::reflect_projectile(entt::registry& registry, int m_id, vec2 
             direction = angle;
         }
     }
+}
+
+vec2 PhysicsSystem::getOffset(bool isBoss, vec2 position, vec2 offset, vector<Wall> &walls) {
+    bool moving_down = offset.y>0;
+    bool moving_up = offset.y<0;
+    bool moving_left = offset.x<0;
+    bool moving_right = offset.x>0;
+    for (Wall wall: walls) {
+        wall.wall_offset(isBoss, position, offset, moving_right, moving_left, moving_up, moving_down);
+    }
+    if (!moving_down && !moving_up) {
+        offset.y = 0;
+    }
+    if (!moving_left && !moving_right) {
+        offset.x = 0;
+    }
+    return offset;
 }

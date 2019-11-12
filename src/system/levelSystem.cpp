@@ -183,3 +183,19 @@ void LevelSystem::increment_enemy_killed(entt::registry& registry)
         minion_killed++;
     }
 }
+
+std::vector<vec2> LevelSystem::get_wall_orientation() {
+    std::vector<vec2> returnVector;
+    switch (lvl_num) {
+        case 1:
+            for (vec2 pos: wall_level1_pos_array) {
+                returnVector.emplace_back(pos);
+            }
+            break;
+    }
+    return returnVector;
+}
+
+int LevelSystem::getLevel() {
+    return lvl_num;
+}
