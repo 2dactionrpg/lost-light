@@ -21,7 +21,11 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
                 offset = add(offset, mul(normalize(dash_direction), dash_step));
                 dash_duration -= ms;
                 if (direction.x == 0.f || direction.y == 0.f) {
-                    distortion = add(c_init_distortion, {fabs(direction.x), fabs(direction.y)});
+                    float k = 1.f;
+                    float h = c_init_dash_duration / 2.f;
+                    float a = -k/(h*h);
+                    float distortion_scale = a*powf(dash_duration - h, 2.f) + k;
+                    distortion = add(c_init_distortion, {fabs(direction.x) * distortion_scale, fabs(direction.y)* distortion_scale});
                 } else {
                     float k = 0.5f;
                     float h = c_init_dash_duration / 2.f;
