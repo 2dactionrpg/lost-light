@@ -18,6 +18,8 @@ entt::entity makeCharacter(entt::registry &registry)
     mo.speed = c_init_speed;
     auto &ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = c_init_scale;
+    ps.distortion = c_init_distortion;
+    ps.sheer = c_init_sheer;
     registry.assign<inputKeyboard>(entity, false, false, false, false, false);
     registry.assign<inputMouse>(entity, 0.0, 0.0);
     return entity;

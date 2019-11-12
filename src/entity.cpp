@@ -195,6 +195,13 @@ void Entity::Transform::translate(vec2 offset)
     out = mul(out, T);
 }
 
+void Entity::Transform::sheer(float angle)
+{
+    mat3 T = {{1.f, tanf(angle), 0.f}, {tanf(angle), 1.f, 0.f}, {0.f, 0.f, 1.f}};
+    out = mul(out, T);
+}
+
+
 void Entity::Transform::end()
 {
 }

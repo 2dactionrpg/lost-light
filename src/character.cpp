@@ -81,6 +81,8 @@ void Character::draw(const mat3 &projection)
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
     transform.translate(motion.position);
+    transform.sheer(physics.sheer);
+    transform.scale(physics.distortion);
     transform.rotate(motion.radians);
     transform.scale(physics.scale);
     transform.end();
@@ -133,6 +135,16 @@ vec2 Character::get_scale() const
 void Character::set_scale(vec2 scale)
 {
     physics.scale = scale;
+}
+
+void Character::set_distortion(vec2 distortion)
+{
+    physics.distortion = distortion;
+}
+
+void Character::set_sheer(float sheer)
+{
+    physics.sheer = sheer;
 }
 
 vec2 Character::get_position() const

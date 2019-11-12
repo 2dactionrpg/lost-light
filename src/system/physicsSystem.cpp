@@ -3,12 +3,14 @@
 void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls)
 {
     // Character Physics Sync
-    auto view = registry.view<characterComponent, motionComponent, inputKeyboard, inputMouse>();
+    auto view = registry.view<characterComponent, physicsScaleComponent, motionComponent, inputKeyboard, inputMouse>();
     for (auto entity : view) {
         auto& [position, direction, radians, speed] = view.get<motionComponent>(entity);
         auto& [is_movable, is_dashable, dash_speed, dash_direction, dash_duration, dash_cooldown] = view.get<characterComponent>(entity);
         auto& resetKeyPressed = view.get<inputKeyboard>(entity).resetKeyPressed;
         auto& [xpos, ypos] = view.get<inputMouse>(entity);
+        auto& distortion = view.get<physicsScaleComponent>(entity).distortion;
+        auto& sheer = view.get<physicsScaleComponent>(entity).sheer;
 
         float step = speed * (ms / 1000);
         vec2 offset = mul(normalize(direction), step);
@@ -18,7 +20,20 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
                 float dash_step = dash_speed * (ms / 1000);
                 offset = add(offset, mul(normalize(dash_direction), dash_step));
                 dash_duration -= ms;
+                if (direction.x == 0.f || direction.y == 0.f) {
+                    distortion = add(c_init_distortion, {fabs(direction.x), fabs(direction.y)});
+                } else {
+                    float k = 0.5f;
+                    float h = c_init_dash_duration / 2.f;
+                    float a = -k/(h*h);
+                    sheer = a*powf(dash_duration - h, 2.f) + k;
+                    if (direction.x * direction.y < 0.f) { 
+                        sheer = -sheer;
+                    }
+                }
             } else {
+                distortion = c_init_distortion;
+                sheer = c_init_sheer;
                 dash_cooldown -= ms;
             }
         }
@@ -117,10 +132,14 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
         auto& position = character.get<motionComponent>(entity).position;
         auto& radians = character.get<motionComponent>(entity).radians;
         auto& scale = character.get<physicsScaleComponent>(entity).scale;
+        auto& distortion = character.get<physicsScaleComponent>(entity).distortion;
+        auto& sheer = character.get<physicsScaleComponent>(entity).sheer;
 
         m_character.set_position(position);
         m_character.set_rotation(radians);
         m_character.set_scale(scale);
+        m_character.set_distortion(distortion);
+        m_character.set_sheer(sheer);
     }
 
     // Shield Physics Update
