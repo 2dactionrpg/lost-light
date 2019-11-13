@@ -93,7 +93,13 @@ bool World::init(vec2 screen)
     m_wall_manager.init(levelSystem.get_wall_orientation(),m_walls,1);
     fprintf(stderr, "factory done\n");
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init();
+    debug = false;
+
+    return m_character.init()
+        && m_background.init()
+        && m_shield.init()
+        && m_ground.init(999)
+        && m_menu.init();
 }
 
 // Releases all the associated resources
@@ -126,6 +132,7 @@ bool World::update(float elapsed_ms)
     levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
     m_wall_manager.update(m_walls,levelSystem.getLevel(), levelSystem.get_wall_orientation());
     state = menuSystem.get_state(registry);
+    debug = menuSystem.get_debug_mode(registry);
 
     if (state != STATE_PLAYING)
     {
@@ -138,6 +145,7 @@ bool World::update(float elapsed_ms)
 
     collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points, m_walls);
 
+    enemyAI.update(registry, elapsed_ms, m_enemies);
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
@@ -211,8 +219,8 @@ void World::draw()
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
 
-    for (auto &enemy : m_enemies)
-        enemy.draw(projection_2D);
+    for (auto& enemy : m_enemies)
+        enemy.draw(projection_2D, debug);
 
     for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);

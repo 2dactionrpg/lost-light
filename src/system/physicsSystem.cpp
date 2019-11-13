@@ -85,27 +85,35 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
     for (auto enemy : viewEnemy) {
         auto& [position, direction, radians, speed] = viewEnemy.get<motionComponent>(enemy);
         // auto &destination = viewEnemy.get<enemyComponent>(enemy).is_alive;
-        auto& is_alive = viewEnemy.get<enemyComponent>(enemy).is_alive;
-        auto& is_movable = viewEnemy.get<enemyComponent>(enemy).is_movable;
-        auto& destination = viewEnemy.get<enemyComponent>(enemy).destination;
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = viewEnemy.get<enemyComponent>(enemy);
+        // auto &is_alive = viewEnemy.get<enemyComponent>(enemy).is_alive;
+        // auto &is_movable = viewEnemy.get<enemyComponent>(enemy).is_movable;
+        // auto &destination = viewEnemy.get<enemyComponent>(enemy).destination;
         float step = speed * (ms / 1000);
-        if (is_alive && is_movable) {
-            if (direction.x > 0) {
-                if (position.x + direction.x > destination.x) {
+        if (is_alive && is_movable && (enemy_type == BOSS || es.action == MOVE))
+        {
+            if (direction.x > 0)
+            {
+                if (position.x + direction.x > destination.x)
+                {
                     direction.x = 0.f;
+                    position.x = destination.x;
                 }
             } else if (direction.x < 0) {
                 if (position.x + direction.x < destination.x) {
                     direction.x = 0.f;
+                    position.x = destination.x;
                 }
             }
             if (direction.y > 0) {
                 if (position.y + direction.y > destination.y) {
                     direction.y = 0.f;
+                    position.y = destination.y;
                 }
             } else if (direction.y < 0) {
                 if (position.y + direction.y < destination.y) {
                     direction.y = 0.f;
+                    position.y = destination.y;
                 }
             }
             vec2 offset = mul(normalize(direction), step);
@@ -165,24 +173,25 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
 
     // Enemy Physics Update
     auto enemy = registry.view<enemyComponent, motionComponent, physicsScaleComponent>();
-
-    for (auto entity : enemy) {
-        auto& position = enemy.get<motionComponent>(entity).position;
-        auto& radians = enemy.get<motionComponent>(entity).radians;
-        auto& id = enemy.get<enemyComponent>(entity).id;
-        auto& scale = enemy.get<physicsScaleComponent>(entity).scale;
-        for (auto& m_enemy : m_enemies) {
-            if (id == m_enemy.get_id()) {
+    for (auto entity : enemy)
+    {
+        auto &[position, direction, radians, speed] = enemy.get<motionComponent>(entity);
+        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = enemy.get<enemyComponent>(entity);
+        auto &scale = enemy.get<physicsScaleComponent>(entity).scale;
+        for (auto &m_enemy : m_enemies)
+        {
+            if (id == m_enemy.get_id())
+            {
                 m_enemy.set_position(position);
                 m_enemy.set_rotation(radians);
                 m_enemy.set_scale(scale);
+                m_enemy.update_triangle();
             }
         }
     }
 
     // Projectile Physics Update
     auto projectile = registry.view<projectileComponent, motionComponent, physicsScaleComponent>();
-
     for (auto entity : projectile) {
         auto& [position, direction, radians, speed] = projectile.get<motionComponent>(entity);
         auto& id = projectile.get<projectileComponent>(entity).id;

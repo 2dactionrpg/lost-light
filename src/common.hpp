@@ -45,6 +45,7 @@ vec2 sub(vec2 a, vec2 b);
 vec2 to_vec2(vec3 v);
 float sq_len(vec2 a);
 float len(vec2 a);
+vec2 rotate_point(vec2 o, float rad, vec2 p);
 
 // OpenGL utilities
 // cleans error buffer

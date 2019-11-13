@@ -17,7 +17,7 @@
 
 entt::entity makeCharacter(entt::registry& registry);
 entt::entity makeShield(entt::registry& registry);
-entt::entity makeMinion(entt::registry& registry, int id, vec2 pos, bool is_movable = false);
+entt::entity makeMinion(entt::registry& registry, int id, vec2 pos, bool is_movable = false, bool alert = false);
 entt::entity makeBoss(entt::registry& registry, int id, vec2 pos, bool is_movable = false);
 entt::entity makePotion(entt::registry& registry, int id);
 entt::entity makeGround(entt::registry& registry, int id);

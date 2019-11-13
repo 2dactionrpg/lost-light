@@ -44,8 +44,12 @@ set(SOURCE_FILES
     src/menu.cpp
     src/potion.cpp
     src/ground.cpp
+    src/path.cpp
+    src/line.cpp
+    src/triangle.cpp
     src/wall_manager.cpp
     src/wall.cpp
+
     # System
     src/system/inputSystem.cpp
     src/system/physicsSystem.cpp
@@ -69,6 +73,9 @@ set(SOURCE_FILES
     src/potion.hpp
     src/ground.hpp
     src/data.hpp
+    src/path.hpp
+    src/line.hpp
+    src/triangle.hpp
     src/wall_manager.hpp
     src/wall.hpp
     # Component
