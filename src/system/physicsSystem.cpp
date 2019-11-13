@@ -90,7 +90,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
         // auto &is_movable = viewEnemy.get<enemyComponent>(enemy).is_movable;
         // auto &destination = viewEnemy.get<enemyComponent>(enemy).destination;
         float step = speed * (ms / 1000);
-        if (is_alive && is_movable && es.action == MOVE)
+        if (is_alive && is_movable && (enemy_type == BOSS || es.action == MOVE))
         {
             if (direction.x > 0)
             {
