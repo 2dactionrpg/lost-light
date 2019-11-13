@@ -79,6 +79,8 @@ protected:
     // and so contextually belongs here (for now).
     struct Physics {
         vec2 scale;
+        vec2 distortion;
+        float sheer;
     } physics;
 
     // Transform component handles transformations passed to the Vertex shader.
@@ -91,6 +93,7 @@ protected:
         void scale(vec2 scale);
         void rotate(float radians);
         void translate(vec2 offset);
+        void sheer(float angle);
         void end();
     } transform;
 };

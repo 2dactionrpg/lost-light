@@ -47,6 +47,9 @@ set(SOURCE_FILES
     src/path.cpp
     src/line.cpp
     src/triangle.cpp
+    src/wall_manager.cpp
+    src/wall.cpp
+
     # System
     src/system/inputSystem.cpp
     src/system/physicsSystem.cpp
@@ -73,6 +76,8 @@ set(SOURCE_FILES
     src/path.hpp
     src/line.hpp
     src/triangle.hpp
+    src/wall_manager.hpp
+    src/wall.hpp
     # Component
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp

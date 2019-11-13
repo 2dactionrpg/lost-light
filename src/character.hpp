@@ -39,6 +39,10 @@ public:
 
     void set_scale(vec2 scale);
 
+    void set_distortion(vec2 distortion);
+
+    void set_sheer(float sheer);
+
     vec2 get_bounding_box() const;
 
 private:

@@ -1,11 +1,11 @@
 #pragma once
 #include "../common.hpp"
-#include "../data.hpp"
 #include "../components/levelComponent.hpp"
+#include "../data.hpp"
+#include "../enemy.hpp"
 #include "../factory.hpp"
 #include "../potion.hpp"
 #include "menuSystem.hpp"
-#include "../enemy.hpp"
 
 #include <entt/entity/registry.hpp>
 
@@ -40,7 +40,7 @@ private:
 
 public:
     bool init_level(entt::registry& registry, int m_lvl_num);
-    void update(entt::registry& registry, float elapsed_ms, std::vector<Enemy> *m_enemies);
+    void update(entt::registry& registry, float elapsed_ms, vector<Enemy>* m_enemies, vector<Projectile>* m_projectiles);
     void increment_enemy_killed(entt::registry& registry);
     int get_next_enemy_id();
     vec2 get_next_minion_pos();
@@ -50,4 +50,6 @@ public:
     void reset_enemy(entt::registry& registry);
     bool should_spawn_minion(int enemy_size);
     bool should_spawn_boss(entt::registry& registry);
+    std::vector<vec2> get_wall_orientation();
+    int getLevel();
 };

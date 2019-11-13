@@ -24,7 +24,8 @@ bool World::init(vec2 screen)
     // GLFW / OGL Initialization
     // Core Opengl 3.
     glfwSetErrorCallback(glfw_err_cb);
-    if (!glfwInit()) {
+    if (!glfwInit())
+    {
         fprintf(stderr, "Failed to initialize GLFW");
         return false;
     }
@@ -50,9 +51,9 @@ bool World::init(vec2 screen)
     // Setting callbacks to member functions (that's why the redirect is needed)
     // Input is handled using GLFW, for more info see
     glfwSetWindowUserPointer(m_window, this);
-    auto key_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2, int _3) { ((World*)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
-    auto mouse_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_key(wnd, _0, _1, _2); };
-    auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
+    auto key_redirect = [](GLFWwindow *wnd, int _0, int _1, int _2, int _3) { ((World *)glfwGetWindowUserPointer(wnd))->on_key(wnd, _0, _1, _2, _3); };
+    auto mouse_redirect = [](GLFWwindow *wnd, int _0, int _1, int _2) { ((World *)glfwGetWindowUserPointer(wnd))->on_mouse_key(wnd, _0, _1, _2); };
+    auto cursor_pos_redirect = [](GLFWwindow *wnd, double _0, double _1) { ((World *)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
     glfwSetKeyCallback(m_window, key_redirect);
     glfwSetMouseButtonCallback(m_window, mouse_redirect);
     glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
@@ -70,11 +71,12 @@ bool World::init(vec2 screen)
     // Initialize the screen texture
     m_screen_tex.create_from_screen(m_window);
 
-    if (!soundSystem.init()) {
+    if (!soundSystem.init())
+    {
         fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-            audio_path("music.wav"),
-            audio_path("character_dead.wav"),
-            audio_path("character_reflect.wav"));
+                audio_path("music.wav"),
+                audio_path("character_dead.wav"),
+                audio_path("character_reflect.wav"));
     }
 
     soundSystem.play_background_music();
@@ -88,7 +90,7 @@ bool World::init(vec2 screen)
     makeLevel(registry);
 
     levelSystem.init_level(registry, 1);
-
+    m_wall_manager.init(levelSystem.get_wall_orientation(),m_walls,1);
     fprintf(stderr, "factory done\n");
 
     debug = false;
@@ -111,11 +113,12 @@ void World::destroy()
     m_potion.destroy();
     m_menu.destroy();
     m_shield.destroy();
+    m_wall_manager.destroy(m_walls);
     for (auto& projectile : m_projectiles)
         projectile.destroy();
     m_projectiles.clear();
 
-    for (auto& enemy : m_enemies)
+    for (auto &enemy : m_enemies)
         enemy.destroy();
     m_enemies.clear();
 
@@ -126,20 +129,21 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    levelSystem.update(registry, elapsed_ms,&m_enemies);
-
+    levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
+    m_wall_manager.update(m_walls,levelSystem.getLevel(), levelSystem.get_wall_orientation());
     state = menuSystem.get_state(registry);
     debug = menuSystem.get_debug_mode(registry);
 
-    if (state != STATE_PLAYING) {
+    if (state != STATE_PLAYING)
+    {
         return false;
     }
 
     int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
-    vec2 screen = { (float)w / m_screen_scale, (float)h / m_screen_scale };
+    vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
 
-    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points);
+    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points, m_walls);
 
     enemyAI.update(registry, elapsed_ms, m_enemies);
     enemyAI.set_direction(registry);
@@ -147,15 +151,17 @@ bool World::update(float elapsed_ms)
     enemyAI.set_rotation(registry);
     enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_projectiles);
 
-    physicsSystem.sync(registry, elapsed_ms);
+    physicsSystem.sync(registry, elapsed_ms, m_walls);
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
     healthSystem.update(registry, m_enemies);
 
-    if (levelSystem.should_spawn_minion(m_enemies.size())) {
+    if (levelSystem.should_spawn_minion(m_enemies.size()))
+    {
         spawn_minion();
     }
 
-    if (levelSystem.should_spawn_boss(registry)) {
+    if (levelSystem.should_spawn_boss(registry))
+    {
         spawn_boss();
         makePotion(registry, 1);
         m_potion.init(1);
@@ -188,26 +194,27 @@ void World::draw()
     // Clearing backbuffer
     glViewport(0, 0, w, h);
     glDepthRange(0.00001, 10);
-    const float clear_color[3] = { 0.16f, 0.07f, 0.05f };
+    const float clear_color[3] = {0.16f, 0.07f, 0.05f};
     glClearColor(clear_color[0], clear_color[1], clear_color[2], 1.0);
     glClearDepth(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Fake projection matrix, scales with respect to window coordinates
     // PS: 1.f / w in [1][1] is correct.. do you know why ? (:
-    float left = 0.f; // *-0.5;
-    float top = 0.f; // (float)h * -0.5;
-    float right = (float)w / m_screen_scale; // *0.5;
+    float left = 0.f;                         // *-0.5;
+    float top = 0.f;                          // (float)h * -0.5;
+    float right = (float)w / m_screen_scale;  // *0.5;
     float bottom = (float)h / m_screen_scale; // *0.5;
 
     float sx = 2.f / (right - left);
     float sy = 2.f / (top - bottom);
     float tx = -(right + left) / (right - left);
     float ty = -(top + bottom) / (top - bottom);
-    mat3 projection_2D { { sx, 0.f, 0.f }, { 0.f, sy, 0.f }, { tx, ty, 1.f } };
+    mat3 projection_2D{{sx, 0.f, 0.f}, {0.f, sy, 0.f}, {tx, ty, 1.f}};
 
     // Drawing entities
     m_ground.draw(projection_2D);
+    m_wall_manager.draw(m_walls,projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
@@ -215,7 +222,7 @@ void World::draw()
     for (auto& enemy : m_enemies)
         enemy.draw(projection_2D, debug);
 
-    for (auto& projectile : m_projectiles)
+    for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);
 
     m_menu.draw(projection_2D);
@@ -253,7 +260,8 @@ bool World::spawn_minion()
 {
     Enemy enemy;
     int id = levelSystem.get_next_enemy_id();
-    if (enemy.init(id)) {
+    if (enemy.init(id))
+    {
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_minion_pos();
         bool is_movable = levelSystem.get_next_minion_is_movable();
@@ -269,7 +277,8 @@ bool World::spawn_boss()
 {
     Enemy enemy;
     int id = levelSystem.get_next_enemy_id();
-    if (enemy.init(id)) {
+    if (enemy.init(id))
+    {
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_boss_pos();
         bool is_movable = levelSystem.get_next_boss_is_movable();
@@ -281,18 +290,18 @@ bool World::spawn_boss()
 }
 
 // On key callback
-void World::on_key(GLFWwindow*, int key, int, int action, int mod)
+void World::on_key(GLFWwindow *, int key, int, int action, int mod)
 {
     inputSystem.on_key(registry, key, action, mod);
 }
 
 // On key callback
-void World::on_mouse_key(GLFWwindow*, int key, int action, int mod)
+void World::on_mouse_key(GLFWwindow *, int key, int action, int mod)
 {
     inputSystem.on_mouse_key(registry, key, action, mod);
 }
 
-void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
+void World::on_mouse_move(GLFWwindow *window, double xpos, double ypos)
 {
     inputSystem.on_mouse_move(registry, xpos, ypos);
 }
