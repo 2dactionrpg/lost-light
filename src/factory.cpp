@@ -1,5 +1,7 @@
 #include "factory.hpp"
 
+#include <cmath>
+
 entt::entity makeCharacter(entt::registry &registry)
 {
 
@@ -38,12 +40,16 @@ entt::entity makeShield(entt::registry &registry)
     return entity;
 }
 
-entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_movable)
+entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_movable, bool alert)
 {
     const entt::entity entity = registry.create();
     auto &em = registry.assign<enemyComponent>(entity);
     em.id = id;
     em.enemy_type = MINION;
+    em.es.alert = alert;
+    em.es.enemy_on_sight = false;
+    em.es.line_of_sight = false;
+    em.es.action = IDLE;
     em.is_alive = true;
     em.health = 1;
     em.shoot_frequency = e_minion_init_shoot_frequency;
@@ -54,7 +60,7 @@ entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_mova
     // float xpos = randomFloat(50.f, 1000.f);
     // float ypos = randomFloat(50.f, 500.f);
     mo.position = {pos.x, pos.y};
-    mo.radians = 20.f;
+    mo.radians = M_PI + M_PI/2;
     mo.speed = 200.f;
     auto &ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = {0.08f, 0.08f};
@@ -127,7 +133,7 @@ entt::entity makeGround(entt::registry &registry, int id)
 entt::entity makeMenu(entt::registry &registry)
 {
     const entt::entity entity = registry.create();
-    registry.assign<menuComponent>(entity, STATE_START, STATE_START);
+    registry.assign<menuComponent>(entity, STATE_START, STATE_START, false);
     return entity;
 }
 

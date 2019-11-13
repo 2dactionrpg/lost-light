@@ -44,6 +44,7 @@ struct Entity {
     // projection contains the orthographic projection matrix. As every Entity::draw()
     // renders itself it needs it to correctly bind it to its shader.
     virtual void draw(const mat3& projection) = 0;
+    virtual void draw(const mat3& projection, bool debug=false) {};
 
 protected:
     // A Mesh is a collection of a VertexBuffer and an IndexBuffer. A VAO

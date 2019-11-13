@@ -1,4 +1,5 @@
 #include "inputSystem.hpp"
+#include "data.hpp"
 
 void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
 {
@@ -6,6 +7,7 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
     for (auto entity : menu)
     {
         auto &state = menu.get(entity).state;
+        auto &debug = menu.get(entity).debug;
         if (action == GLFW_PRESS && key == GLFW_KEY_SPACE && (state == STATE_TUTORIAL || state == STATE_PAUSE))
             state = STATE_PLAYING;
 
@@ -23,6 +25,9 @@ void InputSystem::on_key(entt::registry &registry, int key, int action, int mod)
 
         if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE && state == STATE_PLAYING)
             state = STATE_PAUSE;
+
+        if (action == GLFW_PRESS && key == GLFW_KEY_M && state == STATE_PLAYING)
+            debug = !debug;
     }
 
     auto view = registry.view<characterComponent, motionComponent, inputKeyboard>();

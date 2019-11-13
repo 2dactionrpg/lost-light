@@ -17,4 +17,5 @@ public:
     void update(entt::registry& registry, Menu& m_menu);
     void sync(entt::registry& registry, int m_state);
     int get_state(entt::registry& registry);
+    bool get_debug_mode(entt::registry& registry);
 };

@@ -71,6 +71,25 @@ float sq_len(vec2 a) { return dot(a, a); }
 float len(vec2 a) { return std::sqrt(sq_len(a)); }
 vec2 to_vec2(vec3 v) { return { v.x, v.y }; }
 
+vec2 rotate_point(vec2 o, float rad, vec2 p)
+{
+    float s = sin(rad);
+    float c = cos(rad);
+
+    // translate point back to origin:
+    p.x -= o.x;
+    p.y -= o.y;
+
+    // rotate point
+    float xnew = p.x * c - p.y * s;
+    float ynew = p.x * s + p.y * c;
+
+    // translate point back:
+    p.x = xnew + o.x;
+    p.y = ynew + o.y;
+    return p;
+}
+
 mat3 mul(const mat3& l, const mat3& r)
 {
     mat3 l_t = { { l.c0.x, l.c1.x, l.c2.x },

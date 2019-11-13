@@ -63,6 +63,8 @@ public:
 
     int state;
 
+    bool debug;
+
 private:
     // generate enemies
     bool spawn_minion();

@@ -44,6 +44,9 @@ set(SOURCE_FILES
     src/menu.cpp
     src/potion.cpp
     src/ground.cpp
+    src/path.cpp
+    src/line.cpp
+    src/triangle.cpp
     # System
     src/system/inputSystem.cpp
     src/system/physicsSystem.cpp
@@ -67,6 +70,9 @@ set(SOURCE_FILES
     src/potion.hpp
     src/ground.hpp
     src/data.hpp
+    src/path.hpp
+    src/line.hpp
+    src/triangle.hpp
     # Component
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp

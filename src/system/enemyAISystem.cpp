@@ -4,20 +4,127 @@ float LO = 100.f;
 float HI_X = 1100.f;
 float HI_Y = 700.f;
 
+void EnemyAISystem::update(entt::registry& registry, float elapsed_ms, vector<Enemy>& m_enemies)
+{
+    vec2 char_pos;
+    auto character_view = registry.view<characterComponent, motionComponent>();
+    for (auto character : character_view) {
+        char_pos = character_view.get<motionComponent>(character).position;
+    }
+
+    auto enemies = registry.view<enemyComponent, motionComponent>();
+    for (auto enemy : enemies) {
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
+        for (auto& m_enemy : m_enemies) {
+            if (id == m_enemy.get_id()) {
+                bool on_sight = m_enemy.on_sight(target);
+                if(on_sight && !es.alert)
+                {
+                    es.turn_sum = 0.f;
+                    es.turn_step = 0.01f;
+                    es.is_turn_complete = false;
+                    es.alert = true;
+                    es.enemy_on_sight = true;
+                    es.alert_cooldown_ms = 25000;
+                    m_enemy.alert();
+                    es.line_of_sight = m_enemy.set_line(target, m_enemies);
+                }
+                else if(on_sight && es.alert)
+                {
+                    es.alert_cooldown_ms = 25000;
+                    es.turn_sum = 0.f;
+                    es.turn_step = 0.01f;
+                    es.is_turn_complete = false;
+                    es.enemy_on_sight = true;
+                    m_enemy.alert();
+                    es.line_of_sight = m_enemy.set_line(target, m_enemies);
+                }
+                else if(!on_sight && es.alert)
+                {
+                    es.alert_cooldown_ms -= elapsed_ms;
+                    es.enemy_on_sight = false;
+                    es.line_of_sight = false;
+                    m_enemy.search();
+                    m_enemy.unset_line();
+                }
+                if (es.alert_cooldown_ms <= 0)
+                {
+                    es.alert = false;
+                    m_enemy.idle();
+                }
+
+            }
+        }
+    }
+
+    for (auto entity : enemies)
+    {
+        auto& stateMachine = enemies.get<enemyComponent>(entity).es;
+        auto& [position, direction, radians, speed] = enemies.get<motionComponent>(entity);
+        if(stateMachine.alert)
+        {
+            if(stateMachine.enemy_on_sight)
+            {
+                if(stateMachine.line_of_sight)
+                {
+                    stateMachine.action = SHOOT;
+                }
+                else
+                {
+                    stateMachine.action = PICK_DEST;
+                    direction = { 0.f, 0.f };
+                }
+            }
+            else
+            {
+                if(stateMachine.is_turn_complete && stateMachine.action != TURN_TO_DEST && stateMachine.action != MOVE)
+                {
+                    stateMachine.action = PICK_DEST;
+                    direction = { 0.f, 0.f };
+                }
+                else if(stateMachine.action != PICK_DEST && stateMachine.action != MOVE && stateMachine.action != TURN_TO_DEST)
+                {
+                    stateMachine.action = TURN;
+                }
+            }
+            // enemy_on_sight
+                // yes -> attack
+                    // line_of_sight
+                        // yes -> shoot = true
+                        // no  -> shoot = false, move()
+                // no  -> check_for_enemy
+                    // enemy_in_sight_triangle()
+                        // yes -> enemy_on_sight = true
+                        // no  -> turn
+                            // 360 turn complete
+                                // move()
+        }
+        else
+        {
+            // system.check_if_p_onsight
+                // yes -> alert
+                // no  -> remain idle
+        }
+    }
+}
+
 void EnemyAISystem::set_direction(entt::registry& registry)
 {
     auto view = registry.view<enemyComponent, motionComponent>();
     for (auto entity : view) {
         auto& [position, direction, radians, speed] = view.get<motionComponent>(entity);
-        auto& destination = view.get<enemyComponent>(entity).destination;
-        if (direction.x == 0.f && direction.y == 0.f) {
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = view.get<enemyComponent>(entity);
+        if (direction.x == 0.f && direction.y == 0.f && es.action == PICK_DEST) {
             // set new destination
             // update direction
             destination.x = LO + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (HI_X - LO)));
             destination.y = LO + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (HI_Y - LO)));
             direction = normalize(sub(destination, position));
+            es.action = TURN_TO_DEST;
+            es.turn_target = atan2(destination.x - position.x, position.y - destination.y);
         } else if (position.x == destination.x && position.y == destination.y) {
             direction = { 0.f, 0.f };
+            es.action = TURN;
         }
     }
 }
@@ -32,7 +139,8 @@ void EnemyAISystem::set_target(entt::registry& registry)
 
     auto enemy_view = registry.view<enemyComponent, motionComponent>();
     for (auto entity : enemy_view) {
-        auto& target = enemy_view.get<enemyComponent>(entity).target;
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = enemy_view.get<enemyComponent>(entity);
+        // if(es.line_of_sight)
         target = char_pos;
     }
 }
@@ -42,8 +150,38 @@ void EnemyAISystem::set_rotation(entt::registry& registry)
     auto view = registry.view<enemyComponent, motionComponent>();
     for (auto entity : view) {
         auto& [position, direction, radians, speed] = view.get<motionComponent>(entity);
-        auto& target = view.get<enemyComponent>(entity).target;
-        radians = atan2(target.x - position.x, position.y - target.y);
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = view.get<enemyComponent>(entity);
+        if(es.enemy_on_sight)
+            radians = atan2(target.x - position.x, position.y - target.y);
+        else if(es.action == TURN)
+        {
+            radians += es.turn_step;
+            es.turn_sum += es.turn_step;
+            if(es.turn_sum > 0.8f)
+                es.turn_step = -0.01f;
+            if(es.turn_sum < -0.8f)
+            {
+                es.turn_step = 0.f;
+                es.turn_sum = 0.f;
+                es.is_turn_complete = true;
+            }
+        }
+        else if(es.action == TURN_TO_DEST)
+        {
+            if(radians < es.turn_target)
+            {              
+                radians += 0.01f;
+            }
+            if(radians > es.turn_target)
+            {              
+                radians -= 0.01f;
+            }
+            if(fabs(radians - es.turn_target) < 0.02)
+            {
+                radians = es.turn_target;
+                es.action = MOVE;
+            }
+        }
     }
 }
 
@@ -80,8 +218,8 @@ void EnemyAISystem::shoot_manager(entt::registry& registry, float elapsed_ms, ve
     auto enemies = registry.view<enemyComponent, motionComponent>();
     for (auto enemy : enemies) {
         auto& [position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
-        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target] = enemies.get<enemyComponent>(enemy);
-        if (is_alive && shoot_cooldown < 0.f) {
+        auto& [id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
+        if (is_alive && shoot_cooldown < 0.f && es.action == SHOOT) {
             for (auto& m_enemy : m_enemies) {
                 if (id == m_enemy.get_id()) {
                     vec2 face_pos = m_enemy.get_face_position();

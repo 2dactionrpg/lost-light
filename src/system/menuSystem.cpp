@@ -44,3 +44,15 @@ int MenuSystem::get_state(entt::registry& registry)
     }
     return m_state;
 }
+
+bool MenuSystem::get_debug_mode(entt::registry& registry)
+{
+    auto menu = registry.view<menuComponent>();
+
+    bool m_debug = false;
+    for (auto entity : menu) {
+        auto& debug = menu.get(entity).debug;
+        m_debug = debug;
+    }
+    return m_debug;
+}

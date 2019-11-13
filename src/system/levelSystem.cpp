@@ -16,9 +16,9 @@ bool LevelSystem::init_level(entt::registry& registry, int m_lvl_num)
             minion_init_pos.push_back(init_pos_array[0]);
             minion_init_pos.push_back(init_pos_array[1]);
             minion_init_pos.push_back(init_pos_array[2]);
-            minion_is_movable.push_back(false);
-            minion_is_movable.push_back(false);
-            minion_is_movable.push_back(false);
+            minion_is_movable.push_back(true);
+            minion_is_movable.push_back(true);
+            minion_is_movable.push_back(true);
 
             // boss info
             boss_num = 1;
@@ -135,12 +135,12 @@ void LevelSystem::reset_enemy(entt::registry& registry) {
     minion_init_pos.push_back(init_pos_array[1]);
     minion_init_pos.push_back(init_pos_array[2]);
     minion_is_movable.clear();
-    minion_is_movable.push_back(false);
-    minion_is_movable.push_back(false);
-    minion_is_movable.push_back(false);
+    minion_is_movable.push_back(true);
+    minion_is_movable.push_back(true);
+    minion_is_movable.push_back(true);
 
     for (auto entity : viewEnemy) {
-        auto& [id,health,enemy_type,is_alive,is_movable,shoot_cooldown,shoot_frequency,destination,target] = viewEnemy.get<enemyComponent>(entity);
+        auto& [id,health,enemy_type,is_alive,is_movable,shoot_cooldown,shoot_frequency,destination,target, es] = viewEnemy.get<enemyComponent>(entity);
         is_alive = true;
         auto& position = viewEnemy.get<motionComponent>(entity).position;
         auto& scale = viewEnemy.get<physicsScaleComponent>(entity).scale;
