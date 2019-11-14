@@ -15,9 +15,15 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
     {
         auto &id1 = projectile.get<projectileComponent>(pj1).id;
         auto &r1 = projectile.get<projectileComponent>(pj1).radius;
+        auto &is_alive = projectile.get<projectileComponent>(pj1).is_alive;
 
         auto &p1 = projectile.get<motionComponent>(pj1).position;
         auto &d1 = projectile.get<motionComponent>(pj1).direction;
+
+        if (p1.x < -100.f || p1.x > 1300.f || p1.y < -100.f || p1.y > 900.f)
+        {
+            registry.destroy(pj1);
+        }
 
         for (auto pj2 : projectile)
         {
@@ -62,12 +68,15 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
                 float m1 = r1;
                 float m2 = r2;
 
-                d1 = add(mul(d1, (m1 - m2) / (m1 + m2)), mul(d2, 2.f * m2 / (m1 + m2)));
-                d2 = add(mul(d2, (m2 - m1) / (m1 + m2)), mul(d1, 2.f * m1 / (m1 + m2)));
+                vec2 d1_new = add(mul(d1, (m1 - m2) / (m1 + m2)), mul(d2, 2.f * m2 / (m1 + m2)));
+                vec2 d2_new = add(mul(d2, (m2 - m1) / (m1 + m2)), mul(d1, 2.f * m1 / (m1 + m2)));
 
+                d1 = d1_new;
+                d2 = d2_new;
                 break;
             }
         }
+
     }
 
     auto projectile_it = m_projectiles.begin();
