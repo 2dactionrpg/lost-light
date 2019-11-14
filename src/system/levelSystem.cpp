@@ -59,6 +59,46 @@ bool LevelSystem::init_level(entt::registry &registry)
             // global info
             enemy_spawn_delay = 0.f;
             break;
+        case 3:
+            // minion info
+            minion_num = 3;
+            minion_max_on_screen = 3;
+            for (vec2 pos : minion_level3_pos_array)
+            {
+                minion_init_pos.push_back(pos);
+            }
+            for (bool is_movable : minion_level3_movable_array)
+            {
+                minion_is_movable.push_back(is_movable);
+            }
+
+            // boss info
+            boss_num = 0;
+            boss_max_on_screen = 1;
+
+            // global info
+            enemy_spawn_delay = 0.f;
+            break;
+        case 4:
+            // minion info
+            minion_num = 0;
+            minion_max_on_screen = 3;
+
+            // boss info
+            boss_num = 1;
+            boss_max_on_screen = 1;
+            for (vec2 pos : boss_level4_pos_array)
+            {
+                boss_init_pos.push_back(pos);
+            }
+            for (bool is_movable : boss_level4_movable_array)
+            {
+                boss_is_movable.push_back(is_movable);
+            }
+
+            // global info
+            enemy_spawn_delay = 1000.f;
+            break;
         default:
             return false;
         }
@@ -229,33 +269,33 @@ vector<vec2> LevelSystem::get_wall_orientation()
 {
     wallVector.clear();
 
-    switch (lvl_num)
-    {
-    case 1:
-        for (vec2 pos : wall_level1_pos_array)
-        {
-            wallVector.push_back(pos);
-        }
-        break;
-    case 2:
-        for (vec2 pos : wall_level2_pos_array)
-        {
-            wallVector.push_back(pos);
-        }
-        break;
-    case 3:
-        for (vec2 pos : wall_level3_pos_array)
-        {
-            wallVector.push_back(pos);
-        }
-        break;
-    case 4:
-        for (vec2 pos : wall_level4_pos_array)
-        {
-            wallVector.push_back(pos);
-        }
-        break;
-    }
+    // switch (lvl_num)
+    // {
+    // case 1:
+    //     for (vec2 pos : wall_level1_pos_array)
+    //     {
+    //         wallVector.push_back(pos);
+    //     }
+    //     break;
+    // case 2:
+    //     for (vec2 pos : wall_level2_pos_array)
+    //     {
+    //         wallVector.push_back(pos);
+    //     }
+    //     break;
+    // case 3:
+    //     for (vec2 pos : wall_level3_pos_array)
+    //     {
+    //         wallVector.push_back(pos);
+    //     }
+    //     break;
+    // case 4:
+    //     for (vec2 pos : wall_level4_pos_array)
+    //     {
+    //         wallVector.push_back(pos);
+    //     }
+    //     break;
+    // }
     return wallVector;
 }
 
