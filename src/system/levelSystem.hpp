@@ -11,7 +11,8 @@
 
 using namespace std;
 
-class LevelSystem {
+class LevelSystem
+{
 private:
     // globa info
     int enemy_id = 0;
@@ -39,17 +40,17 @@ private:
     MenuSystem menuSystem;
 
 public:
-    bool init_level(entt::registry& registry, int m_lvl_num);
-    void update(entt::registry& registry, float elapsed_ms, vector<Enemy>* m_enemies, vector<Projectile>* m_projectiles);
-    void increment_enemy_killed(entt::registry& registry);
+    bool init_level(entt::registry &registry, int m_lvl_num);
+    int update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles);
+    void increment_enemy_killed(entt::registry &registry);
     int get_next_enemy_id();
     vec2 get_next_minion_pos();
     bool get_next_minion_is_movable();
     vec2 get_next_boss_pos();
     bool get_next_boss_is_movable();
-    void reset_enemy(entt::registry& registry);
+    void reset_enemy(entt::registry &registry);
     bool should_spawn_minion(int enemy_size);
-    bool should_spawn_boss(entt::registry& registry);
+    bool should_spawn_boss(entt::registry &registry);
     std::vector<vec2> get_wall_orientation();
     int getLevel();
 };

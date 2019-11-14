@@ -32,18 +32,21 @@
 #include <vector>
 
 // Same as static in c, local to compilation unit
-namespace {
-namespace {
-    void glfw_err_cb(int error, const char* desc)
-    {
-        fprintf(stderr, "%d: %s", error, desc);
-    }
+namespace
+{
+namespace
+{
+void glfw_err_cb(int error, const char *desc)
+{
+    fprintf(stderr, "%d: %s", error, desc);
 }
+} // namespace
 } // namespace
 
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
-class World {
+class World
+{
 public:
     World();
     ~World();
@@ -65,6 +68,8 @@ public:
 
     int state;
 
+    int level;
+
     bool debug;
 
 private:
@@ -73,12 +78,12 @@ private:
     bool spawn_boss();
 
     // !!! INPUT CALLBACK FUNCTIONS
-    void on_key(GLFWwindow*, int key, int, int action, int mod);
-    void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
-    void on_mouse_key(GLFWwindow*, int key, int action, int mod);
+    void on_key(GLFWwindow *, int key, int, int action, int mod);
+    void on_mouse_move(GLFWwindow *window, double xpos, double ypos);
+    void on_mouse_key(GLFWwindow *, int key, int action, int mod);
 
     // Window handle
-    GLFWwindow* m_window;
+    GLFWwindow *m_window;
     float m_screen_scale; // Screen to pixel coordinates scale factor
 
     // Screen texture
@@ -98,12 +103,11 @@ private:
     Shield m_shield;
     Potion m_potion;
     Ground m_ground;
-    
+
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
     WallManager m_wall_manager;
     std::vector<Wall> m_walls;
-
 
     // C++ rng
     std::default_random_engine m_rng;

@@ -90,16 +90,13 @@ bool World::init(vec2 screen)
     makeLevel(registry);
 
     levelSystem.init_level(registry, 1);
-    m_wall_manager.init(levelSystem.get_wall_orientation(),m_walls,1);
+    m_wall_manager.init(levelSystem.get_wall_orientation(), m_walls, 1);
     fprintf(stderr, "factory done\n");
 
     debug = false;
+    level = 0;
 
-    return m_character.init()
-        && m_background.init()
-        && m_shield.init()
-        && m_ground.init(999)
-        && m_menu.init();
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init();
 }
 
 // Releases all the associated resources
@@ -114,7 +111,7 @@ void World::destroy()
     m_menu.destroy();
     m_shield.destroy();
     m_wall_manager.destroy(m_walls);
-    for (auto& projectile : m_projectiles)
+    for (auto &projectile : m_projectiles)
         projectile.destroy();
     m_projectiles.clear();
 
@@ -129,8 +126,13 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
-    m_wall_manager.update(m_walls,levelSystem.getLevel(), levelSystem.get_wall_orientation());
+    int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
+    if (temp_lvl != level)
+    {
+        level = temp_lvl;
+        m_ground.load_texture(level);
+    }
+    m_wall_manager.update(m_walls, levelSystem.getLevel(), levelSystem.get_wall_orientation());
     state = menuSystem.get_state(registry);
     debug = menuSystem.get_debug_mode(registry);
 
@@ -214,12 +216,12 @@ void World::draw()
 
     // Drawing entities
     m_ground.draw(projection_2D);
-    m_wall_manager.draw(m_walls,projection_2D);
+    m_wall_manager.draw(m_walls, projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
 
-    for (auto& enemy : m_enemies)
+    for (auto &enemy : m_enemies)
         enemy.draw(projection_2D, debug);
 
     for (auto &projectile : m_projectiles)
