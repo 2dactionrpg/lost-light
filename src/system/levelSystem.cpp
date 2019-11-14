@@ -13,7 +13,7 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
         {
         case 1:
             // minion info
-            minion_num = 1;
+            minion_num = 0;
             minion_count = 0;
             minion_killed = 0;
             minion_max_on_screen = 1;
@@ -21,10 +21,12 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
             minion_is_movable.push_back(false);
 
             // boss info
-            boss_num = 0;
+            boss_num = 1;
             boss_count = 0;
             boss_killed = 0;
             boss_max_on_screen = 1;
+            boss_init_pos.push_back(init_pos_array[0]);
+            boss_is_movable.push_back(true);
 
             // global info
             lvl_num = m_lvl_num;
