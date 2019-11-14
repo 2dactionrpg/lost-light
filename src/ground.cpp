@@ -10,7 +10,7 @@ bool Ground::init(int id)
     // Load shared texture
     if (!ground_texture.is_valid())
     {
-        if (!ground_texture.load_from_file(textures_path("ground.png")))
+        if (!ground_texture.load_from_file(textures_path("ground-1.png")))
         {
             fprintf(stderr, "Failed to load ground texture!");
             return false;
@@ -87,6 +87,27 @@ void Ground::set_direction(vec2 direction)
 void Ground::set_rotation(float rad)
 {
     motion.radians = rad;
+}
+
+void Ground::load_texture(int state)
+{
+    switch (state)
+    {
+    case 1:
+        ground_texture.load_from_file(textures_path("ground-1.png"));
+        break;
+    case 2:
+        ground_texture.load_from_file(textures_path("ground-2.png"));
+        break;
+    case 3:
+        ground_texture.load_from_file(textures_path("ground-3.png"));
+        break;
+    case 4:
+        ground_texture.load_from_file(textures_path("ground-4.png"));
+        break;
+    default:
+        break;
+    }
 }
 
 void Ground::draw(const mat3 &projection)
