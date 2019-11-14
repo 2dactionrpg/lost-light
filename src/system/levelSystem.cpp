@@ -65,7 +65,7 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
     return true;
 }
 
-void LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles)
+int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
@@ -96,6 +96,8 @@ void LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enem
             init_level(registry, 1);
         }
     }
+
+    return lvl_num;
 }
 
 // Minion functions

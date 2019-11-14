@@ -2,7 +2,8 @@
 
 #include "entity.hpp"
 
-class Ground : public Entity {
+class Ground : public Entity
+{
     // Shared between all grounds, no need to load one for each instance
     static Texture ground_texture;
 
@@ -15,7 +16,7 @@ public:
 
     // Renders the ground
     // projection is the 2D orthographic projection matrix
-    void draw(const mat3& projection) override;
+    void draw(const mat3 &projection) override;
 
     vec2 get_direction();
 
@@ -24,6 +25,8 @@ public:
     void set_rotation(float rad);
 
     void set_scale(vec2 scale);
+
+    void load_texture(int level);
 
     // Returns the current ground position
     vec2 get_position() const;
