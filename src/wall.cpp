@@ -192,7 +192,7 @@ bool Wall::collides_with(const Projectile& projectile)
 
 void Wall::wall_offset(bool isBoss, vec2 position, vec2 offset, bool &right_moveable, bool &left_moveable, bool &up_moveable, bool &down_moveable)
 {
-    float grace = 30.f;
+    float grace = 60.f;
     if (isBoss) {
         grace *=2;
     }
