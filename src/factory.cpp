@@ -22,7 +22,7 @@ entt::entity makeCharacter(entt::registry &registry)
     ps.scale = c_init_scale;
     ps.distortion = c_init_distortion;
     ps.sheer = c_init_sheer;
-    registry.assign<inputKeyboard>(entity, false, false, false, false, false);
+    registry.assign<inputKeyboard>(entity, false, false, false, false, false, false, false);
     registry.assign<inputMouse>(entity, 0.0, 0.0);
     return entity;
 }
@@ -62,7 +62,7 @@ entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_mova
     // float xpos = randomFloat(50.f, 1000.f);
     // float ypos = randomFloat(50.f, 500.f);
     mo.position = {pos.x, pos.y};
-    mo.radians = M_PI + M_PI/2;
+    mo.radians = M_PI + M_PI / 2;
     mo.speed = 200.f;
     auto &ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = {0.08f, 0.08f};

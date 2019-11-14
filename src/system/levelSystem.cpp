@@ -141,7 +141,6 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
         auto &saveKeyPressed = view.get<inputKeyboard>(entity).saveKeyPressed;
         auto &loadKeyPressed = view.get<inputKeyboard>(entity).loadKeyPressed;
 
-
         if (resetKeyPressed)
         {
             m_enemies->clear();
@@ -166,13 +165,17 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
             if (!in)
             {
                 fprintf(stderr, "Error: Can’t open the file named level.txt.\n");
-            } else
+            }
+            else
             {
                 in >> lvl_num;
                 printf("%d", lvl_num);
             }
             in.close();
             loadKeyPressed = false;
+            m_enemies->clear();
+            m_projectiles->clear();
+            init_level(registry);
         }
     }
 
