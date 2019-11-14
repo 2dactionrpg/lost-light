@@ -89,7 +89,7 @@ bool World::init(vec2 screen)
     makeGround(registry, 999);
     makeLevel(registry);
 
-    levelSystem.init_level(registry, 1);
+    levelSystem.init_level(registry);
     m_wall_manager.init(levelSystem.get_wall_orientation(), m_walls, 1);
     fprintf(stderr, "factory done\n");
 

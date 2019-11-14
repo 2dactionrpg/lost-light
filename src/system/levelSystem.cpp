@@ -1,6 +1,6 @@
 #include "levelSystem.hpp"
 
-bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
+bool LevelSystem::init_level(entt::registry &registry)
 {
     reset_enemy(registry);
 
@@ -9,57 +9,63 @@ bool LevelSystem::init_level(entt::registry &registry, int m_lvl_num)
     for (auto entity : level)
     {
         auto &[minion_killed, boss_killed] = level.get(entity);
-        switch (m_lvl_num)
+
+        // shared info
+        minion_count = 0;
+        minion_killed = 0;
+        boss_count = 0;
+        boss_killed = 0;
+        enemy_killed = 0;
+
+        switch (lvl_num)
         {
         case 1:
             // minion info
-            minion_num = 0;
-            minion_count = 0;
-            minion_killed = 0;
-            minion_max_on_screen = 1;
-            minion_init_pos.push_back(init_pos_array[0]);
-            minion_is_movable.push_back(false);
-
-            // boss info
-            boss_num = 1;
-            boss_count = 0;
-            boss_killed = 0;
-            boss_max_on_screen = 1;
-            boss_init_pos.push_back(init_pos_array[0]);
-            boss_is_movable.push_back(true);
-
-            // global info
-            lvl_num = m_lvl_num;
-            enemy_killed = 0;
-            enemy_total = minion_num + boss_num;
-            enemy_spawn_delay = 0.f;
-            next_enemy_spawn_counter = 0.f;
-            break;
-        case 2:
-            // minion info
             minion_num = 1;
-            minion_count = 0;
-            minion_killed = 0;
-            minion_max_on_screen = 3;
-            minion_init_pos.push_back(init_pos_array[0]);
-            minion_is_movable.push_back(true);
+            minion_max_on_screen = 1;
+            for (vec2 pos : minion_level1_pos_array)
+            {
+                minion_init_pos.push_back(pos);
+            }
+            for (bool is_movable : minion_level1_movable_array)
+            {
+                minion_is_movable.push_back(is_movable);
+            }
 
             // boss info
             boss_num = 0;
-            boss_count = 0;
-            boss_killed = 0;
             boss_max_on_screen = 1;
 
             // global info
-            lvl_num = m_lvl_num;
-            enemy_killed = 0;
-            enemy_total = minion_num + boss_num;
+            enemy_spawn_delay = 50.f;
+            break;
+        case 2:
+            // minion info
+            minion_num = 3;
+            minion_max_on_screen = 3;
+            for (vec2 pos : minion_level2_pos_array)
+            {
+                minion_init_pos.push_back(pos);
+            }
+            for (bool is_movable : minion_level2_movable_array)
+            {
+                minion_is_movable.push_back(is_movable);
+            }
+
+            // boss info
+            boss_num = 0;
+            boss_max_on_screen = 1;
+
+            // global info
             enemy_spawn_delay = 0.f;
-            next_enemy_spawn_counter = 0.f;
             break;
         default:
             return false;
         }
+
+        // shared info
+        enemy_total = minion_num + boss_num;
+        next_enemy_spawn_counter = 0.f;
     }
 
     return true;
@@ -78,9 +84,12 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
 
         if (enemy_killed >= enemy_total)
         {
-            if (!init_level(registry, ++lvl_num))
+            lvl_num++;
+            if (!init_level(registry))
             {
                 menuSystem.sync(registry, STATE_WIN);
+                lvl_num--;
+                return lvl_num;
             }
         }
     }
@@ -93,7 +102,8 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
         {
             m_enemies->clear();
             m_projectiles->clear();
-            init_level(registry, 1);
+            lvl_num = 1;
+            init_level(registry);
         }
     }
 
@@ -152,6 +162,7 @@ void LevelSystem::reset_enemy(entt::registry &registry)
     minion_is_movable.clear();
     boss_init_pos.clear();
     boss_is_movable.clear();
+    wallVector.clear();
 
     auto viewEnemy = registry.view<enemyComponent, physicsScaleComponent, motionComponent>();
 
@@ -214,38 +225,38 @@ void LevelSystem::increment_enemy_killed(entt::registry &registry)
     }
 }
 
-std::vector<vec2> LevelSystem::get_wall_orientation()
+vector<vec2> LevelSystem::get_wall_orientation()
 {
-    std::vector<vec2> returnVector;
+    wallVector.clear();
+
     switch (lvl_num)
     {
     case 1:
         for (vec2 pos : wall_level1_pos_array)
         {
-            returnVector.emplace_back(pos);
+            wallVector.push_back(pos);
         }
         break;
     case 2:
         for (vec2 pos : wall_level2_pos_array)
         {
-            returnVector.emplace_back(pos);
+            wallVector.push_back(pos);
         }
         break;
     case 3:
         for (vec2 pos : wall_level3_pos_array)
         {
-            returnVector.emplace_back(pos);
+            wallVector.push_back(pos);
         }
         break;
     case 4:
         for (vec2 pos : wall_level4_pos_array)
         {
-            returnVector.emplace_back(pos);
+            wallVector.push_back(pos);
         }
         break;
-
     }
-    return returnVector;
+    return wallVector;
 }
 
 int LevelSystem::getLevel()

@@ -26,7 +26,12 @@ float c_init_dash_duration = 200.f;
 float c_init_dash_cooldown = 500.f;
 vec2 c_boss_init_pos = {1000.f, 500.f};
 
-static const vec2 init_pos_array[] = {{1000.f, 100.f}, {1000.f, 400.f}, {1000.f, 700.f}};
+static const vec2 minion_level1_pos_array[] = {{1000.f, 400.f}};
+static const bool minion_level1_movable_array[] = {false};
+
+static const vec2 minion_level2_pos_array[] = {{1000.f, 200.f}, {1000.f, 400.f}, {1000.f, 600.f}};
+static const bool minion_level2_movable_array[] = {false, false, false};
+
 static const vec2 wall_level1_pos_array[] = {{-100.f, -100.f}};
 static const vec2 wall_level2_pos_array[] = {{14.f, 10.f},
                                              {14.f, 9.f},

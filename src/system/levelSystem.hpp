@@ -16,7 +16,7 @@ class LevelSystem
 private:
     // globa info
     int enemy_id = 0;
-    int lvl_num;
+    int lvl_num = 1;
     int enemy_total;
     int enemy_killed;
     float enemy_spawn_delay;
@@ -36,11 +36,13 @@ private:
     vector<vec2> boss_init_pos;
     vector<bool> boss_is_movable;
 
+    vector<vec2> wallVector;
+
     // additional info
     MenuSystem menuSystem;
 
 public:
-    bool init_level(entt::registry &registry, int m_lvl_num);
+    bool init_level(entt::registry &registry);
     int update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles);
     void increment_enemy_killed(entt::registry &registry);
     int get_next_enemy_id();
