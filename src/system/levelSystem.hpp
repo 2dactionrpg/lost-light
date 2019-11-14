@@ -8,6 +8,9 @@
 #include "menuSystem.hpp"
 
 #include <entt/entity/registry.hpp>
+#include <fstream>
+#include <iostream>
+#include <filesystem>
 
 using namespace std;
 
