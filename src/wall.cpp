@@ -184,7 +184,7 @@ bool Wall::collides_with(const Projectile& projectile)
     float dx = motion.position.x - projectile.get_position().x;
     float dy = motion.position.y - projectile.get_position().y;
     float d_sq = dx * dx + dy * dy;
-    float maxRadius = get_bounding_box().x / 2 + projectile.get_bounding_box().x / 2;
+    float maxRadius = get_bounding_box().x / 3 + projectile.get_bounding_box().x / 3;
     if (d_sq < maxRadius * maxRadius)
         return true;
     return false;
