@@ -223,6 +223,25 @@ std::vector<vec2> LevelSystem::get_wall_orientation()
             returnVector.emplace_back(pos);
         }
         break;
+    case 2:
+        for (vec2 pos : wall_level2_pos_array)
+        {
+            returnVector.emplace_back(pos);
+        }
+        break;
+    case 3:
+        for (vec2 pos : wall_level3_pos_array)
+        {
+            returnVector.emplace_back(pos);
+        }
+        break;
+    case 4:
+        for (vec2 pos : wall_level4_pos_array)
+        {
+            returnVector.emplace_back(pos);
+        }
+        break;
+
     }
     return returnVector;
 }
