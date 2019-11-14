@@ -8,6 +8,6 @@ struct inputKeyboard
     bool leftKeyPressed;
     bool rightKeyPressed;
     bool resetKeyPressed;
-    bool loadKeyPressed;
     bool saveKeyPressed;
+    bool loadKeyPressed;
 };
