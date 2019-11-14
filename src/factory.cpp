@@ -95,7 +95,7 @@ entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movabl
 entt::entity makeProjectile(entt::registry &registry, int id, vec2 pos, vec2 dir, float rad)
 {
     const entt::entity entity = registry.create();
-    registry.assign<projectileComponent>(entity, id, false, true);
+    registry.assign<projectileComponent>(entity, id, false, true, 20.0f);
     auto &mo = registry.assign<motionComponent>(entity);
     mo.position = pos;
     mo.direction = dir;
