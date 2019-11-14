@@ -2,6 +2,10 @@
 
 #include "common.hpp"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 namespace
 {
 // SaveGameData {
@@ -35,8 +39,6 @@ float s_init_cooldown = 50.f;
 // Enemy Initial data
 float e_minion_init_shoot_frequency = 3000.f;
 float e_boss_init_shoot_frequency = 1000.f;
-
-float M_PI = 3.14159265358979323846264338327950288;
 
 bool debug_mode = false;
 
