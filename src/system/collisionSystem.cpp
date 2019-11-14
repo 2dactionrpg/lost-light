@@ -23,6 +23,7 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
         if (p1.x < -100.f || p1.x > 1300.f || p1.y < -100.f || p1.y > 900.f)
         {
             registry.destroy(pj1);
+            continue;
         }
 
         for (auto pj2 : projectile)
