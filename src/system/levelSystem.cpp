@@ -301,33 +301,33 @@ vector<vec2> LevelSystem::get_wall_orientation()
 {
     wallVector.clear();
 
-    // switch (lvl_num)
-    // {
-    // case 1:
-    //     for (vec2 pos : wall_level1_pos_array)
-    //     {
-    //         wallVector.push_back(pos);
-    //     }
-    //     break;
-    // case 2:
-    //     for (vec2 pos : wall_level2_pos_array)
-    //     {
-    //         wallVector.push_back(pos);
-    //     }
-    //     break;
-    // case 3:
-    //     for (vec2 pos : wall_level3_pos_array)
-    //     {
-    //         wallVector.push_back(pos);
-    //     }
-    //     break;
-    // case 4:
-    //     for (vec2 pos : wall_level4_pos_array)
-    //     {
-    //         wallVector.push_back(pos);
-    //     }
-    //     break;
-    // }
+    switch (lvl_num)
+    {
+    case 1:
+        for (vec2 pos : wall_level1_pos_array)
+        {
+            wallVector.push_back(pos);
+        }
+        break;
+    case 2:
+        for (vec2 pos : wall_level2_pos_array)
+        {
+            wallVector.push_back(pos);
+        }
+        break;
+    case 3:
+        for (vec2 pos : wall_level3_pos_array)
+        {
+            wallVector.push_back(pos);
+        }
+        break;
+    case 4:
+        for (vec2 pos : wall_level4_pos_array)
+        {
+            wallVector.push_back(pos);
+        }
+        break;
+    }
     return wallVector;
 }
 
