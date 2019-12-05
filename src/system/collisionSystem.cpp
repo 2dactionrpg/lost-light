@@ -1,6 +1,11 @@
+#include <components/skillComponent.hpp>
 #include "collisionSystem.hpp"
 
-void CollisionSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Projectile> &m_projectiles, Potion &m_potion, unsigned int &m_points, vector<Wall> &m_walls)
+void
+CollisionSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies,
+                        vector<Projectile> &m_projectiles, Potion &m_potion, unsigned int &m_points,
+                        vector<Wall> &m_walls,
+                        Redzone &m_redzone, float elapsed_ms)
 {
     // Checking Character - Potion collisions
     if (m_character.collides_with(m_potion) && !m_potion.is_consumed())
@@ -8,6 +13,24 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
         physicsSystem.consume_potion(registry, m_potion.get_id());
         physicsSystem.set_shield_scale_multiplier(registry, 2.0f, 1.0f);
     }
+    // Checking Character - red zone collisions
+    auto enemies = registry.view<enemyComponent, motionComponent, skillComponent>();
+    for (auto enemy : enemies)
+    {
+        auto &[cooldown, duration] = enemies.get<skillComponent>(enemy);
+        if (m_character.collides_with(m_redzone) && duration < 0.f && cooldown < 0.f)
+        {
+            soundSystem.play_sound(C_DEAD);
+            physicsSystem.set_character_unmovable(registry);
+            menuSystem.sync(registry, STATE_GAMEOVER);
+            duration = 1000.f;
+        }
+        else
+        {
+            duration -= elapsed_ms;
+        }
+    }
+
 
     auto projectile = registry.view<projectileComponent, motionComponent>();
 

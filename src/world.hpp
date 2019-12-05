@@ -23,6 +23,7 @@
 #include "ground.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
+#include "redzone.hpp"
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -103,6 +104,7 @@ private:
     Shield m_shield;
     Potion m_potion;
     Ground m_ground;
+    Redzone m_redzone;
 
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;

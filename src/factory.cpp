@@ -1,6 +1,7 @@
 #include "factory.hpp"
 
 #include <cmath>
+#include <components/skillComponent.hpp>
 
 entt::entity makeCharacter(entt::registry &registry)
 {
@@ -69,7 +70,7 @@ entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_mova
     return entity;
 }
 
-entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable)
+entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable, bool is_mage)
 {
     const entt::entity entity = registry.create();
     auto &em = registry.assign<enemyComponent>(entity);
@@ -89,6 +90,12 @@ entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movabl
     mo.speed = 200.f;
     auto &ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = {0.2f, 0.2f};
+    if (is_mage)
+    {
+        auto &sc = registry.assign<skillComponent>(entity);
+        sc.cooldown = 4000.f;
+        sc.duration = 1000.f;
+    }
     return entity;
 }
 

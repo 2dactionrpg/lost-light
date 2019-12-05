@@ -108,6 +108,7 @@ void World::destroy()
 
     m_character.destroy();
     m_potion.destroy();
+    m_redzone.destroy();
     m_menu.destroy();
     m_shield.destroy();
     m_wall_manager.destroy(m_walls);
@@ -145,13 +146,15 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
 
-    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points, m_walls);
+    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points, m_walls,
+                           m_redzone, elapsed_ms);
 
     enemyAI.update(registry, elapsed_ms, m_enemies);
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
     enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_projectiles);
+    enemyAI.skill_manager(registry, elapsed_ms, m_redzone);
 
     physicsSystem.sync(registry, elapsed_ms, m_walls);
     physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
@@ -167,6 +170,7 @@ bool World::update(float elapsed_ms)
         spawn_boss();
         makePotion(registry, 1);
         m_potion.init(1);
+        m_redzone.init();
     }
 
     enemyAI.destroy_dead_enemies(registry);
@@ -220,6 +224,7 @@ void World::draw()
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
+    m_redzone.draw(projection_2D);
 
     for (auto &enemy : m_enemies)
         enemy.draw(projection_2D, debug);
@@ -284,7 +289,7 @@ bool World::spawn_boss()
         m_enemies.emplace_back(enemy);
         vec2 pos = levelSystem.get_next_boss_pos();
         bool is_movable = levelSystem.get_next_boss_is_movable();
-        makeBoss(registry, id, pos, is_movable);
+        makeBoss(registry, id, pos, is_movable, true);
         return true;
     }
     fprintf(stderr, "Failed to spawn enemy");
