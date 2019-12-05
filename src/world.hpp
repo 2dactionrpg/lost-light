@@ -27,6 +27,7 @@
 #include "ground.hpp"
 #include "potion.hpp"
 #include "projectile.hpp"
+#include "redzone.hpp"
 
 // entt
 #include <entt/entity/registry.hpp>
@@ -112,6 +113,7 @@ private:
     Cooldown m_cooldown;
 
     float s_cooldown;
+    Redzone m_redzone;
 
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;

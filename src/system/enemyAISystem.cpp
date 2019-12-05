@@ -1,3 +1,5 @@
+#include <redzone.hpp>
+#include <components/skillComponent.hpp>
 #include "enemyAISystem.hpp"
 
 float LO = 100.f;
@@ -208,8 +210,8 @@ void EnemyAISystem::set_rotation(entt::registry &registry)
                 {
                     radians -= 0.01f;
                 }
-                if (fabs(radians - es.turn_target) < 0.02)
-                {
+                if (fabs(radians - es.turn_target) < 0.02) 
+                { 
                     radians = es.turn_target;
                     es.action = MOVE;
                 }
@@ -222,7 +224,8 @@ void EnemyAISystem::set_rotation(entt::registry &registry)
     }
 }
 
-void EnemyAISystem::shoot(entt::registry &registry, int enemy_type, vec2 proj_direction, vec2 face_pos, float radians, vector<Projectile> &m_projectiles)
+void EnemyAISystem::shoot(entt::registry &registry, int enemy_type, vec2 proj_direction, vec2 face_pos, float radians,
+                          vector<Projectile> &m_projectiles)
 {
     if (enemy_type == BOSS)
     {
@@ -260,7 +263,39 @@ void EnemyAISystem::shoot(entt::registry &registry, int enemy_type, vec2 proj_di
     }
 }
 
-void EnemyAISystem::shoot_manager(entt::registry &registry, float elapsed_ms, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles)
+void EnemyAISystem::summon_redzone(entt::registry &registry, Redzone &redzone) {
+    // summon red zone
+    vec2 char_pos = vec2();
+    auto character_view = registry.view<characterComponent, motionComponent>();
+    for (auto character : character_view)
+    {
+        char_pos = character_view.get<motionComponent>(character).position;
+    }
+    redzone.set_position(char_pos);
+}
+
+void EnemyAISystem::skill_manager(entt::registry &registry, float elapsed_ms, Redzone &m_redzone)
+{
+    auto enemies = registry.view<enemyComponent, motionComponent, skillComponent>();
+    for (auto enemy : enemies)
+    {
+        auto &[position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
+        auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
+        auto &[cooldown, duration] = enemies.get<skillComponent>(enemy);
+        if (is_alive && cooldown < 0.f && (enemy_type == BOSS))
+        {
+            summon_redzone(registry, m_redzone);
+            cooldown = 4000.f;
+        }
+        else
+        {
+            cooldown -= elapsed_ms;
+        }
+    }
+}
+
+void EnemyAISystem::shoot_manager(entt::registry &registry, float elapsed_ms, vector<Enemy> &m_enemies,
+                                  vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles)
 {
     auto enemies = registry.view<enemyComponent, motionComponent>();
     for (auto enemy : enemies)
@@ -297,3 +332,5 @@ void EnemyAISystem::destroy_dead_enemies(entt::registry &registry)
             registry.destroy(enemy);
     }
 }
+
+

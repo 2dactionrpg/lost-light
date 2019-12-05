@@ -108,7 +108,7 @@ set(SOURCE_FILES
     src/system/menuSystem.hpp
     src/system/soundSystem.hpp
     src/system/levelSystem.hpp
-)
+        src/components/skillComponent.hpp src/redzone.cpp src/redzone.hpp)
 
 if (IS_OS_MAC)
   include_directories(/usr/local/include)

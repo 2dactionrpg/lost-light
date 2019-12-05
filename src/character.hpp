@@ -4,6 +4,7 @@
 #include "potion.hpp"
 #include "zombie.hpp"
 #include "projectile.hpp"
+#include "redzone.hpp"
 #include <entt/entity/registry.hpp>
 #include <vector>
 
@@ -36,6 +37,8 @@ public:
 
     bool collides_with(const Zombie &zombie);
 
+    bool collides_with(const Redzone &redzone);
+
     // Set character rotation in radians
     void set_rotation(float radians);
 
@@ -61,4 +64,5 @@ private:
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;
     entt::registry registry;
+
 };

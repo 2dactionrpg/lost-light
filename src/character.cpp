@@ -1,5 +1,6 @@
 // Header
 #include "character.hpp"
+#include "redzone.hpp"
 
 // stlib
 #include <algorithm>
@@ -226,4 +227,16 @@ int Character::get_health() const
 void Character::restart_health()
 {
     m_health = 3;
+}
+
+bool Character::collides_with(const Redzone &redzone)
+{
+    vec2 box = get_bounding_box();
+    float dx = motion.position.x - redzone.get_position().x;
+    float dy = motion.position.y - redzone.get_position().y;
+    float d_sq = dx * dx + dy * dy;
+    float maxRadius = get_bounding_box().x / 2 + redzone.get_bounding_box().x / 2;
+    if (d_sq < maxRadius * maxRadius)
+        return true;
+    return false;
 }

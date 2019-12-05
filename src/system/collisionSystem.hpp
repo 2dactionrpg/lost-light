@@ -30,5 +30,5 @@ private:
 
 public:
     // void update(entt::registry& registry, Menu& m_menu);
-    void update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, unsigned int &m_points, vector<Wall> &m_walls);
+    void update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, unsigned int &m_points, vector<Wall> &m_walls, Redzone &m_redzone, float elapsed_ms);
 };
