@@ -6,6 +6,7 @@
 #include "triangle.hpp"
 #include "path.hpp"
 #include "data.hpp"
+#include "zombie.hpp"
 
 class Projectile;
 
@@ -48,7 +49,7 @@ public:
 
     bool on_sight(vec2 target);
 
-    bool set_line(vec2 target, std::vector<Enemy> &m_enemies);
+    bool set_line(vec2 target, std::vector<Enemy> &m_enemies, std::vector<Zombie> &m_zombie);
     void unset_line();
 
     void alert();

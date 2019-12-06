@@ -50,6 +50,7 @@ set(SOURCE_FILES
     src/wall_manager.cpp
     src/wall.cpp
     src/zombie.cpp
+    src/health.cpp
 
     # System
     src/system/inputSystem.cpp
@@ -80,6 +81,7 @@ set(SOURCE_FILES
     src/wall_manager.hpp
     src/wall.hpp
     src/zombie.hpp
+    src/health.hpp
     # Component
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp

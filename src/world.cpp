@@ -96,7 +96,7 @@ bool World::init(vec2 screen)
     debug = false;
     level = 0;
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init();
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init();
 }
 
 // Releases all the associated resources
@@ -233,6 +233,7 @@ void World::draw()
     for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);
 
+    m_health.draw(projection_2D);
     m_menu.draw(projection_2D);
 
     /////////////////////

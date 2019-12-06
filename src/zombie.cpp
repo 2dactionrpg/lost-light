@@ -211,7 +211,7 @@ void Zombie::set_scale(vec2 scale)
 
 vec2 Zombie::get_bounding_box() const
 {
-    return {std::fabs(physics.scale.x) * zombie_texture.width, std::fabs(physics.scale.y) * zombie_texture.height};
+    return {std::fabs(physics.scale.x) * zombie_texture.width - 50.f, std::fabs(physics.scale.y) * zombie_texture.height - 50.f};
 }
 
 bool Zombie::collides_with(const Projectile &projectile)
@@ -229,10 +229,12 @@ bool Zombie::collides_with(const Projectile &projectile)
 bool Zombie::collides_with_point(Dot d)
 {
     vec2 box = get_bounding_box();
+    box.x = box.x + 75.f;
+    box.y = box.y + 75.f;
     float dx = motion.position.x - d.position.x;
     float dy = motion.position.y - d.position.y;
     float d_sq = dx * dx + dy * dy;
-    float maxRadius = get_bounding_box().x / 2 + d.radius;
+    float maxRadius = box.x / 2 + d.radius;
     if (d_sq < maxRadius * maxRadius)
         return true;
     return false;
