@@ -42,6 +42,7 @@ set(SOURCE_FILES
     src/factory.cpp
     src/enemy.cpp
     src/menu.cpp
+    src/overlay.cpp
     src/potion.cpp
     src/ground.cpp
     src/path.cpp
@@ -56,7 +57,8 @@ set(SOURCE_FILES
     src/system/enemyAISystem.cpp
     src/system/healthSystem.cpp
     src/system/collisionSystem.cpp
-    src/system/menuSystem.cpp
+    src/system/menuSystem.cpp    
+    src/system/overlaySystem.cpp
     src/system/soundSystem.cpp
     src/system/levelSystem.cpp
 
@@ -70,6 +72,7 @@ set(SOURCE_FILES
     src/entity.hpp
     src/enemy.hpp
     src/menu.hpp
+    src/overlay.hpp
     src/potion.hpp
     src/ground.hpp
     src/data.hpp
@@ -98,6 +101,7 @@ set(SOURCE_FILES
     src/system/collisionSystem.hpp
     src/system/healthSystem.hpp
     src/system/menuSystem.hpp
+    src/system/overlaySystem.hpp
     src/system/soundSystem.hpp
     src/system/levelSystem.hpp
 )

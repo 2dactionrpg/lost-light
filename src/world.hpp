@@ -6,6 +6,7 @@
 #include "data.hpp"
 #include "enemy.hpp"
 #include "menu.hpp"
+#include "overlay.hpp"
 #include "shield.hpp"
 #include "wall.hpp"
 #include "wall_manager.hpp"
@@ -16,6 +17,7 @@
 #include "./system/inputSystem.hpp"
 #include "./system/levelSystem.hpp"
 #include "./system/menuSystem.hpp"
+#include "./system/overlaySystem.hpp"
 #include "./system/physicsSystem.hpp"
 #include "./system/soundSystem.hpp"
 #include "background.hpp"
@@ -100,6 +102,7 @@ private:
     // Game entities
     Character m_character;
     Menu m_menu;
+    Overlay m_overlay;
     Shield m_shield;
     Potion m_potion;
     Ground m_ground;
@@ -118,6 +121,7 @@ private:
     EnemyAISystem enemyAI;
     HealthSystem healthSystem;
     MenuSystem menuSystem;
+    OverlaySystem overlaySystem;
     SoundSystem soundSystem;
     CollisionSystem collisionSystem;
     LevelSystem levelSystem;

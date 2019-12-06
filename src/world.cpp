@@ -86,6 +86,7 @@ bool World::init(vec2 screen)
     makeCharacter(registry);
     makeShield(registry);
     makeMenu(registry);
+    makeOverlay(registry);
     makeGround(registry, 999);
     makeLevel(registry);
 
@@ -96,7 +97,8 @@ bool World::init(vec2 screen)
     debug = false;
     level = 0;
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init();
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init()
+    && m_overlay.init();
 }
 
 // Releases all the associated resources
@@ -109,6 +111,7 @@ void World::destroy()
     m_character.destroy();
     m_potion.destroy();
     m_menu.destroy();
+    m_overlay.destroy();
     m_shield.destroy();
     m_wall_manager.destroy(m_walls);
     for (auto &projectile : m_projectiles)
@@ -126,6 +129,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
+    overlaySystem.update(registry, m_overlay);
     int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
     if (temp_lvl != level)
     {
@@ -227,6 +231,7 @@ void World::draw()
     for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);
 
+    m_overlay.draw(projection_2D);
     m_menu.draw(projection_2D);
 
     /////////////////////

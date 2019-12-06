@@ -7,6 +7,7 @@
 #include "./components/inputMouse.hpp"
 #include "./components/levelComponent.hpp"
 #include "./components/menuComponent.hpp"
+#include "./components/overlayComponent.hpp"
 #include "./components/motionComponent.hpp"
 #include "./components/physicsScaleComponent.hpp"
 #include "./components/potionComponent.hpp"
@@ -23,4 +24,5 @@ entt::entity makePotion(entt::registry& registry, int id);
 entt::entity makeGround(entt::registry& registry, int id);
 entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir, float rad);
 entt::entity makeMenu(entt::registry& registry);
+entt::entity makeOverlay(entt::registry& registry);
 entt::entity makeLevel(entt::registry& registry);
