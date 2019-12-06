@@ -96,7 +96,7 @@ bool World::init(vec2 screen)
     debug = false;
     level = 0;
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init();
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init();
 }
 
 // Releases all the associated resources
@@ -130,7 +130,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_enemies, &m_zombies, &m_projectiles);
+    int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_character, &m_enemies, &m_zombies, &m_projectiles);
     if (temp_lvl != level)
     {
         level = temp_lvl;
@@ -148,7 +148,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
     collisionSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_points, m_walls);
-
+    m_health.load_texture(m_character.get_health());
     enemyAI.update(registry, elapsed_ms, m_enemies, m_zombies);
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
@@ -233,6 +233,7 @@ void World::draw()
     for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);
 
+    m_health.draw(projection_2D);
     m_menu.draw(projection_2D);
 
     /////////////////////

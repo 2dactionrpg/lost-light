@@ -1,29 +1,25 @@
 // Header
-#include "character.hpp"
-
-// stlib
-#include <algorithm>
-#include <string>
+#include "health.hpp"
 
 #include <cmath>
 
-Texture Character::character_texture;
+Texture Health::health_texture;
 
-bool Character::init()
+bool Health::init()
 {
     // Load shared texture
-    if (!character_texture.is_valid())
+    if (!health_texture.is_valid())
     {
-        if (!character_texture.load_from_file(textures_path("character.png")))
+        if (!health_texture.load_from_file(textures_path("health-3.png")))
         {
-            fprintf(stderr, "Failed to load projectile texture!");
+            fprintf(stderr, "Failed to load heart texture!");
             return false;
         }
     }
 
     // The position corresponds to the center of the texture
-    float wr = character_texture.width * 0.5f;
-    float hr = character_texture.height * 0.5f;
+    float wr = health_texture.width * 0.5f;
+    float hr = health_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
     vertices[0].position = {-wr, +hr, -0.02f};
@@ -57,16 +53,18 @@ bool Character::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("character.vs.glsl"), shader_path("character.fs.glsl")))
+    if (!effect.load_from_file(shader_path("health.vs.glsl"), shader_path("health.fs.glsl")))
         return false;
 
-    m_health = 3;
+    motion.position = {165.f, 60.f};
+    physics.scale = {0.25f,
+                     0.25f};
 
     return true;
 }
 
 // Releases all graphics resources
-void Character::destroy()
+void Health::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
@@ -77,14 +75,33 @@ void Character::destroy()
     glDeleteShader(effect.program);
 }
 
-void Character::draw(const mat3 &projection)
+void Health::load_texture(int state)
+{
+    switch (state)
+    {
+    case 3:
+        health_texture.load_from_file(textures_path("health-3.png"));
+        break;
+    case 2:
+        health_texture.load_from_file(textures_path("health-2.png"));
+        break;
+    case 1:
+        health_texture.load_from_file(textures_path("health-1.png"));
+        break;
+    case 0:
+        health_texture.load_from_file(textures_path("health-0.png"));
+        break;
+    default:
+        break;
+    }
+}
+
+void Health::draw(const mat3 &projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
     transform.translate(motion.position);
-    transform.sheer(physics.sheer);
-    transform.scale(physics.distortion);
     transform.rotate(motion.radians);
     transform.scale(physics.scale);
     transform.end();
@@ -117,7 +134,7 @@ void Character::draw(const mat3 &projection)
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, character_texture.id);
+    glBindTexture(GL_TEXTURE_2D, health_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
@@ -129,101 +146,12 @@ void Character::draw(const mat3 &projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-vec2 Character::get_scale() const
-{
-    return physics.scale;
-}
-
-void Character::set_scale(vec2 scale)
+void Health::set_scale(vec2 scale)
 {
     physics.scale = scale;
 }
 
-void Character::set_distortion(vec2 distortion)
+void Health::set_position(vec2 position)
 {
-    physics.distortion = distortion;
-}
-
-void Character::set_sheer(float sheer)
-{
-    physics.sheer = sheer;
-}
-
-vec2 Character::get_position() const
-{
-    return motion.position;
-}
-
-void Character::set_position(vec2 pos)
-{
-    motion.position = pos;
-}
-
-float Character::get_rotation() const
-{
-    return motion.radians;
-}
-
-void Character::set_rotation(float radians)
-{
-    motion.radians = radians;
-}
-
-vec2 Character::get_bounding_box() const
-{
-    // Returns the local bounding coordinates scaled by the current size of the projectile
-    // fabs is to avoid negative scale due to the facing direction.
-    return {std::fabs(physics.scale.x) * character_texture.width * 0.4f,
-            std::fabs(physics.scale.y) * character_texture.height * 0.4f};
-}
-
-bool Character::collides_with(const Projectile &projectile)
-{
-    vec2 box = get_bounding_box();
-    float dx = motion.position.x - projectile.get_position().x;
-    float dy = motion.position.y - projectile.get_position().y;
-    float d_sq = dx * dx + dy * dy;
-    float maxRadius = get_bounding_box().x / 2 + projectile.get_bounding_box().x / 2;
-    if (d_sq < maxRadius * maxRadius)
-        return true;
-    return false;
-}
-
-bool Character::collides_with(const Potion &potion)
-{
-    vec2 box = get_bounding_box();
-    float dx = motion.position.x - potion.get_position().x;
-    float dy = motion.position.y - potion.get_position().y;
-    float d_sq = dx * dx + dy * dy;
-    float maxRadius = get_bounding_box().x / 2 + potion.get_bounding_box().x / 2;
-    if (d_sq < maxRadius * maxRadius)
-        return true;
-    return false;
-}
-
-bool Character::collides_with(const Zombie &zombie)
-{
-    vec2 box = get_bounding_box();
-    float dx = motion.position.x - zombie.get_position().x;
-    float dy = motion.position.y - zombie.get_position().y;
-    float d_sq = dx * dx + dy * dy;
-    float maxRadius = get_bounding_box().x / 2 + zombie.get_bounding_box().x / 2;
-    if (d_sq < maxRadius * maxRadius)
-        return true;
-    return false;
-}
-
-void Character::take_damage()
-{
-    m_health--;
-}
-
-int Character::get_health() const
-{
-    return m_health;
-}
-
-void Character::restart_health()
-{
-    m_health = 3;
+    motion.position = position;
 }

@@ -33,7 +33,7 @@ void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<En
                         es.enemy_on_sight = true;
                         es.alert_cooldown_ms = 25000;
                         m_enemy.alert();
-                        es.line_of_sight = m_enemy.set_line(target, m_enemies);
+                        es.line_of_sight = m_enemy.set_line(target, m_enemies, m_zombies);
                     }
                     else if (on_sight && es.alert)
                     {
@@ -43,7 +43,7 @@ void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<En
                         es.is_turn_complete = false;
                         es.enemy_on_sight = true;
                         m_enemy.alert();
-                        es.line_of_sight = m_enemy.set_line(target, m_enemies);
+                        es.line_of_sight = m_enemy.set_line(target, m_enemies, m_zombies);
                     }
                     else if (!on_sight && es.alert)
                     {

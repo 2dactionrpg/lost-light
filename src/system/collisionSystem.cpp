@@ -28,8 +28,12 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
         if (m_character.collides_with(*zombie_it))
         {
             soundSystem.play_sound(C_DEAD);
-            physicsSystem.set_character_unmovable(registry);
-            menuSystem.sync(registry, STATE_GAMEOVER);
+            m_character.take_damage();
+            if (m_character.get_health() < 1)
+            {
+                physicsSystem.set_character_unmovable(registry);
+                menuSystem.sync(registry, STATE_GAMEOVER);
+            }
             break;
         }
         ++zombie_it;
@@ -150,13 +154,19 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
             continue;
         }
 
+        bool hits_character = false;
         // check character collision
         if (m_character.collides_with(*projectile_it))
         {
             soundSystem.play_sound(C_DEAD);
-            physicsSystem.set_character_unmovable(registry);
             projectile_it = m_projectiles.erase(projectile_it);
-            menuSystem.sync(registry, STATE_GAMEOVER);
+            m_character.take_damage();
+            hits_character = true;
+            if (m_character.get_health() < 1)
+            {
+                physicsSystem.set_character_unmovable(registry);
+                menuSystem.sync(registry, STATE_GAMEOVER);
+            }
             continue;
         }
 
@@ -195,7 +205,7 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
             }
         }
 
-        if (hits_enemy || hits_zombie)
+        if (hits_enemy || hits_zombie || hits_character)
         {
             projectile_it = m_projectiles.erase(projectile_it);
         }

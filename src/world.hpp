@@ -7,6 +7,7 @@
 #include "enemy.hpp"
 #include "zombie.hpp"
 #include "menu.hpp"
+#include "health.hpp"
 #include "shield.hpp"
 #include "wall.hpp"
 #include "wall_manager.hpp"
@@ -104,6 +105,7 @@ private:
     Shield m_shield;
     Potion m_potion;
     Ground m_ground;
+    Health m_health;
 
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
