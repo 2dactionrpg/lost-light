@@ -137,7 +137,7 @@ bool LevelSystem::init_level(entt::registry &registry)
     return true;
 }
 
-int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles)
+int LevelSystem::update(entt::registry &registry, float elapsed_ms, Character *m_character, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
@@ -172,6 +172,7 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
             m_enemies->clear();
             m_zombies->clear();
             m_projectiles->clear();
+            m_character->restart_health();
             lvl_num = 1;
             init_level(registry);
         }

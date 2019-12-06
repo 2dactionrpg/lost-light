@@ -10,7 +10,7 @@ bool Health::init()
     // Load shared texture
     if (!health_texture.is_valid())
     {
-        if (!health_texture.load_from_file(textures_path("full-heart.png")))
+        if (!health_texture.load_from_file(textures_path("health-3.png")))
         {
             fprintf(stderr, "Failed to load heart texture!");
             return false;
@@ -56,7 +56,7 @@ bool Health::init()
     if (!effect.load_from_file(shader_path("health.vs.glsl"), shader_path("health.fs.glsl")))
         return false;
 
-    motion.position = {115.f, 75.f};
+    motion.position = {165.f, 60.f};
     physics.scale = {0.25f,
                      0.25f};
 
@@ -79,14 +79,17 @@ void Health::load_texture(int state)
 {
     switch (state)
     {
-    case 1:
-        health_texture.load_from_file(textures_path("full-heart.png"));
+    case 3:
+        health_texture.load_from_file(textures_path("health-3.png"));
         break;
     case 2:
-        health_texture.load_from_file(textures_path("half-heart.png"));
+        health_texture.load_from_file(textures_path("health-2.png"));
         break;
-    case 3:
-        health_texture.load_from_file(textures_path("empty-heart.png"));
+    case 1:
+        health_texture.load_from_file(textures_path("health-1.png"));
+        break;
+    case 0:
+        health_texture.load_from_file(textures_path("health-0.png"));
         break;
     default:
         break;

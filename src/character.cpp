@@ -60,6 +60,8 @@ bool Character::init()
     if (!effect.load_from_file(shader_path("character.vs.glsl"), shader_path("character.fs.glsl")))
         return false;
 
+    m_health = 3;
+
     return true;
 }
 
@@ -209,4 +211,19 @@ bool Character::collides_with(const Zombie &zombie)
     if (d_sq < maxRadius * maxRadius)
         return true;
     return false;
+}
+
+void Character::take_damage()
+{
+    m_health--;
+}
+
+int Character::get_health() const
+{
+    return m_health;
+}
+
+void Character::restart_health()
+{
+    m_health = 3;
 }

@@ -4,6 +4,7 @@
 #include "../data.hpp"
 #include "../enemy.hpp"
 #include "../zombie.hpp"
+#include "../character.hpp"
 #include "../factory.hpp"
 #include "../potion.hpp"
 #include "menuSystem.hpp"
@@ -55,7 +56,7 @@ private:
 
 public:
     bool init_level(entt::registry &registry);
-    int update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles);
+    int update(entt::registry &registry, float elapsed_ms, Character *m_character, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles);
     void increment_enemy_killed(entt::registry &registry);
     int get_next_enemy_id();
     vec2 get_next_minion_pos();

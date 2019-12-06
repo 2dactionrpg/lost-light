@@ -49,7 +49,15 @@ public:
 
     vec2 get_bounding_box() const;
 
+    void take_damage();
+
+    int get_health() const;
+
+    void restart_health();
+
 private:
+    float ms_cant_take_damage_cooldown;
+    int m_health;
     std::vector<Vertex> m_vertices;
     std::vector<uint16_t> m_indices;
     entt::registry registry;
