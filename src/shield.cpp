@@ -178,6 +178,30 @@ vec2 Shield::get_bounding_box() const
     return {std::fabs(physics.scale.x) * shield_texture.width, std::fabs(physics.scale.y) * shield_texture.height};
 }
 
+bool Shield::collides_with(const Zombie &zombie)
+{
+    vec3 brMul = {+shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
+    vec3 blMul = {-shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};
+
+    brMul = mul(transform.out, brMul);
+    blMul = mul(transform.out, blMul);
+
+    vec2 shieldBR = {brMul.x, brMul.y};
+    vec2 shieldBL = {blMul.x, blMul.y};
+
+    vec2 position = zombie.get_position();
+    vec2 zombieTL = {position.x - zombie.get_bounding_box().x / 2.0f,
+                     position.y - zombie.get_bounding_box().y / 2.0f};
+    vec2 zombieTR = {position.x + zombie.get_bounding_box().x / 2.0f,
+                     position.y - zombie.get_bounding_box().y / 2.0f};
+    vec2 zombieBL = {position.x - zombie.get_bounding_box().x / 2.0f,
+                     position.y + zombie.get_bounding_box().y / 2.0f};
+    vec2 zombieBR = {position.x + zombie.get_bounding_box().x / 2.0f,
+                     position.y + zombie.get_bounding_box().y / 2.0f};
+
+    return doIntersect(shieldBL, shieldBR, zombieBL, zombieBR) || doIntersect(shieldBL, shieldBR, zombieBR, zombieTR) || doIntersect(shieldBL, shieldBR, zombieTR, zombieTL) || doIntersect(shieldBL, shieldBR, zombieTL, zombieBL);
+}
+
 bool Shield::collides_with(const Projectile &projectile)
 {
     vec3 brMul = {+shield_texture.width / 2.f, -shield_texture.height / 2.f, 1.f};

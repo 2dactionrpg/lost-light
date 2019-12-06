@@ -11,7 +11,8 @@ enum actionType
     IDLE,
 };
 
-struct enemyStateMachine {
+struct enemyStateMachine
+{
     /* Behaviour */
     bool alert;
     float alert_cooldown_ms;
@@ -24,21 +25,22 @@ struct enemyStateMachine {
     float turn_target;
 };
 
-struct triangleComponent {
+struct triangleComponent
+{
     int id;
 };
 
-struct enemyComponent {
+struct enemyComponent
+{
     /* data */
     int id;
     int health;
     int enemy_type;
     bool is_alive;
     bool is_movable;
-    float shoot_cooldown;
-    float shoot_frequency;
+    float attack_cooldown;
+    float attack_frequency;
     vec2 destination;
     vec2 target;
     enemyStateMachine es;
 };
-

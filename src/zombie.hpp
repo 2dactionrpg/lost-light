@@ -1,62 +1,49 @@
 #pragma once
 
 #include "entity.hpp"
-#include "projectile.hpp"
 #include <vector>
-#include "triangle.hpp"
-#include "path.hpp"
 #include "data.hpp"
+
+#include "projectile.hpp"
+#include "path.hpp"
+#include "triangle.hpp"
 
 class Projectile;
 
-class Enemy : public Entity
+class Zombie : public Entity
 {
-    static Texture enemy_texture;
+    static Texture zombie_texture;
 
 public:
-    // Creates all the associated render resources and default transform
     bool init(int id);
-
-    // Releases all associated resources
     void destroy();
 
-    // Renders the enemy
     void draw(const mat3 &projection) override;
     void draw(const mat3 &projection, bool debug) override;
 
-    // Returns the current enemy position
+    int get_id();
     vec2 get_position() const;
-
     void set_position(vec2 pos);
 
-    bool collides_with(const Projectile &Projectile);
-
+    bool collides_with(const Projectile &projectile);
     bool collides_with_point(Dot d);
 
     void set_scale(vec2 scale);
-
-    // Set enemy rotation in radians
     void set_rotation(float radians);
-
     vec2 get_bounding_box() const;
-
     vec2 get_face_position();
 
-    int get_id();
-
     void update_triangle();
-
     bool on_sight(vec2 target);
-
-    bool set_line(vec2 target, std::vector<Enemy> &m_enemies);
-    void unset_line();
+    // bool set_line(vec2 target, std::vector<Enemy> &m_enemies);
+    // void unset_line()
 
     void alert();
     void search();
     void idle();
 
 private:
-    int enemy_id;
+    int zombie_id;
     bool has_path;
 
     Triangle trig;

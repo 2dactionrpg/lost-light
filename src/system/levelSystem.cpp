@@ -8,11 +8,13 @@ bool LevelSystem::init_level(entt::registry &registry)
 
     for (auto entity : level)
     {
-        auto &[minion_killed, boss_killed] = level.get(entity);
+        auto &[minion_killed, boss_killed, zombie_killed] = level.get(entity);
 
         // shared info
         minion_count = 0;
         minion_killed = 0;
+        zombie_count = 0;
+        zombie_killed = 0;
         boss_count = 0;
         boss_killed = 0;
         enemy_killed = 0;
@@ -30,6 +32,18 @@ bool LevelSystem::init_level(entt::registry &registry)
             for (bool is_movable : minion_level1_movable_array)
             {
                 minion_is_movable.push_back(is_movable);
+            }
+
+            // zombie information
+            zombie_num = 1;
+            zombie_max_on_screen = 1;
+            for (vec2 pos : zombie_level1_pos_array)
+            {
+                zombie_init_pos.push_back(pos);
+            }
+            for (bool is_movable : zombie_level1_movable_array)
+            {
+                zombie_is_movable.push_back(is_movable);
             }
 
             // boss info
@@ -52,6 +66,10 @@ bool LevelSystem::init_level(entt::registry &registry)
                 minion_is_movable.push_back(is_movable);
             }
 
+            // zombie information
+            zombie_num = 0;
+            zombie_max_on_screen = 1;
+
             // boss info
             boss_num = 0;
             boss_max_on_screen = 1;
@@ -72,6 +90,10 @@ bool LevelSystem::init_level(entt::registry &registry)
                 minion_is_movable.push_back(is_movable);
             }
 
+            // zombie information
+            zombie_num = 0;
+            zombie_max_on_screen = 1;
+
             // boss info
             boss_num = 0;
             boss_max_on_screen = 1;
@@ -83,6 +105,10 @@ bool LevelSystem::init_level(entt::registry &registry)
             // minion info
             minion_num = 0;
             minion_max_on_screen = 3;
+
+            // zombie information
+            zombie_num = 0;
+            zombie_max_on_screen = 1;
 
             // boss info
             boss_num = 1;
@@ -104,14 +130,14 @@ bool LevelSystem::init_level(entt::registry &registry)
         }
 
         // shared info
-        enemy_total = minion_num + boss_num;
+        enemy_total = minion_num + boss_num + zombie_num;
         next_enemy_spawn_counter = 0.f;
     }
 
     return true;
 }
 
-int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles)
+int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
@@ -119,8 +145,8 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
 
     for (auto entity : level)
     {
-        auto &[minion_killed, boss_killed] = level.get(entity);
-        enemy_killed = minion_killed + boss_killed;
+        auto &[minion_killed, boss_killed, zombie_killed] = level.get(entity);
+        enemy_killed = minion_killed + boss_killed + zombie_killed;
 
         if (enemy_killed >= enemy_total)
         {
@@ -144,6 +170,7 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
         if (resetKeyPressed)
         {
             m_enemies->clear();
+            m_zombies->clear();
             m_projectiles->clear();
             lvl_num = 1;
             init_level(registry);
@@ -174,6 +201,7 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
             in.close();
             loadKeyPressed = false;
             m_enemies->clear();
+            m_zombies->clear();
             m_projectiles->clear();
             init_level(registry);
         }
@@ -199,6 +227,14 @@ bool LevelSystem::get_next_minion_is_movable()
     return result;
 }
 
+vec2 LevelSystem::get_next_zombie_pos()
+{
+    vec2 result = zombie_init_pos[0];
+    auto init_pos = zombie_init_pos.begin();
+    zombie_init_pos.erase(init_pos);
+    return result;
+}
+
 bool LevelSystem::should_spawn_minion(int enemy_size)
 {
     if (enemy_size < minion_max_on_screen && next_enemy_spawn_counter < 0.f && minion_count < minion_num)
@@ -208,6 +244,17 @@ bool LevelSystem::should_spawn_minion(int enemy_size)
         return true;
     }
 
+    return false;
+}
+
+bool LevelSystem::should_spawn_zombie(int zombies_size)
+{
+    if (zombies_size < zombie_max_on_screen && next_enemy_spawn_counter < 0.f && zombie_count < zombie_num)
+    {
+        zombie_count++;
+        next_enemy_spawn_counter = enemy_spawn_delay;
+        return true;
+    }
     return false;
 }
 
@@ -248,9 +295,10 @@ void LevelSystem::reset_enemy(entt::registry &registry)
 
     for (auto entity : level)
     {
-        auto &[minion_killed, boss_killed] = level.get(entity);
+        auto &[minion_killed, boss_killed, zombie_killed] = level.get(entity);
         minion_killed = 0;
         boss_killed = 0;
+        zombie_killed = 0;
     }
 
     auto menu = registry.view<menuComponent>();
@@ -292,7 +340,7 @@ void LevelSystem::increment_enemy_killed(entt::registry &registry)
 
     for (auto entity : level)
     {
-        auto &[minion_killed, boss_killed] = level.get(entity);
+        auto &[minion_killed, boss_killed, zombie_killed] = level.get(entity);
         minion_killed++;
     }
 }

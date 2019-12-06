@@ -1,12 +1,38 @@
 #include "collisionSystem.hpp"
 
-void CollisionSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Projectile> &m_projectiles, Potion &m_potion, unsigned int &m_points, vector<Wall> &m_walls)
+void CollisionSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, unsigned int &m_points, vector<Wall> &m_walls)
 {
     // Checking Character - Potion collisions
     if (m_character.collides_with(m_potion) && !m_potion.is_consumed())
     {
         physicsSystem.consume_potion(registry, m_potion.get_id());
         physicsSystem.set_shield_scale_multiplier(registry, 2.0f, 1.0f);
+    }
+
+    // Checking Zombie - Shield collisions
+    auto zombie_it = m_zombies.begin();
+    while (zombie_it != m_zombies.end())
+    {
+        if (m_shield.collides_with(*zombie_it))
+        {
+            m_points++;
+            healthSystem.damage(registry, zombie_it->get_id());
+        }
+        ++zombie_it;
+    }
+
+    // Check Zombie - Character colllisions
+    zombie_it = m_zombies.begin();
+    while (zombie_it != m_zombies.end())
+    {
+        if (m_character.collides_with(*zombie_it))
+        {
+            soundSystem.play_sound(C_DEAD);
+            physicsSystem.set_character_unmovable(registry);
+            menuSystem.sync(registry, STATE_GAMEOVER);
+            break;
+        }
+        ++zombie_it;
     }
 
     auto projectile = registry.view<projectileComponent, motionComponent>();
@@ -77,7 +103,6 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
                 break;
             }
         }
-
     }
 
     auto projectile_it = m_projectiles.begin();
@@ -144,6 +169,7 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
             {
                 m_points++;
                 hits_enemy = true;
+                healthSystem.damage(registry, enemy_it->get_id());
                 break;
             }
             else
@@ -152,9 +178,25 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
             }
         }
 
-        if (hits_enemy)
+        bool hits_zombie = false;
+        zombie_it = m_zombies.begin();
+        while (zombie_it != m_zombies.end())
         {
-            healthSystem.damage(registry, enemy_it->get_id());
+            if (zombie_it->collides_with(*projectile_it))
+            {
+                m_points++;
+                hits_enemy = true;
+                healthSystem.damage(registry, zombie_it->get_id());
+                break;
+            }
+            else
+            {
+                ++zombie_it;
+            }
+        }
+
+        if (hits_enemy || hits_zombie)
+        {
             projectile_it = m_projectiles.erase(projectile_it);
         }
         else
