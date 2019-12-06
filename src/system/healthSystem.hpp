@@ -11,6 +11,7 @@
 #include "../components/projectileComponent.hpp"
 #include "../components/shieldComponent.hpp"
 #include "../enemy.hpp"
+#include "../zombie.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
 #include "levelSystem.hpp"
@@ -19,11 +20,12 @@
 
 using namespace std;
 
-class HealthSystem {
+class HealthSystem
+{
 private:
     LevelSystem levelSystem;
 
 public:
-    void update(entt::registry& registry, vector<Enemy>& m_enemies);
-    void damage(entt::registry& registry, int m_id);
+    void update(entt::registry &registry, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies);
+    void damage(entt::registry &registry, int m_id);
 };

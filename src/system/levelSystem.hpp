@@ -3,6 +3,7 @@
 #include "../components/levelComponent.hpp"
 #include "../data.hpp"
 #include "../enemy.hpp"
+#include "../zombie.hpp"
 #include "../factory.hpp"
 #include "../potion.hpp"
 #include "menuSystem.hpp"
@@ -32,6 +33,14 @@ private:
     vector<vec2> minion_init_pos;
     vector<bool> minion_is_movable;
 
+    // zombie info
+    int zombie_num;
+    int zombie_count;
+    int zombie_max_on_screen;
+    vector<vec2> zombie_init_pos;
+    // likely always true for movable
+    vector<bool> zombie_is_movable;
+
     // boss info
     int boss_num;
     int boss_count;
@@ -46,16 +55,18 @@ private:
 
 public:
     bool init_level(entt::registry &registry);
-    int update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Projectile> *m_projectiles);
+    int update(entt::registry &registry, float elapsed_ms, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles);
     void increment_enemy_killed(entt::registry &registry);
     int get_next_enemy_id();
     vec2 get_next_minion_pos();
     bool get_next_minion_is_movable();
+    vec2 get_next_zombie_pos();
     vec2 get_next_boss_pos();
     bool get_next_boss_is_movable();
     void reset_enemy(entt::registry &registry);
     bool should_spawn_minion(int enemy_size);
     bool should_spawn_boss(entt::registry &registry);
+    bool should_spawn_zombie(int num_zombies);
     std::vector<vec2> get_wall_orientation();
     int getLevel();
 };

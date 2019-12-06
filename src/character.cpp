@@ -198,3 +198,15 @@ bool Character::collides_with(const Potion &potion)
         return true;
     return false;
 }
+
+bool Character::collides_with(const Zombie &zombie)
+{
+    vec2 box = get_bounding_box();
+    float dx = motion.position.x - zombie.get_position().x;
+    float dy = motion.position.y - zombie.get_position().y;
+    float d_sq = dx * dx + dy * dy;
+    float maxRadius = get_bounding_box().x / 2 + zombie.get_bounding_box().x / 2;
+    if (d_sq < maxRadius * maxRadius)
+        return true;
+    return false;
+}

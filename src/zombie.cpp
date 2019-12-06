@@ -1,34 +1,28 @@
-// Header
-#include "enemy.hpp"
 
-// stlib
+#include "zombie.hpp"
+
 #include <algorithm>
 #include <string>
 
 #include <cmath>
 
-Texture Enemy::enemy_texture;
+Texture Zombie::zombie_texture;
 
-// following variables can change depending on the enemy's character size / world's frame size
-float FRAME_X_MAX = 1050;
-float FRAME_X_MIN = 100;
-float FRAME_Y_MAX = 680;
-float FRAME_Y_MIN = 100;
-bool Enemy::init(int id)
+bool Zombie::init(int id)
 {
-    // Load shared texture
-    if (!enemy_texture.is_valid())
+    if (!zombie_texture.is_valid())
     {
-        if (!enemy_texture.load_from_file(textures_path("enemy.png")))
+        if (!zombie_texture.load_from_file(textures_path("zombie.png")))
         {
-            fprintf(stderr, "Failed to load enemy texture!");
+            fprintf(stderr, "Failed to load zombie texutre\n");
             return false;
         }
     }
 
-    // The position corresponds to the center of the texture
-    float wr = enemy_texture.width * 0.5f;
-    float hr = enemy_texture.height * 0.5f;
+    // the position corresponds to the center of the textures
+    // fixed values
+    float wr = zombie_texture.width * 0.5f;
+    float hr = zombie_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
     vertices[0].position = {-wr, +hr, -0.02f};
@@ -40,7 +34,7 @@ bool Enemy::init(int id)
     vertices[3].position = {-wr, -hr, -0.02f};
     vertices[3].texcoord = {0.f, 0.f};
 
-    // Counterclockwise as it's the default opengl front winding direction
+    // Counterclockwise as it's the default opengl fron winding direction
     uint16_t indices[] = {0, 3, 1, 1, 3, 2};
 
     // Clearing errors
@@ -65,20 +59,17 @@ bool Enemy::init(int id)
     if (!effect.load_from_file(shader_path("enemy.vs.glsl"), shader_path("enemy.fs.glsl")))
         return false;
 
-    enemy_id = id;
+    zombie_id = id;
     has_path = false;
 
     motion.position = {0.f, 0.f};
     motion.radians = 0.f;
     physics.scale = {0.f, 0.f};
 
-    // motion.radians = M_PI + M_PI / 2;
-
-    return trig.init(id) && path.init(id);
+    return true;
 }
 
-// Releases all graphics resources
-void Enemy::destroy()
+void Zombie::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
@@ -89,7 +80,7 @@ void Enemy::destroy()
     glDeleteShader(effect.program);
 }
 
-void Enemy::draw(const mat3 &projection)
+void Zombie::draw(const mat3 &projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -127,7 +118,7 @@ void Enemy::draw(const mat3 &projection)
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, enemy_texture.id);
+    glBindTexture(GL_TEXTURE_2D, zombie_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
@@ -139,7 +130,7 @@ void Enemy::draw(const mat3 &projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-void Enemy::draw(const mat3 &projection, bool debug)
+void Zombie::draw(const mat3 &projection, bool debug)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -177,7 +168,7 @@ void Enemy::draw(const mat3 &projection, bool debug)
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, enemy_texture.id);
+    glBindTexture(GL_TEXTURE_2D, zombie_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
@@ -198,34 +189,32 @@ void Enemy::draw(const mat3 &projection, bool debug)
     }
 }
 
-vec2 Enemy::get_position() const
+vec2 Zombie::get_position() const
 {
     return motion.position;
 }
 
-void Enemy::set_position(vec2 pos)
+void Zombie::set_position(vec2 pos)
 {
     motion.position = pos;
 }
 
-void Enemy::set_rotation(float radians)
+void Zombie::set_rotation(float radians)
 {
     motion.radians = radians;
 }
 
-void Enemy::set_scale(vec2 scale)
+void Zombie::set_scale(vec2 scale)
 {
     physics.scale = scale;
 }
 
-vec2 Enemy::get_bounding_box() const
+vec2 Zombie::get_bounding_box() const
 {
-    // Returns the local bounding coordinates scaled by the current size of the projectile
-    // fabs is to avoid negative scale due to the facing direction.
-    return {std::fabs(physics.scale.x) * enemy_texture.width, std::fabs(physics.scale.y) * enemy_texture.height};
+    return {std::fabs(physics.scale.x) * zombie_texture.width, std::fabs(physics.scale.y) * zombie_texture.height};
 }
 
-bool Enemy::collides_with(const Projectile &projectile)
+bool Zombie::collides_with(const Projectile &projectile)
 {
     vec2 box = get_bounding_box();
     float dx = motion.position.x - projectile.get_position().x;
@@ -237,7 +226,7 @@ bool Enemy::collides_with(const Projectile &projectile)
     return false;
 }
 
-bool Enemy::collides_with_point(Dot d)
+bool Zombie::collides_with_point(Dot d)
 {
     vec2 box = get_bounding_box();
     float dx = motion.position.x - d.position.x;
@@ -249,64 +238,65 @@ bool Enemy::collides_with_point(Dot d)
     return false;
 }
 
-vec2 Enemy::get_face_position()
+vec2 Zombie::get_face_position()
 {
-    vec3 facePoint = {enemy_texture.width / 3.f, -enemy_texture.height / 2.f - 200, 1.f};
+    vec3 facePoint = {zombie_texture.width / 3.f, -zombie_texture.height / 2.f - 200, 1.f};
     facePoint = mul(transform.out, facePoint);
     return {facePoint.x, facePoint.y};
 }
 
-int Enemy::get_id()
+int Zombie::get_id()
 {
-    return enemy_id;
+    return zombie_id;
 }
 
-void Enemy::update_triangle()
+void Zombie::update_triangle()
 {
     trig.set_position(get_face_position());
     trig.set_rotation(motion.radians + M_PI / 2);
     // trig.set_scale(physics.scale);
 }
-bool Enemy::on_sight(vec2 target)
+bool Zombie::on_sight(vec2 target)
 {
     // fprintf(stderr, "in on_sight\n");
     // fprintf(stderr, "%d\n", trig.is_inside(target));
     return trig.is_inside(target);
 }
 
-bool Enemy::set_line(vec2 target, std::vector<Enemy> &m_enemies)
-{
-    has_path = true;
-    std::vector<Dot> dots = path.form(get_face_position(), get_bounding_box(), target);
-    for (auto d : dots)
-    {
-        for (auto enemy : m_enemies)
-        {
-            if (enemy_id != enemy.get_id() && enemy.collides_with_point(d))
-            {
-                path.blocked();
-                return false;
-            }
-        }
-    }
-    return true;
-}
-void Enemy::unset_line()
-{
-    has_path = false;
-}
+// bool Zombie::set_line(vec2 target, std::vector<Enemy> &m_enemies)
+// {
+//     has_path = true;
+//     std::vector<Dot> dots = path.form(get_face_position(), get_bounding_box(), target);
+//     for (auto d : dots)
+//     {
+//         for (auto enemy : m_enemies)
+//         {
+//             if (enemy_id != enemy.get_id() && enemy.collides_with_point(d))
+//             {
+//                 path.blocked();
+//                 return false;
+//             }
+//         }
+//     }
+//     return true;
+// }
 
-void Enemy::alert()
+// void Zombie::unset_line()
+// {
+//     has_path = false;
+// }
+
+void Zombie::alert()
 {
     trig.green();
 }
 
-void Enemy::search()
+void Zombie::search()
 {
     trig.red();
 }
 
-void Enemy::idle()
+void Zombie::idle()
 {
     // fprintf(stderr, "in white\n");
     trig.white();

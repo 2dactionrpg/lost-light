@@ -29,6 +29,9 @@ vec2 c_boss_init_pos = {1000.f, 500.f};
 static const vec2 minion_level1_pos_array[] = {{1000.f, 400.f}};
 static const bool minion_level1_movable_array[] = {false};
 
+static const vec2 zombie_level1_pos_array[] = {{800.f, 400.f}};
+static const bool zombie_level1_movable_array[] = {true};
+
 static const vec2 minion_level2_pos_array[] = {{1000.f, 200.f}, {1000.f, 400.f}, {1000.f, 600.f}};
 static const bool minion_level2_movable_array[] = {false, false, false};
 
@@ -96,6 +99,7 @@ enum soundType
 enum enemyType
 {
     MINION,
+    ZOMBIE,
     BOSS
 };
 

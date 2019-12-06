@@ -2,13 +2,15 @@
 
 #include "entity.hpp"
 #include "potion.hpp"
+#include "zombie.hpp"
 #include "projectile.hpp"
 #include <entt/entity/registry.hpp>
 #include <vector>
 
 class Projectile;
 
-class Character : public Entity {
+class Character : public Entity
+{
     static Texture character_texture;
 
 public:
@@ -19,7 +21,7 @@ public:
     void destroy();
 
     // Renders the character
-    void draw(const mat3& projection) override;
+    void draw(const mat3 &projection) override;
 
     // Returns the current character position
     vec2 get_position() const;
@@ -28,9 +30,11 @@ public:
 
     vec2 get_scale() const;
 
-    bool collides_with(const Projectile& Projectile);
+    bool collides_with(const Projectile &Projectile);
 
-    bool collides_with(const Potion& potion);
+    bool collides_with(const Potion &potion);
+
+    bool collides_with(const Zombie &zombie);
 
     // Set character rotation in radians
     void set_rotation(float radians);

@@ -49,6 +49,7 @@ set(SOURCE_FILES
     src/triangle.cpp
     src/wall_manager.cpp
     src/wall.cpp
+    src/zombie.cpp
 
     # System
     src/system/inputSystem.cpp
@@ -78,6 +79,7 @@ set(SOURCE_FILES
     src/triangle.hpp
     src/wall_manager.hpp
     src/wall.hpp
+    src/zombie.hpp
     # Component
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp

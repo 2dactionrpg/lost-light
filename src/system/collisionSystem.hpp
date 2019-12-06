@@ -5,6 +5,7 @@
 
 #include "../character.hpp"
 #include "../enemy.hpp"
+#include "../zombie.hpp"
 #include "../potion.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
@@ -18,7 +19,8 @@
 
 using namespace std;
 
-class CollisionSystem {
+class CollisionSystem
+{
 private:
     PhysicsSystem physicsSystem;
     EnemyAISystem enemyAI;
@@ -28,5 +30,5 @@ private:
 
 public:
     // void update(entt::registry& registry, Menu& m_menu);
-    void update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, unsigned int& m_points, vector<Wall>& m_walls);
+    void update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, unsigned int &m_points, vector<Wall> &m_walls);
 };
