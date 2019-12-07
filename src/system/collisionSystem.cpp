@@ -216,4 +216,22 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
             ++projectile_it;
         }
     }
+
+    for (auto pj : projectile)
+    {
+        auto &id = projectile.get<projectileComponent>(pj).id;
+        auto projectile_it = m_projectiles.begin();
+        bool is_found = false;
+        while (projectile_it != m_projectiles.end())
+        {
+            if (projectile_it->get_id() == id) {
+                is_found = true;
+                break;
+            }
+
+            ++projectile_it;
+        }
+        if (!is_found)
+            registry.destroy(pj);
+    }
 }

@@ -41,7 +41,7 @@ public:
     vec2 get_bounding_box() const;
 
     vec2 light_source;
-    GLfloat xs[3];
-    GLfloat ys[100]; 
-    GLfloat radius[100];
+    GLfloat xs[20];
+    GLfloat ys[20];
+    GLfloat radius[20];
 };

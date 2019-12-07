@@ -170,8 +170,8 @@ void Overlay::draw(const mat3 &projection)
 
     int size = sizeof(xs)/sizeof(xs[0]);
 
-    glUniform1fv(light_source_x_uloc, 10, xs);
-    glUniform1fv(light_source_y_uloc, 10, ys);
+    glUniform1fv(light_source_x_uloc, 20, xs);
+    glUniform1fv(light_source_y_uloc, 20, ys);
     glUniform1fv(radius_uloc, 10, radius);
     glUniform1i(ls_num_uloc, size);
 
@@ -182,10 +182,17 @@ void Overlay::draw(const mat3 &projection)
 void Overlay::set_light_sources(vec2 positions[], int size) {
     const float screen_width = 1200.f;
     const float screen_height = 800.f;
+        for (int i = 0; i < size; i++) {
+            fprintf(stderr, "%f\t%f\n", positions[i].x,positions[i].y);
+        }
+         fprintf(stderr, "\n\n\n");
+
+
     for (int i = 0; i < size; i++) {
         ys[i] = positions[i].y / screen_height;
         xs[i] = positions[i].x / screen_width;
         radius[i] = (i == 0) ? 0.5 : 0.15;
+
     }
 }
 
