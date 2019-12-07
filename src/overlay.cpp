@@ -186,9 +186,15 @@ void Overlay::set_light_sources(vec2 positions[], int size) {
     for (int i = 0; i < size; i++) {
         ys[i] = positions[i].y / screen_height;
         xs[i] = positions[i].x / screen_width;
-        radius[i] = (i == 0) ? 0.5 : 0.15;
+        if (i != 0) {
+            radius[i] = 0.15;
+        }
 
     }
+}
+
+void Overlay::set_health(int health) {
+    radius[0] = 0.2*health;
 }
 
 

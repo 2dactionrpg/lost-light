@@ -155,6 +155,7 @@ bool World::update(float elapsed_ms)
     vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
     collisionSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_points, m_walls, m_redzone, elapsed_ms);
     m_health.load_texture(m_character.get_health());
+    m_overlay.set_health(m_character.get_health());
     enemyAI.update(registry, elapsed_ms, m_enemies, m_zombies);
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);

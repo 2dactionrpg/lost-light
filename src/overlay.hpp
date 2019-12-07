@@ -40,6 +40,11 @@ public:
     // Returns the overlay' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
 
+
+    void set_health(int hlth);
+
+    int health;
+
     vec2 light_source;
     GLfloat xs[20];
     GLfloat ys[20];
