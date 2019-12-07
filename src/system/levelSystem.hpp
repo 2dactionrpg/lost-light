@@ -56,6 +56,7 @@ private:
 
 public:
     bool init_level(entt::registry &registry);
+    bool check_all_enemies_are_dead(entt::registry &registry);
     int update(entt::registry &registry, float elapsed_ms, Character *m_character, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles);
     void increment_enemy_killed(entt::registry &registry);
     int get_next_enemy_id();

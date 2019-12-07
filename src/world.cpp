@@ -96,10 +96,11 @@ bool World::init(vec2 screen)
 
     debug = false;
     level = 0;
+    show_arrow = false;
 
     s_cooldown = 0.f;
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init() && m_cooldown.init() && m_overlay.init();
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init() && m_cooldown.init() && m_arrow.init() && m_overlay.init();
 }
 
 // Releases all the associated resources
@@ -182,6 +183,8 @@ bool World::update(float elapsed_ms)
     }
     enemyAI.destroy_dead_enemies(registry);
 
+    show_arrow = levelSystem.check_all_enemies_are_dead(registry);
+
     return true;
 }
 
@@ -244,6 +247,10 @@ void World::draw()
 
     m_overlay.draw(projection_2D);
     m_health.draw(projection_2D);
+    if (show_arrow)
+    {
+        m_arrow.draw(projection_2D);
+    }
     m_cooldown.draw(projection_2D);
     m_menu.draw(projection_2D);
 

@@ -210,11 +210,15 @@ void EnemyAISystem::set_rotation(entt::registry &registry)
                 {
                     radians -= 0.01f;
                 }
-                if (fabs(radians - es.turn_target) < 0.02) 
-                { 
+                if (fabs(radians - es.turn_target) < 0.02)
+                {
                     radians = es.turn_target;
                     es.action = MOVE;
                 }
+            }
+            else if (!es.alert)
+            {
+                radians = atan2(600.f - position.x, position.y - 500.f);
             }
         }
         else if (enemy_type == BOSS || enemy_type == ZOMBIE)
@@ -263,7 +267,8 @@ void EnemyAISystem::shoot(entt::registry &registry, int enemy_type, vec2 proj_di
     }
 }
 
-void EnemyAISystem::summon_redzone(entt::registry &registry, Redzone &redzone) {
+void EnemyAISystem::summon_redzone(entt::registry &registry, Redzone &redzone)
+{
     // summon red zone
     vec2 char_pos = vec2();
     auto character_view = registry.view<characterComponent, motionComponent>();
@@ -334,5 +339,3 @@ void EnemyAISystem::destroy_dead_enemies(entt::registry &registry)
             registry.destroy(enemy);
     }
 }
-
-
