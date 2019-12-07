@@ -2,6 +2,9 @@
 .vs
 lostlight
 src/project_path.hpp
+.idea/
+cmake-build-debug/
+cmake-build-debug/lostlight.cbp
 
 # cmake
 CMakeLists.txt.user
