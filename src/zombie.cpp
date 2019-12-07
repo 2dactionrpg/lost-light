@@ -260,8 +260,6 @@ void Zombie::update_triangle()
 }
 bool Zombie::on_sight(vec2 target)
 {
-    // fprintf(stderr, "in on_sight\n");
-    // fprintf(stderr, "%d\n", trig.is_inside(target));
     return trig.is_inside(target);
 }
 
@@ -300,6 +298,5 @@ void Zombie::search()
 
 void Zombie::idle()
 {
-    // fprintf(stderr, "in white\n");
     trig.white();
 }

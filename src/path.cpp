@@ -95,7 +95,6 @@ std::vector<Dot> Path::form(vec2 start, vec2 self_box,vec2 end) {
         m_dots.emplace_back(d);
     }
 	return m_dots;
-	// fprintf(stderr,"line formed\n");
 }
 
 void Path::blocked()

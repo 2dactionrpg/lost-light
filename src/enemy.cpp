@@ -269,8 +269,6 @@ void Enemy::update_triangle()
 }
 bool Enemy::on_sight(vec2 target)
 {
-    // fprintf(stderr, "in on_sight\n");
-    // fprintf(stderr, "%d\n", trig.is_inside(target));
     return trig.is_inside(target);
 }
 
@@ -316,6 +314,5 @@ void Enemy::search()
 
 void Enemy::idle()
 {
-    // fprintf(stderr, "in white\n");
     trig.white();
 }

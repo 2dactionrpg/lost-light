@@ -173,8 +173,6 @@ bool Triangle::is_inside(vec2 pos)
     float A3 = area (p1, p2, pos); 
     
     /* Check if sum of A1, A2 and A3 is same as A */
-    // fprintf(stderr, "%f %f\n", A, A1 + A2 + A3);
-    // fprintf(stderr, "%d\n", fabs(A - A1 - A2 - A3) < 0.04);
 
     // some marginal error (0.2) to cover floating points mistakes
     return (fabs(A - A1 - A2 - A3) < 0.04);

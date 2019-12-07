@@ -126,7 +126,6 @@ std::vector<vec3> Line::get_vertices()
     for(auto& v : m_vertices)
 	{
 		vec3 pos = mul(transform.out, v.position);
-		// fprintf(stderr, "%f %f %f\n", pos.x, pos.y, pos.z);
         vertices.emplace_back(pos);
 	}
 

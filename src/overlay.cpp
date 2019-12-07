@@ -182,11 +182,6 @@ void Overlay::draw(const mat3 &projection)
 void Overlay::set_light_sources(vec2 positions[], int size) {
     const float screen_width = 1200.f;
     const float screen_height = 800.f;
-        for (int i = 0; i < size; i++) {
-            fprintf(stderr, "%f\t%f\n", positions[i].x,positions[i].y);
-        }
-         fprintf(stderr, "\n\n\n");
-
 
     for (int i = 0; i < size; i++) {
         ys[i] = positions[i].y / screen_height;

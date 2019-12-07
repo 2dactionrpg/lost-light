@@ -56,8 +56,6 @@ bool Wall::init(float xPos, float yPos)
     if (!effect.load_from_file(shader_path("wall.vs.glsl"), shader_path("wall.fs.glsl")))
         return false;
 
-    //fprintf(stderr, "%f\t%f\n", xPos, yPos);
-
     motion.position = { xPos, yPos};
     motion.radians = 0;
     //setDirection({ -1.f, 0.2f });
@@ -106,7 +104,6 @@ void Wall::setRotation(float rad)
 void Wall::draw(const mat3& projection)
 {
     //std::cout << "drawn" << std::endl;
-    //fprintf(stderr, "%f\t%f\n", motion.position.x, motion.position.y);
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
