@@ -47,8 +47,8 @@ static const bool zombie_level3_movable_array[] = {true, true, true, true, true}
 static const vec2 boss_level4_pos_array[] = {{1000.f, 400.f}};
 static const bool boss_level4_movable_array[] = {true};
 
-static const vec2 zombie_level4_pos_array[] = {{800.f, 200.f}, {800.f, 300.f}, {800.f, 400.f}, {800.f, 500.f}, {800.f, 600.f}, {800.f, 700.f}, {600.f, 200.f}, {600.f, 300.f}, {600.f, 400.f}, {600.f, 500.f}, {600.f, 600.f}, {600.f, 700.f}, {500.f, 200.f}, {500.f, 500.f}, {500.f, 400.f}, {500.f, 500.f}, {500.f, 600.f}, {500.f, 700.f}};
-static const bool zombie_level4_movable_array[] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+static const vec2 zombie_level4_pos_array[] = {{800.f, 200.f}, {800.f, 300.f}, {800.f, 400.f}, {800.f, 500.f}, {800.f, 600.f}, {800.f, 700.f}, {600.f, 200.f}, {600.f, 300.f}, {600.f, 400.f}, {600.f, 500.f}, {600.f, 600.f}, {600.f, 700.f}, {500.f, 200.f}, {500.f, 500.f}, {500.f, 400.f}, {500.f, 500.f}, {500.f, 600.f}, {500.f, 700.f}, {800.f, 200.f}, {800.f, 300.f}, {800.f, 400.f}, {800.f, 500.f}, {800.f, 600.f}, {800.f, 700.f}, {600.f, 200.f}, {600.f, 300.f}, {600.f, 400.f}, {600.f, 500.f}, {600.f, 600.f}, {600.f, 700.f}, {500.f, 200.f}, {500.f, 500.f}, {500.f, 400.f}, {500.f, 500.f}, {500.f, 600.f}, {500.f, 700.f}};
+static const bool zombie_level4_movable_array[] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 
 static const vec2 wall_level1_pos_array[] = {{-100.f, -100.f}};
 static const vec2 surrounding_wall_pos_array[] = {{0.5f, 0.5f},

@@ -122,8 +122,8 @@ bool LevelSystem::init_level(entt::registry &registry)
             minion_max_on_screen = 3;
 
             // zombie information
-            zombie_num = 18;
-            zombie_max_on_screen = 18;
+            zombie_num = 36;
+            zombie_max_on_screen = 36;
             for (vec2 pos : zombie_level4_pos_array)
             {
                 zombie_init_pos.push_back(pos);
