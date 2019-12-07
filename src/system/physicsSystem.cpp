@@ -296,6 +296,11 @@ float PhysicsSystem::update(entt::registry &registry, Character &m_character, Sh
     // Overlay Physics Update
     auto overlay = registry.view<overlayComponent>();
     vec2 coords[20];
+    for (int i = 0; i < 20; i++) {
+        coords[i].x = -100.f;
+        coords[i].y = -100.f;
+    }
+
     int i = 0;      
     for (auto entity : overlay) {
         coords[i++] = overlay.get(entity).light_source;
@@ -308,15 +313,7 @@ float PhysicsSystem::update(entt::registry &registry, Character &m_character, Sh
             auto &[position, direction, radians, speed] = enemy.get<motionComponent>(entity);
             coords[i++] = position;
         }
-
-        for (int i = 0; i < 20; i++) {
-            if (coords[i].x <= 0.f || coords[i].y <= 0.f || coords[i].x >= 1200.f || coords[i].y >= 800.f) {
-                coords[i].x = -100.f;
-                coords[i].y = -100.f;
-                break;
-            }
-        }
-
+    
         m_overlay.set_light_sources(coords, 20);
     }
 
