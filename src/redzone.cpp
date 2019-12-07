@@ -33,7 +33,7 @@ bool Redzone::init() {
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("coloured.vs.glsl"), shader_path("coloured.fs.glsl")))
+    if (!effect.load_from_file(shader_path("coloured.vs.glsl"), shader_path("redzone.fs.glsl")))
         return false;
     physics.scale = { 1.f, 1.f };
     motion.position = {-100.f, -100.f};
@@ -102,8 +102,7 @@ void Redzone::set_position(vec2 pos) {
 
 vec2 Redzone::get_bounding_box() const
 {
-    // TODO
-    return {0.f, 0.f};
+    return {100.f, 100.f};
 }
 
 vec2 Redzone::get_position() const

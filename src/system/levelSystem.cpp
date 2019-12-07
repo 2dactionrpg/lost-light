@@ -204,7 +204,6 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, Character *m
             else
             {
                 in >> lvl_num;
-                printf("%d", lvl_num);
             }
             in.close();
             loadKeyPressed = false;

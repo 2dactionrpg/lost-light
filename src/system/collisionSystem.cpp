@@ -14,16 +14,12 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
     for (auto enemy : enemies)
     {
         auto &[cooldown, duration] = enemies.get<skillComponent>(enemy);
-        if (m_character.collides_with(m_redzone) && duration < 0.f && cooldown < 0.f)
+        if (m_character.collides_with(m_redzone) && duration < 0.f)
         {
+            m_redzone.set_position({-100.f, -100.f});
             soundSystem.play_sound(C_DEAD);
             physicsSystem.set_character_unmovable(registry);
             menuSystem.sync(registry, STATE_GAMEOVER);
-            duration = 1000.f;
-        }
-        else
-        {
-            duration -= elapsed_ms;
         }
     }
 
