@@ -150,12 +150,19 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, Character *m
 
         if (enemy_killed >= enemy_total)
         {
-            lvl_num++;
-            if (!init_level(registry))
-            {
-                menuSystem.sync(registry, STATE_WIN);
-                lvl_num--;
-                return lvl_num;
+            auto viewCharacter = registry.view<characterComponent, motionComponent>();
+            for (auto character : viewCharacter) {
+                auto &position = viewCharacter.get<motionComponent>(character).position;
+                if (position.x > 1100 && position.y > 130 && position.y < 210) {
+                    position = {30, 150};
+                    lvl_num++;
+                    if (!init_level(registry))
+                    {
+                        menuSystem.sync(registry, STATE_WIN);
+                        lvl_num--;
+                        return lvl_num;
+                    }
+                }
             }
         }
     }
@@ -349,6 +356,10 @@ void LevelSystem::increment_enemy_killed(entt::registry &registry)
 vector<vec2> LevelSystem::get_wall_orientation()
 {
     wallVector.clear();
+    for (vec2 pos : surrounding_wall_pos_array)
+    {
+        wallVector.push_back(pos);
+    }
 
     switch (lvl_num)
     {
