@@ -169,7 +169,6 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy
             else
             {
                 in >> lvl_num;
-                printf("%d", lvl_num);
             }
             in.close();
             loadKeyPressed = false;

@@ -278,10 +278,12 @@ void EnemyAISystem::skill_manager(entt::registry &registry, float elapsed_ms, Re
         {
             summon_redzone(registry, m_redzone);
             cooldown = 4000.f;
+            duration = 1500.f;
         }
         else
         {
             cooldown -= elapsed_ms;
+            duration -= elapsed_ms;
         }
     }
 }

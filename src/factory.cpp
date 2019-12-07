@@ -94,7 +94,7 @@ entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movabl
     {
         auto &sc = registry.assign<skillComponent>(entity);
         sc.cooldown = 4000.f;
-        sc.duration = 1000.f;
+        sc.duration = 5000.f;
     }
     return entity;
 }
