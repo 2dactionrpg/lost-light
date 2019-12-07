@@ -8,6 +8,7 @@
 #include "zombie.hpp"
 #include "menu.hpp"
 #include "health.hpp"
+#include "cooldown.hpp"
 #include "shield.hpp"
 #include "wall.hpp"
 #include "wall_manager.hpp"
@@ -106,6 +107,9 @@ private:
     Potion m_potion;
     Ground m_ground;
     Health m_health;
+    Cooldown m_cooldown;
+
+    float s_cooldown;
 
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;

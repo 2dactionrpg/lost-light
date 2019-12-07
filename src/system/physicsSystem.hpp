@@ -35,7 +35,7 @@ private:
     SoundSystem soundSystem;
 
 public:
-    void update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground);
+    float update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground);
     void sync(entt::registry &registry, float elapsed_ms, vector<Wall> &walls);
     void move(vec2 &pos, vec2 off, bool is_bounded);
     void rotate(float &radians, float xpos, float ypos, vec2 position);
