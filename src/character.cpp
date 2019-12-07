@@ -61,6 +61,8 @@ bool Character::init()
     if (!effect.load_from_file(shader_path("character.vs.glsl"), shader_path("character.fs.glsl")))
         return false;
 
+    m_health = 3;
+
     return true;
 }
 
@@ -210,4 +212,31 @@ bool Character::collides_with(const Redzone &redzone)
     if (d_sq < maxRadius * maxRadius)
         return true;
     return false;
+}
+
+bool Character::collides_with(const Zombie &zombie)
+{
+    vec2 box = get_bounding_box();
+    float dx = motion.position.x - zombie.get_position().x;
+    float dy = motion.position.y - zombie.get_position().y;
+    float d_sq = dx * dx + dy * dy;
+    float maxRadius = get_bounding_box().x / 2 + zombie.get_bounding_box().x / 2;
+    if (d_sq < maxRadius * maxRadius)
+        return true;
+    return false;
+}
+
+void Character::take_damage()
+{
+    m_health--;
+}
+
+int Character::get_health() const
+{
+    return m_health;
+}
+
+void Character::restart_health()
+{
+    m_health = 3;
 }

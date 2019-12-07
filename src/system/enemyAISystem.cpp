@@ -6,7 +6,7 @@ float LO = 100.f;
 float HI_X = 1100.f;
 float HI_Y = 700.f;
 
-void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> &m_enemies)
+void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies)
 {
     vec2 char_pos;
     auto character_view = registry.view<characterComponent, motionComponent>();
@@ -18,7 +18,7 @@ void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<En
     auto enemies = registry.view<enemyComponent, motionComponent>();
     for (auto enemy : enemies)
     {
-        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
+        auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
         if (enemy_type == MINION)
         {
             for (auto &m_enemy : m_enemies)
@@ -35,7 +35,7 @@ void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<En
                         es.enemy_on_sight = true;
                         es.alert_cooldown_ms = 25000;
                         m_enemy.alert();
-                        es.line_of_sight = m_enemy.set_line(target, m_enemies);
+                        es.line_of_sight = m_enemy.set_line(target, m_enemies, m_zombies);
                     }
                     else if (on_sight && es.alert)
                     {
@@ -45,7 +45,7 @@ void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<En
                         es.is_turn_complete = false;
                         es.enemy_on_sight = true;
                         m_enemy.alert();
-                        es.line_of_sight = m_enemy.set_line(target, m_enemies);
+                        es.line_of_sight = m_enemy.set_line(target, m_enemies, m_zombies);
                     }
                     else if (!on_sight && es.alert)
                     {
@@ -67,7 +67,7 @@ void EnemyAISystem::update(entt::registry &registry, float elapsed_ms, vector<En
 
     for (auto entity : enemies)
     {
-        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, stateMachine] = enemies.get<enemyComponent>(entity);
+        auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, stateMachine] = enemies.get<enemyComponent>(entity);
         auto &[position, direction, radians, speed] = enemies.get<motionComponent>(entity);
         if (enemy_type == MINION)
         {
@@ -114,7 +114,7 @@ void EnemyAISystem::set_direction(entt::registry &registry)
     for (auto entity : view)
     {
         auto &[position, direction, radians, speed] = view.get<motionComponent>(entity);
-        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = view.get<enemyComponent>(entity);
+        auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, es] = view.get<enemyComponent>(entity);
         if (enemy_type == MINION)
         {
             if (direction.x == 0.f && direction.y == 0.f && es.action == PICK_DEST)
@@ -132,6 +132,14 @@ void EnemyAISystem::set_direction(entt::registry &registry)
                 direction = {0.f, 0.f};
                 es.action = TURN;
             }
+        }
+        else if (enemy_type == ZOMBIE)
+        {
+            // set new destination
+            // update direction
+            destination.x = target.x;
+            destination.y = target.y;
+            direction = normalize(sub(destination, position));
         }
         else if (enemy_type == BOSS)
         {
@@ -163,7 +171,7 @@ void EnemyAISystem::set_target(entt::registry &registry)
     auto enemy_view = registry.view<enemyComponent, motionComponent>();
     for (auto entity : enemy_view)
     {
-        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = enemy_view.get<enemyComponent>(entity);
+        auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, es] = enemy_view.get<enemyComponent>(entity);
         target = char_pos;
     }
 }
@@ -174,7 +182,7 @@ void EnemyAISystem::set_rotation(entt::registry &registry)
     for (auto entity : view)
     {
         auto &[position, direction, radians, speed] = view.get<motionComponent>(entity);
-        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown, shoot_frequency, destination, target, es] = view.get<enemyComponent>(entity);
+        auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, es] = view.get<enemyComponent>(entity);
         if (enemy_type == MINION)
         {
             if (es.enemy_on_sight)
@@ -209,7 +217,7 @@ void EnemyAISystem::set_rotation(entt::registry &registry)
                 }
             }
         }
-        else if (enemy_type == BOSS)
+        else if (enemy_type == BOSS || enemy_type == ZOMBIE)
         {
             radians = atan2(target.x - position.x, position.y - target.y);
         }
@@ -288,15 +296,14 @@ void EnemyAISystem::skill_manager(entt::registry &registry, float elapsed_ms, Re
     }
 }
 
-void EnemyAISystem::shoot_manager(entt::registry &registry, float elapsed_ms, vector<Enemy> &m_enemies,
-                                  vector<Projectile> &m_projectiles)
+void EnemyAISystem::shoot_manager(entt::registry &registry, float elapsed_ms, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles)
 {
-    auto enemies = registry.view<enemyComponent, motionComponent>();
+    auto enemies = registry.view<enemyComponent, motionComponent, skillComponent>();
     for (auto enemy : enemies)
     {
         auto &[position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
-        auto &[id, health, enemy_type, is_alive, is_movable, shoot_cooldown,    shoot_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
-        if (is_alive && shoot_cooldown < 0.f && (enemy_type == BOSS || es.action == SHOOT))
+        auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
+        if (is_alive && attack_cooldown < 0.f && (enemy_type == BOSS || es.action == SHOOT))
         {
             for (auto &m_enemy : m_enemies)
             {
@@ -307,11 +314,11 @@ void EnemyAISystem::shoot_manager(entt::registry &registry, float elapsed_ms, ve
                     shoot(registry, enemy_type, proj_direction, face_pos, radians, m_projectiles);
                 }
             }
-            shoot_cooldown = shoot_frequency;
+            attack_cooldown = attack_frequency;
         }
         else
         {
-            shoot_cooldown -= elapsed_ms;
+            attack_cooldown -= elapsed_ms;
         }
     }
 }

@@ -86,6 +86,7 @@ bool World::init(vec2 screen)
     makeCharacter(registry);
     makeShield(registry);
     makeMenu(registry);
+    makeOverlay(registry);
     makeGround(registry, 999);
     makeLevel(registry);
 
@@ -96,7 +97,9 @@ bool World::init(vec2 screen)
     debug = false;
     level = 0;
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init();
+    s_cooldown = 0.f;
+
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init() && m_cooldown.init() && m_overlay.init();
 }
 
 // Releases all the associated resources
@@ -110,6 +113,7 @@ void World::destroy()
     m_potion.destroy();
     m_redzone.destroy();
     m_menu.destroy();
+    m_overlay.destroy();
     m_shield.destroy();
     m_wall_manager.destroy(m_walls);
     for (auto &projectile : m_projectiles)
@@ -120,6 +124,10 @@ void World::destroy()
         enemy.destroy();
     m_enemies.clear();
 
+    for (auto &zombie : m_zombies)
+        zombie.destroy();
+    m_zombies.clear();
+
     glfwDestroyWindow(m_window);
 }
 
@@ -127,7 +135,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
+    int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_character, &m_enemies, &m_zombies, &m_projectiles);
     if (temp_lvl != level)
     {
         level = temp_lvl;
@@ -136,7 +144,6 @@ bool World::update(float elapsed_ms)
     m_wall_manager.update(m_walls, levelSystem.getLevel(), levelSystem.get_wall_orientation());
     state = menuSystem.get_state(registry);
     debug = menuSystem.get_debug_mode(registry);
-
     if (state != STATE_PLAYING)
     {
         return false;
@@ -146,25 +153,23 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
 
-    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_points, m_walls,
-                           m_redzone, elapsed_ms);
-
-    enemyAI.update(registry, elapsed_ms, m_enemies);
+    collisionSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_points, m_walls, m_redzone);
+    m_health.load_texture(m_character.get_health());
+    enemyAI.update(registry, elapsed_ms, m_enemies, m_zombies);
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
     enemyAI.set_rotation(registry);
-    enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_projectiles);
+    enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_zombies, m_projectiles);
     enemyAI.skill_manager(registry, elapsed_ms, m_redzone);
 
     physicsSystem.sync(registry, elapsed_ms, m_walls);
-    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
-    healthSystem.update(registry, m_enemies);
-
+    s_cooldown = physicsSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_ground, m_overlay);
+    m_cooldown.load_texture(s_cooldown);
+    healthSystem.update(registry, m_enemies, m_zombies);
     if (levelSystem.should_spawn_minion(m_enemies.size()))
     {
         spawn_minion();
     }
-
     if (levelSystem.should_spawn_boss(registry))
     {
         spawn_boss();
@@ -172,7 +177,10 @@ bool World::update(float elapsed_ms)
         m_potion.init(1);
         m_redzone.init();
     }
-
+    if (levelSystem.should_spawn_zombie(m_zombies.size()))
+    {
+        spawn_zombie();
+    }
     enemyAI.destroy_dead_enemies(registry);
 
     return true;
@@ -229,9 +237,15 @@ void World::draw()
     for (auto &enemy : m_enemies)
         enemy.draw(projection_2D, debug);
 
+    for (auto &zombie : m_zombies)
+        zombie.draw(projection_2D, debug);
+
     for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);
 
+    m_health.draw(projection_2D);
+    m_cooldown.draw(projection_2D);
+    m_overlay.draw(projection_2D);
     m_menu.draw(projection_2D);
 
     /////////////////////
@@ -276,6 +290,21 @@ bool World::spawn_minion()
         return true;
     }
     fprintf(stderr, "Failed to spawn enemy");
+    return false;
+}
+
+bool World::spawn_zombie()
+{
+    Zombie zombie;
+    int id = levelSystem.get_next_enemy_id();
+    if (zombie.init(id))
+    {
+        m_zombies.emplace_back(zombie);
+        vec2 pos = levelSystem.get_next_zombie_pos();
+        makeZombie(registry, id, pos);
+        return true;
+    }
+    fprintf(stderr, "Failed to spawn zombie");
     return false;
 }
 

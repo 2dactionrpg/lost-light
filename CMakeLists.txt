@@ -42,6 +42,7 @@ set(SOURCE_FILES
     src/factory.cpp
     src/enemy.cpp
     src/menu.cpp
+    src/overlay.cpp
     src/potion.cpp
     src/ground.cpp
     src/path.cpp
@@ -49,6 +50,9 @@ set(SOURCE_FILES
     src/triangle.cpp
     src/wall_manager.cpp
     src/wall.cpp
+    src/zombie.cpp
+    src/health.cpp
+    src/cooldown.cpp
 
     # System
     src/system/inputSystem.cpp
@@ -56,7 +60,7 @@ set(SOURCE_FILES
     src/system/enemyAISystem.cpp
     src/system/healthSystem.cpp
     src/system/collisionSystem.cpp
-    src/system/menuSystem.cpp
+    src/system/menuSystem.cpp    
     src/system/soundSystem.cpp
     src/system/levelSystem.cpp
 
@@ -70,6 +74,7 @@ set(SOURCE_FILES
     src/entity.hpp
     src/enemy.hpp
     src/menu.hpp
+    src/overlay.hpp
     src/potion.hpp
     src/ground.hpp
     src/data.hpp
@@ -78,6 +83,9 @@ set(SOURCE_FILES
     src/triangle.hpp
     src/wall_manager.hpp
     src/wall.hpp
+    src/zombie.hpp
+    src/health.hpp
+    src/cooldown.hpp
     # Component
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp

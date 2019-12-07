@@ -2,6 +2,7 @@
 
 #include "entity.hpp"
 #include "projectile.hpp"
+#include "zombie.hpp"
 #include <vector>
 
 class Projectile;
@@ -34,6 +35,7 @@ public:
 
     vec2 get_bounding_box() const;
 
+    bool collides_with(const Zombie& zombie);
     bool collides_with(const Projectile& projectile);
 
     float triangleArea(vec2 p1, vec2 p2, vec2 p3);

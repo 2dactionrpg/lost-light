@@ -21,7 +21,7 @@ bool Enemy::init(int id)
     {
         if (!enemy_texture.load_from_file(textures_path("enemy.png")))
         {
-            fprintf(stderr, "Failed to load projectile texture!");
+            fprintf(stderr, "Failed to load enemy texture!");
             return false;
         }
     }
@@ -274,7 +274,7 @@ bool Enemy::on_sight(vec2 target)
     return trig.is_inside(target);
 }
 
-bool Enemy::set_line(vec2 target, std::vector<Enemy> &m_enemies)
+bool Enemy::set_line(vec2 target, std::vector<Enemy> &m_enemies, std::vector<Zombie> &m_zombies)
 {
     has_path = true;
     std::vector<Dot> dots = path.form(get_face_position(), get_bounding_box(), target);
@@ -283,6 +283,14 @@ bool Enemy::set_line(vec2 target, std::vector<Enemy> &m_enemies)
         for (auto enemy : m_enemies)
         {
             if (enemy_id != enemy.get_id() && enemy.collides_with_point(d))
+            {
+                path.blocked();
+                return false;
+            }
+        }
+        for (auto zombie : m_zombies)
+        {
+            if (zombie.collides_with_point(d))
             {
                 path.blocked();
                 return false;

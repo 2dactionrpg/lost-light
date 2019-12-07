@@ -9,13 +9,17 @@
 
 using namespace std;
 
-class SoundSystem {
+class SoundSystem
+{
 private:
-    inline static Mix_Music* m_background_music;
-    inline static Mix_Chunk* m_character_dead_sound;
-    inline static Mix_Chunk* m_shield_reflect_sound;
-    inline static Mix_Chunk* m_menu_popup_sound;
-    inline static Mix_Chunk* m_menu_close_sound;
+    inline static Mix_Music *m_background_music;
+    inline static Mix_Chunk *m_character_hit_sound;
+    inline static Mix_Chunk *m_character_dead_sound;
+    inline static Mix_Chunk *m_shield_reflect_sound;
+    inline static Mix_Chunk *m_zombie_killed_sound;
+    inline static Mix_Chunk *m_enemy_killed_sound;
+    inline static Mix_Chunk *m_menu_popup_sound;
+    inline static Mix_Chunk *m_menu_close_sound;
 
 public:
     bool init();

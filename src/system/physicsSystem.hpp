@@ -10,12 +10,15 @@
 #include "../components/levelComponent.hpp"
 #include "../components/motionComponent.hpp"
 #include "../components/physicsScaleComponent.hpp"
+#include "../components/overlayComponent.hpp"
 #include "../components/potionComponent.hpp"
 #include "../components/projectileComponent.hpp"
 #include "../components/shieldComponent.hpp"
 #include "../data.hpp"
 #include "../enemy.hpp"
+#include "../zombie.hpp"
 #include "../ground.hpp"
+#include "../overlay.hpp"
 #include "../potion.hpp"
 #include "../projectile.hpp"
 #include "../shield.hpp"
@@ -28,22 +31,23 @@
 
 using namespace std;
 
-class PhysicsSystem {
+class PhysicsSystem
+{
 private:
     SoundSystem soundSystem;
-public:
-    void update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, Ground& m_ground);
-    void sync(entt::registry& registry, float elapsed_ms, vector<Wall>& walls);
-    void move(vec2& pos, vec2 off, bool is_bounded);
-    void rotate(float& radians, float xpos, float ypos, vec2 position);
-    float lengthVec2(vec2 v);
-    void set_shield_scale_multiplier(entt::registry& registry, float x, float y);
-    void set_character_unmovable(entt::registry& registry);
-    void reset_character(entt::registry& registry);
-    void reset_enemy(entt::registry& registry);
-    void reset_potion(entt::registry& registry);
-    void reflect_projectile(entt::registry& registry, int m_id, vec2 angle);
-    void consume_potion(entt::registry& registry, int m_id);
-    vec2 getOffset(bool isBoss, vec2 position, vec2 offset, vector<Wall> &walls);
 
+public:
+    float update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground, Overlay& m_overlay);
+    void sync(entt::registry &registry, float elapsed_ms, vector<Wall> &walls);
+    void move(vec2 &pos, vec2 off, bool is_bounded);
+    void rotate(float &radians, float xpos, float ypos, vec2 position);
+    float lengthVec2(vec2 v);
+    void set_shield_scale_multiplier(entt::registry &registry, float x, float y);
+    void set_character_unmovable(entt::registry &registry);
+    void reset_character(entt::registry &registry);
+    void reset_enemy(entt::registry &registry);
+    void reset_potion(entt::registry &registry);
+    void reflect_projectile(entt::registry &registry, int m_id, vec2 angle);
+    void consume_potion(entt::registry &registry, int m_id);
+    vec2 getOffset(bool isBoss, vec2 position, vec2 offset, vector<Wall> &walls);
 };

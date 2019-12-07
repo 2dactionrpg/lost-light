@@ -6,10 +6,12 @@
 #include "triangle.hpp"
 #include "path.hpp"
 #include "data.hpp"
+#include "zombie.hpp"
 
 class Projectile;
 
-class Enemy : public Entity {
+class Enemy : public Entity
+{
     static Texture enemy_texture;
 
 public:
@@ -19,23 +21,16 @@ public:
     // Releases all associated resources
     void destroy();
 
-    // Update enemy position based on direction
-    // ms represents the number of milliseconds elapsed from the previous update() call
-    void update(float ms);
-
     // Renders the enemy
-    void draw(const mat3& projection) override;
-    void draw(const mat3& projection, bool debug) override;
+    void draw(const mat3 &projection) override;
+    void draw(const mat3 &projection, bool debug) override;
 
     // Returns the current enemy position
     vec2 get_position() const;
 
     void set_position(vec2 pos);
 
-    // Moves the enemy's position by the specified offset
-    void move(vec2 off);
-
-    bool collides_with(const Projectile& Projectile);
+    bool collides_with(const Projectile &Projectile);
 
     bool collides_with_point(Dot d);
 
@@ -54,7 +49,7 @@ public:
 
     bool on_sight(vec2 target);
 
-    bool set_line(vec2 target, std::vector<Enemy>& m_enemies);
+    bool set_line(vec2 target, std::vector<Enemy> &m_enemies, std::vector<Zombie> &m_zombie);
     void unset_line();
 
     void alert();

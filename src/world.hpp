@@ -5,7 +5,11 @@
 #include "common.hpp"
 #include "data.hpp"
 #include "enemy.hpp"
+#include "zombie.hpp"
 #include "menu.hpp"
+#include "health.hpp"
+#include "cooldown.hpp"
+#include "overlay.hpp"
 #include "shield.hpp"
 #include "wall.hpp"
 #include "wall_manager.hpp"
@@ -43,7 +47,6 @@ void glfw_err_cb(int error, const char *desc)
 }
 } // namespace
 } // namespace
-
 // Container for all our entities and game logic. Individual rendering / update is
 // deferred to the relative update() methods
 class World
@@ -77,6 +80,7 @@ private:
     // generate enemies
     bool spawn_minion();
     bool spawn_boss();
+    bool spawn_zombie();
 
     // !!! INPUT CALLBACK FUNCTIONS
     void on_key(GLFWwindow *, int key, int, int action, int mod);
@@ -101,13 +105,19 @@ private:
     // Game entities
     Character m_character;
     Menu m_menu;
+    Overlay m_overlay;
     Shield m_shield;
     Potion m_potion;
     Ground m_ground;
     Redzone m_redzone;
+    Health m_health;
+    Cooldown m_cooldown;
+
+    float s_cooldown;
 
     std::vector<Projectile> m_projectiles;
     std::vector<Enemy> m_enemies;
+    std::vector<Zombie> m_zombies;
     WallManager m_wall_manager;
     std::vector<Wall> m_walls;
 

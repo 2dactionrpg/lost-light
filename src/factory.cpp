@@ -55,16 +55,39 @@ entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_mova
     em.es.action = IDLE;
     em.is_alive = true;
     em.health = 1;
-    em.shoot_frequency = e_minion_init_shoot_frequency;
-    em.shoot_cooldown = e_minion_init_shoot_frequency;
+    em.attack_frequency = e_minion_init_shoot_frequency;
+    em.attack_cooldown = e_minion_init_shoot_frequency;
     em.is_movable = is_movable;
     auto &mo = registry.assign<motionComponent>(entity);
-    // Setting initial values
-    // float xpos = randomFloat(50.f, 1000.f);
-    // float ypos = randomFloat(50.f, 500.f);
+
     mo.position = {pos.x, pos.y};
     mo.radians = M_PI + M_PI / 2;
     mo.speed = 200.f;
+    auto &ps = registry.assign<physicsScaleComponent>(entity);
+    ps.scale = {0.08f, 0.08f};
+    return entity;
+}
+
+entt::entity makeZombie(entt::registry &registry, int id, vec2 pos, bool is_movable, bool alert)
+{
+    const entt::entity entity = registry.create();
+    auto &em = registry.assign<enemyComponent>(entity);
+    em.id = id;
+    em.enemy_type = ZOMBIE;
+    em.es.alert = alert;
+    em.es.enemy_on_sight = false;
+    em.es.line_of_sight = false;
+    em.es.action = IDLE;
+    em.is_alive = true;
+    em.health = 1;
+    em.attack_frequency = e_minion_init_shoot_frequency;
+    em.attack_cooldown = e_minion_init_shoot_frequency;
+    em.is_movable = is_movable;
+    auto &mo = registry.assign<motionComponent>(entity);
+
+    mo.position = {pos.x, pos.y};
+    mo.radians = M_PI + M_PI / 2;
+    mo.speed = 80.f;
     auto &ps = registry.assign<physicsScaleComponent>(entity);
     ps.scale = {0.08f, 0.08f};
     return entity;
@@ -78,8 +101,8 @@ entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movabl
     em.enemy_type = BOSS;
     em.is_alive = true;
     em.health = 5;
-    em.shoot_frequency = e_boss_init_shoot_frequency;
-    em.shoot_cooldown = e_boss_init_shoot_frequency;
+    em.attack_frequency = e_boss_init_shoot_frequency;
+    em.attack_cooldown = e_boss_init_shoot_frequency;
     em.is_movable = is_movable;
     auto &mo = registry.assign<motionComponent>(entity);
     // Setting initial values
@@ -143,6 +166,14 @@ entt::entity makeMenu(entt::registry &registry)
 {
     const entt::entity entity = registry.create();
     registry.assign<menuComponent>(entity, STATE_START, STATE_START, false);
+    return entity;
+}
+
+entt::entity makeOverlay(entt::registry &registry)
+{
+    const entt::entity entity = registry.create();
+    auto &oc = registry.assign<overlayComponent>(entity);
+    // oc.light_source = {0.2, 0.5};
     return entity;
 }
 

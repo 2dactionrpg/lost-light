@@ -7,6 +7,7 @@
 #include "./components/inputMouse.hpp"
 #include "./components/levelComponent.hpp"
 #include "./components/menuComponent.hpp"
+#include "./components/overlayComponent.hpp"
 #include "./components/motionComponent.hpp"
 #include "./components/physicsScaleComponent.hpp"
 #include "./components/potionComponent.hpp"
@@ -15,12 +16,14 @@
 #include "data.hpp"
 #include <entt/entity/registry.hpp>
 
-entt::entity makeCharacter(entt::registry& registry);
-entt::entity makeShield(entt::registry& registry);
-entt::entity makeMinion(entt::registry& registry, int id, vec2 pos, bool is_movable = false, bool alert = false);
-entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable, bool is_mage);
-entt::entity makePotion(entt::registry& registry, int id);
-entt::entity makeGround(entt::registry& registry, int id);
-entt::entity makeProjectile(entt::registry& registry, int id, vec2 pos, vec2 dir, float rad);
-entt::entity makeMenu(entt::registry& registry);
-entt::entity makeLevel(entt::registry& registry);
+entt::entity makeCharacter(entt::registry &registry);
+entt::entity makeShield(entt::registry &registry);
+entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_movable = false, bool alert = false);
+entt::entity makeZombie(entt::registry &registry, int id, vec2 pos, bool is_movable = true, bool alert = false);
+entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable = false, bool is_mage);
+entt::entity makePotion(entt::registry &registry, int id);
+entt::entity makeGround(entt::registry &registry, int id);
+entt::entity makeProjectile(entt::registry &registry, int id, vec2 pos, vec2 dir, float rad);
+entt::entity makeMenu(entt::registry &registry);
+entt::entity makeLevel(entt::registry &registry);
+entt::entity makeOverlay(entt::registry& registry);
