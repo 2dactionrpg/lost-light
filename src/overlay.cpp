@@ -172,7 +172,7 @@ void Overlay::draw(const mat3 &projection)
 
     glUniform1fv(light_source_x_uloc, 20, xs);
     glUniform1fv(light_source_y_uloc, 20, ys);
-    glUniform1fv(radius_uloc, 10, radius);
+    glUniform1fv(radius_uloc, 20, radius);
     glUniform1i(ls_num_uloc, size);
 
     // Drawing!
