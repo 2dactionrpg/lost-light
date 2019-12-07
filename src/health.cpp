@@ -59,6 +59,7 @@ bool Health::init()
     motion.position = {165.f, 60.f};
     physics.scale = {0.25f,
                      0.25f};
+    old_state = 3;
 
     return true;
 }
@@ -77,22 +78,26 @@ void Health::destroy()
 
 void Health::load_texture(int state)
 {
-    switch (state)
+    if (state != old_state)
     {
-    case 3:
-        health_texture.load_from_file(textures_path("health-3.png"));
-        break;
-    case 2:
-        health_texture.load_from_file(textures_path("health-2.png"));
-        break;
-    case 1:
-        health_texture.load_from_file(textures_path("health-1.png"));
-        break;
-    case 0:
-        health_texture.load_from_file(textures_path("health-0.png"));
-        break;
-    default:
-        break;
+        switch (state)
+        {
+        case 3:
+            health_texture.load_from_file(textures_path("health-3.png"));
+            break;
+        case 2:
+            health_texture.load_from_file(textures_path("health-2.png"));
+            break;
+        case 1:
+            health_texture.load_from_file(textures_path("health-1.png"));
+            break;
+        case 0:
+            health_texture.load_from_file(textures_path("health-0.png"));
+            break;
+        default:
+            break;
+        }
+        old_state = state;
     }
 }
 
