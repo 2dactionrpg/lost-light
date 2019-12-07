@@ -197,7 +197,7 @@ void World::draw()
 
     // Updating window title with points
     std::stringstream title_ss;
-    title_ss << "Points: " << m_points;
+    title_ss << "Lost Light";
     glfwSetWindowTitle(m_window, title_ss.str().c_str());
 
     /////////////////////////////////////

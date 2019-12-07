@@ -10,7 +10,7 @@ bool Menu::init()
     // Load shared texture
     if (!menu_texture.is_valid())
     {
-        if (!menu_texture.load_from_file(textures_path("start.png")))
+        if (!menu_texture.load_from_file(textures_path("story.png")))
         {
             fprintf(stderr, "Failed to load menu texture!");
             return false;
@@ -56,8 +56,8 @@ bool Menu::init()
     if (!effect.load_from_file(shader_path("menu.vs.glsl"), shader_path("menu.fs.glsl")))
         return false;
 
-    motion.position = { 600.f, 400.f };
-    physics.scale = { 0.47f, 0.53f };
+    motion.position = {600.f, 400.f};
+    physics.scale = {0.53f, 0.63f};
 
     return true;
 }
@@ -79,7 +79,7 @@ void Menu::load_texture(int state)
     switch (state)
     {
     case STATE_START:
-        menu_texture.load_from_file(textures_path("start.png"));
+        menu_texture.load_from_file(textures_path("story.png"));
         break;
     case STATE_PLAYING:
         menu_texture.load_from_file(textures_path("playing.png"));
@@ -95,6 +95,12 @@ void Menu::load_texture(int state)
         break;
     case STATE_TUTORIAL:
         menu_texture.load_from_file(textures_path("tutorial.png"));
+        break;
+    case STATE_SLIDE_1:
+        menu_texture.load_from_file(textures_path("enemies.png"));
+        break;
+    case STATE_SLIDE_2:
+        menu_texture.load_from_file(textures_path("boss-level.png"));
         break;
     default:
         break;
