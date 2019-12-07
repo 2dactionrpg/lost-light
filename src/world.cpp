@@ -135,7 +135,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_character, &m_enemies, &m_zombies, &m_projectiles);
+    int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_character, &m_enemies, &m_zombies, &m_projectiles, &m_redzone);
     if (temp_lvl != level)
     {
         level = temp_lvl;
