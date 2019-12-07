@@ -51,6 +51,7 @@ set(SOURCE_FILES
     src/wall.cpp
     src/zombie.cpp
     src/health.cpp
+    src/cooldown.cpp
 
     # System
     src/system/inputSystem.cpp
@@ -82,6 +83,7 @@ set(SOURCE_FILES
     src/wall.hpp
     src/zombie.hpp
     src/health.hpp
+    src/cooldown.hpp
     # Component
     src/components/inputKeyboard.hpp
     src/components/inputMouse.hpp

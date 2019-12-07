@@ -163,7 +163,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall> &walls
     }
 }
 
-void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground)
+float PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -184,7 +184,7 @@ void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shi
 
     // Shield Physics Update
     auto shield = registry.view<shieldComponent, motionComponent, physicsScaleComponent>();
-
+    float s_cooldown = 0.f;
     for (auto entity : shield)
     {
         auto &radians = shield.get<motionComponent>(entity).radians;
@@ -201,6 +201,8 @@ void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shi
         {
             m_shield.hide();
         }
+
+        s_cooldown = cooldown;
     }
 
     // Enemy Physics Update
@@ -283,6 +285,8 @@ void PhysicsSystem::update(entt::registry &registry, Character &m_character, Shi
         m_ground.set_position(position);
         m_ground.set_scale(scale);
     }
+
+    return s_cooldown;
 }
 
 void PhysicsSystem::move(vec2 &pos, vec2 off, bool is_bounded)
