@@ -129,7 +129,8 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    overlaySystem.update(registry, m_overlay);
+    // vec2 light_source = {0.5, 0.5};
+    // overlaySystem.update(registry, m_overlay);
     int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
     if (temp_lvl != level)
     {
@@ -158,7 +159,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_projectiles);
 
     physicsSystem.sync(registry, elapsed_ms, m_walls);
-    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground);
+    physicsSystem.update(registry, m_character, m_shield, m_enemies, m_projectiles, m_potion, m_ground, m_overlay);
     healthSystem.update(registry, m_enemies);
 
     if (levelSystem.should_spawn_minion(m_enemies.size()))

@@ -31,10 +31,15 @@ public:
     // Returns the current overlay position
     vec2 get_position() const;
 
+    void set_light_source(vec2 light_source);
+
     // Sets the new overlay position
     void set_position(vec2 position);
     void load_texture(int state);
 
     // Returns the overlay' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
+
+vec2 light_source;
+    // vec2 light_source;
 };

@@ -3,6 +3,10 @@
 void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls)
 {
     // Character Physics Sync
+    auto view_overlay = registry.view<overlayComponent>();
+    for (auto entity : view_overlay) {
+        auto& light_source = view_overlay.get(entity).light_source;
+
     auto view = registry.view<characterComponent, physicsScaleComponent, motionComponent, inputKeyboard, inputMouse>();
     for (auto entity : view) {
         auto& [position, direction, radians, speed] = view.get<motionComponent>(entity);
@@ -51,6 +55,9 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
             move(position, offset, true);
             rotate(radians, xpos, ypos, position);
         }
+
+        light_source = position;
+    }
     }
 
     // Shield Physics Sync
@@ -136,7 +143,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall>& walls
     }
 }
 
-void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, Ground& m_ground)
+void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shield& m_shield, vector<Enemy>& m_enemies, vector<Projectile>& m_projectiles, Potion& m_potion, Ground& m_ground, Overlay& m_overlay)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -228,6 +235,12 @@ void PhysicsSystem::update(entt::registry& registry, Character& m_character, Shi
         auto& scale = ground.get<physicsScaleComponent>(entity).scale;
         m_ground.set_position(position);
         m_ground.set_scale(scale);
+    }
+
+    // Overlay Physics Update
+    auto overlay = registry.view<overlayComponent>();
+    for (auto entity : overlay) {
+        m_overlay.set_light_source(overlay.get(entity).light_source);
     }
 }
 

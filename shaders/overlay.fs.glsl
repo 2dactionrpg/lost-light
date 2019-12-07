@@ -6,34 +6,48 @@ in vec2 texcoord;
 // Application data
 uniform sampler2D sampler0;
 uniform vec3 fcolor;
+uniform float light_source_x[10];
+uniform float light_source_y[10];
+uniform float radius[10];
+
+// uniform vec2 light_source_x;
+// uniform vec2 light_source_y;
+uniform int ls_num;
+
+uniform float v[10];
 
 // Output color
 layout(location = 0) out vec4 color;
 
 void main()
 {
-    vec2 centers[2];
-    centers[0] = vec2(0.25, 0.5);
-    centers[1] = vec2(0.75, 0.5);
+    float min_dist = 999999;
+    float alpha = 99999;
+    float index = -1;
+    float r = 0;
+    float alphas[10];
+    
+    for (int i = 0; i < 10; i++) {
+        vec2 ls = vec2(light_source_x[i], light_source_y[i]);
+        float dist = sqrt(
+            (texcoord.x - ls.x)*(texcoord.x - ls.x) + 
+            (texcoord.y - ls.y)*(texcoord.y - ls.y));
 
-    float min_dist = 9999;
-    vec2 min_center;
+        float r = radius[i];
+        alphas[i] = dist / r;
 
-    for (int i = 0; i < 2; i++) {
-        vec2 center;
-        float dist;
-        center = centers[i];
-
-        dist = sqrt((texcoord.x - center.x)*(texcoord.x - center.x) 
-        + (texcoord.y - center.y)*(texcoord.y - center.y));
         if (dist < min_dist) {
             min_dist = dist;
-            min_center = center;
+            index = i;
+            r = radius[i];
         }
     }
 
-    float distance_yo = sqrt((texcoord.x - min_center.x)*(texcoord.x - min_center.x) 
-    + (texcoord.y - min_center.y)*(texcoord.y - min_center.y))*7.0;
+    for (int i = 0; i < 10; i++) {
+        if (alphas[i] <= alpha) {
+            alpha = alphas[i];
+        }
+    }
 
-    color = vec4(fcolor, distance_yo) * texture(sampler0, vec2(texcoord.x, texcoord.y));
+    color = vec4(0.0,0.0,0.0, alpha);
 }

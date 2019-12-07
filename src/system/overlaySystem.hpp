@@ -14,7 +14,7 @@ private:
     SoundSystem soundSystem;
 
 public:
-    void update(entt::registry& registry, Overlay& m_overlay);
+    void update(entt::registry& registry, Overlay& m_overlay, vec2 light_source);
     void sync(entt::registry& registry, int m_state);
     int get_state(entt::registry& registry);
     bool get_debug_mode(entt::registry& registry);

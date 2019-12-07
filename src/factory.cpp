@@ -142,7 +142,8 @@ entt::entity makeMenu(entt::registry &registry)
 entt::entity makeOverlay(entt::registry &registry)
 {
     const entt::entity entity = registry.create();
-    registry.assign<menuComponent>(entity, STATE_START, STATE_START, false);
+    auto &oc = registry.assign<overlayComponent>(entity);
+    // oc.light_source = {0.2, 0.5};
     return entity;
 }
 
