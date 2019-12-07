@@ -1,25 +1,24 @@
-// Header
-#include "overlay.hpp"
+#include "arrow.hpp"
 
 #include <cmath>
 
-Texture Overlay::overlay_texture;
+Texture Arrow::arrow_texture;
 
-bool Overlay::init()
+bool Arrow::init()
 {
     // Load shared texture
-    if (!overlay_texture.is_valid())
+    if (!arrow_texture.is_valid())
     {
-        if (!overlay_texture.load_from_file(textures_path("overlay.png")))
+        if (!arrow_texture.load_from_file(textures_path("arrow.png")))
         {
-            fprintf(stderr, "Failed to load overlay texture!");
+            fprintf(stderr, "Failed to load arrow texture!");
             return false;
         }
     }
 
     // The position corresponds to the center of the texture
-    float wr = overlay_texture.width * 0.5f;
-    float hr = overlay_texture.height * 0.5f;
+    float wr = arrow_texture.width * 0.5f;
+    float hr = arrow_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
     vertices[0].position = {-wr, +hr, -0.02f};
@@ -53,18 +52,18 @@ bool Overlay::init()
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("overlay.vs.glsl"), shader_path("overlay.fs.glsl")))
+    if (!effect.load_from_file(shader_path("health.vs.glsl"), shader_path("health.fs.glsl")))
         return false;
 
-    motion.position = { 600.f, 400.f };
-    physics.scale = { 1.f, 1.f };
-    light_source = {0.25, 0.5};
+    motion.position = {1075.f, 185.f};
+    physics.scale = {0.25f,
+                     0.25f};
 
     return true;
 }
 
 // Releases all graphics resources
-void Overlay::destroy()
+void Arrow::destroy()
 {
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
@@ -75,50 +74,7 @@ void Overlay::destroy()
     glDeleteShader(effect.program);
 }
 
-void Overlay::load_texture(int state)
-{
-    switch (state)
-    {
-    case STATE_START:
-        overlay_texture.load_from_file(textures_path("start.png"));
-        break;
-    case STATE_PLAYING:
-        overlay_texture.load_from_file(textures_path("playing.png"));
-        break;
-    case STATE_PAUSE:
-        overlay_texture.load_from_file(textures_path("pause.png"));
-        break;
-    case STATE_GAMEOVER:
-        overlay_texture.load_from_file(textures_path("game-over.png"));
-        break;
-    case STATE_WIN:
-        overlay_texture.load_from_file(textures_path("win.png"));
-        break;
-    case STATE_TUTORIAL:
-        overlay_texture.load_from_file(textures_path("tutorial.png"));
-        break;
-    default:
-        break;
-    }
-}
-
-vec2 Overlay::get_direction()
-{
-    return motion.direction;
-}
-
-void Overlay::set_direction(vec2 direction)
-{
-    float normal = sqrt(pow(direction.x, 2.f) + pow(direction.y, 2.f));
-    motion.direction = {direction.x / normal, direction.y / normal};
-}
-
-void Overlay::set_rotation(float rad)
-{
-    motion.radians = rad;
-}
-
-void Overlay::draw(const mat3 &projection)
+void Arrow::draw(const mat3 &projection)
 {
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
@@ -140,10 +96,6 @@ void Overlay::draw(const mat3 &projection)
     GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
     GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
     GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-    GLint light_source_x_uloc = glGetUniformLocation(effect.program, "light_source_x");
-    GLint light_source_y_uloc = glGetUniformLocation(effect.program, "light_source_y");
-    GLint radius_uloc = glGetUniformLocation(effect.program, "radius");
-    GLint ls_num_uloc = glGetUniformLocation(effect.program, "ls_num");
 
     // Setting vertices and indices
     glBindVertexArray(mesh.vao);
@@ -160,7 +112,7 @@ void Overlay::draw(const mat3 &projection)
 
     // Enabling and binding texture to slot 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, overlay_texture.id);
+    glBindTexture(GL_TEXTURE_2D, arrow_texture.id);
 
     // Setting uniform values to the currently bound program
     glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
@@ -168,50 +120,16 @@ void Overlay::draw(const mat3 &projection)
     glUniform3fv(color_uloc, 1, color);
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
 
-    int size = sizeof(xs)/sizeof(xs[0]);
-
-    glUniform1fv(light_source_x_uloc, 20, xs);
-    glUniform1fv(light_source_y_uloc, 20, ys);
-    glUniform1fv(radius_uloc, 20, radius);
-    glUniform1i(ls_num_uloc, size);
-
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-void Overlay::set_light_sources(vec2 positions[], int size) {
-    const float screen_width = 1200.f;
-    const float screen_height = 800.f;
-
-    for (int i = 0; i < size; i++) {
-        ys[i] = positions[i].y / screen_height;
-        xs[i] = positions[i].x / screen_width;
-        if (i != 0) {
-            radius[i] = 0.15;
-        }
-
-    }
-}
-
-void Overlay::set_health(int health) {
-    radius[0] = 0.2*health;
-}
-
-
-vec2 Overlay::get_position() const
+void Arrow::set_scale(vec2 scale)
 {
-    return motion.position;
+    physics.scale = scale;
 }
 
-void Overlay::set_position(vec2 position)
+void Arrow::set_position(vec2 position)
 {
     motion.position = position;
-}
-
-vec2 Overlay::get_bounding_box() const
-{
-    // Returns the local bounding coordinates scaled by the current size of the overlay
-    // fabs is to avoid negative scale due to the facing direction.
-    return {std::fabs(physics.scale.x) * overlay_texture.width * 2,
-            std::fabs(physics.scale.y) * overlay_texture.height * 2};
 }

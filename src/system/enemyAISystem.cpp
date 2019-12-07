@@ -216,6 +216,10 @@ void EnemyAISystem::set_rotation(entt::registry &registry)
                     es.action = MOVE;
                 }
             }
+            else if (!es.alert)
+            {
+                radians = atan2(600.f - position.x, position.y - 500.f);
+            }
         }
         else if (enemy_type == BOSS || enemy_type == ZOMBIE)
         {

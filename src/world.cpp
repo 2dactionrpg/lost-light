@@ -96,10 +96,11 @@ bool World::init(vec2 screen)
 
     debug = false;
     level = 0;
+    show_arrow = false;
 
     s_cooldown = 0.f;
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init() && m_cooldown.init() && m_overlay.init();
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init() && m_cooldown.init() && m_arrow.init() && m_overlay.init();
 }
 
 // Releases all the associated resources
@@ -154,6 +155,7 @@ bool World::update(float elapsed_ms)
     vec2 screen = {(float)w / m_screen_scale, (float)h / m_screen_scale};
     collisionSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_points, m_walls, m_redzone, elapsed_ms);
     m_health.load_texture(m_character.get_health());
+    m_overlay.set_health(m_character.get_health());
     enemyAI.update(registry, elapsed_ms, m_enemies, m_zombies);
     enemyAI.set_direction(registry);
     enemyAI.set_target(registry);
@@ -181,6 +183,8 @@ bool World::update(float elapsed_ms)
         spawn_zombie();
     }
     enemyAI.destroy_dead_enemies(registry);
+
+    show_arrow = levelSystem.check_all_enemies_are_dead(registry);
 
     return true;
 }
@@ -244,6 +248,10 @@ void World::draw()
 
     m_overlay.draw(projection_2D);
     m_health.draw(projection_2D);
+    if (show_arrow)
+    {
+        m_arrow.draw(projection_2D);
+    }
     m_cooldown.draw(projection_2D);
     m_menu.draw(projection_2D);
 
