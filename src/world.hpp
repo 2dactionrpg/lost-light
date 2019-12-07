@@ -8,6 +8,7 @@
 #include "zombie.hpp"
 #include "menu.hpp"
 #include "health.hpp"
+#include "arrow.hpp"
 #include "cooldown.hpp"
 #include "overlay.hpp"
 #include "shield.hpp"
@@ -111,8 +112,10 @@ private:
     Ground m_ground;
     Health m_health;
     Cooldown m_cooldown;
+    Arrow m_arrow;
 
     float s_cooldown;
+    bool show_arrow;
     Redzone m_redzone;
 
     std::vector<Projectile> m_projectiles;

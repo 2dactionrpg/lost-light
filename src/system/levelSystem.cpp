@@ -67,8 +67,16 @@ bool LevelSystem::init_level(entt::registry &registry)
             }
 
             // zombie information
-            zombie_num = 0;
-            zombie_max_on_screen = 1;
+            zombie_num = 3;
+            zombie_max_on_screen = 3;
+            for (vec2 pos : zombie_level2_pos_array)
+            {
+                zombie_init_pos.push_back(pos);
+            }
+            for (bool is_movable : zombie_level2_movable_array)
+            {
+                zombie_is_movable.push_back(is_movable);
+            }
 
             // boss info
             boss_num = 0;
@@ -91,9 +99,16 @@ bool LevelSystem::init_level(entt::registry &registry)
             }
 
             // zombie information
-            zombie_num = 0;
-            zombie_max_on_screen = 1;
-
+            zombie_num = 5;
+            zombie_max_on_screen = 5;
+            for (vec2 pos : zombie_level3_pos_array)
+            {
+                zombie_init_pos.push_back(pos);
+            }
+            for (bool is_movable : zombie_level3_movable_array)
+            {
+                zombie_is_movable.push_back(is_movable);
+            }
             // boss info
             boss_num = 0;
             boss_max_on_screen = 1;
@@ -107,8 +122,16 @@ bool LevelSystem::init_level(entt::registry &registry)
             minion_max_on_screen = 3;
 
             // zombie information
-            zombie_num = 0;
-            zombie_max_on_screen = 1;
+            zombie_num = 18;
+            zombie_max_on_screen = 18;
+            for (vec2 pos : zombie_level4_pos_array)
+            {
+                zombie_init_pos.push_back(pos);
+            }
+            for (bool is_movable : zombie_level4_movable_array)
+            {
+                zombie_is_movable.push_back(is_movable);
+            }
 
             // boss info
             boss_num = 1;
@@ -135,6 +158,19 @@ bool LevelSystem::init_level(entt::registry &registry)
     }
 
     return true;
+}
+
+
+bool LevelSystem::check_all_enemies_are_dead(entt::registry &registry)
+{
+    auto level = registry.view<levelComponent>();
+    for (auto entity : level)
+    {
+        auto &[minion_killed, boss_killed, zombie_killed] = level.get(entity);
+        enemy_killed = minion_killed + boss_killed + zombie_killed;
+        return enemy_killed >= enemy_total;
+    }
+    return false;
 }
 
 int LevelSystem::update(entt::registry &registry, float elapsed_ms, Character *m_character, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles, Redzone *m_redzone)
