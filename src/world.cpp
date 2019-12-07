@@ -238,9 +238,9 @@ void World::draw()
     for (auto &projectile : m_projectiles)
         projectile.draw(projection_2D);
 
+    m_overlay.draw(projection_2D);
     m_health.draw(projection_2D);
     m_cooldown.draw(projection_2D);
-    m_overlay.draw(projection_2D);
     m_menu.draw(projection_2D);
 
     /////////////////////
