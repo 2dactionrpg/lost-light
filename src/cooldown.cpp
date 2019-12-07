@@ -60,6 +60,8 @@ bool Cooldown::init()
     physics.scale = {0.18f,
                      0.13f};
 
+    old_state = 1;
+
     return true;
 }
 
@@ -86,16 +88,21 @@ void Cooldown::load_texture(float cooldown)
     {
         state = 0;
     }
-    switch (state)
+
+    if (state != old_state)
     {
-    case 1:
-        cooldown_texture.load_from_file(textures_path("cooldown-ready.png"));
-        break;
-    case 0:
-        cooldown_texture.load_from_file(textures_path("cooldown-wait.png"));
-        break;
-    default:
-        break;
+        switch (state)
+        {
+        case 1:
+            cooldown_texture.load_from_file(textures_path("cooldown-ready.png"));
+            break;
+        case 0:
+            cooldown_texture.load_from_file(textures_path("cooldown-wait.png"));
+            break;
+        default:
+            break;
+        }
+        old_state = state;
     }
 }
 

@@ -20,4 +20,6 @@ public:
     void load_texture(float cooldown);
 
     void set_position(vec2 position);
+    private:
+        int old_state;
 };
