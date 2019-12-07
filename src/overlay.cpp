@@ -167,9 +167,6 @@ void Overlay::draw(const mat3 &projection)
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
-    GLfloat xs[10] = {light_source.x, 0.75, 0.5};
-    GLfloat ys[10] = {light_source.y, 0.5, 0.2};
-    GLfloat radius[10] = {0.5, 0.15, 0.15};
 
     int size = sizeof(xs)/sizeof(xs[0]);
 
@@ -182,11 +179,14 @@ void Overlay::draw(const mat3 &projection)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-void Overlay::set_light_source(vec2 position) {
+void Overlay::set_light_sources(vec2 positions[], int size) {
     const float screen_width = 1200.f;
     const float screen_height = 800.f;
-    vec2 ls = {position.x/screen_width, position.y/screen_height};
-    light_source = ls;
+    for (int i = 0; i < size; i++) {
+        ys[i] = positions[i].y / screen_height;
+        xs[i] = positions[i].x / screen_width;
+        radius[i] = 0.3;
+    }
 }
 
 

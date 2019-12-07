@@ -31,7 +31,7 @@ public:
     // Returns the current overlay position
     vec2 get_position() const;
 
-    void set_light_source(vec2 light_source);
+    void set_light_sources(vec2 positions[], int size);
 
     // Sets the new overlay position
     void set_position(vec2 position);
@@ -40,6 +40,8 @@ public:
     // Returns the overlay' bounding box for collision detection, called by collides_with()
     vec2 get_bounding_box() const;
 
-vec2 light_source;
-    // vec2 light_source;
+    vec2 light_source;
+    GLfloat xs[3];
+    GLfloat ys[100]; 
+    GLfloat radius[100];
 };
