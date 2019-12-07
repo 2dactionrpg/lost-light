@@ -9,6 +9,7 @@
 #include "menu.hpp"
 #include "health.hpp"
 #include "cooldown.hpp"
+#include "overlay.hpp"
 #include "shield.hpp"
 #include "wall.hpp"
 #include "wall_manager.hpp"
@@ -103,6 +104,7 @@ private:
     // Game entities
     Character m_character;
     Menu m_menu;
+    Overlay m_overlay;
     Shield m_shield;
     Potion m_potion;
     Ground m_ground;

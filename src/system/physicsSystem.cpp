@@ -3,6 +3,10 @@
 void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall> &walls)
 {
     // Character Physics Sync
+    auto view_overlay = registry.view<overlayComponent>();
+    for (auto entity : view_overlay) {
+        auto& light_source = view_overlay.get(entity).light_source;
+
     auto view = registry.view<characterComponent, physicsScaleComponent, motionComponent, inputKeyboard, inputMouse>();
     for (auto entity : view)
     {
@@ -62,6 +66,9 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall> &walls
             move(position, offset, true);
             rotate(radians, xpos, ypos, position);
         }
+
+        light_source = position;
+    }
     }
 
     // Shield Physics Sync
@@ -163,7 +170,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall> &walls
     }
 }
 
-float PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground)
+float PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground, Overlay& m_overlay)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -284,6 +291,33 @@ float PhysicsSystem::update(entt::registry &registry, Character &m_character, Sh
         auto &scale = ground.get<physicsScaleComponent>(entity).scale;
         m_ground.set_position(position);
         m_ground.set_scale(scale);
+    }
+
+    // Overlay Physics Update
+    auto overlay = registry.view<overlayComponent>();
+    vec2 coords[100];
+    int i = 0;      
+    for (auto entity : overlay) {
+        coords[i++] = overlay.get(entity).light_source;
+        for (auto entity : projectile) {
+            auto& [position, direction, radians, speed] = projectile.get<motionComponent>(entity);
+            coords[i++] = position;
+        }
+
+        for (auto entity : enemy) {
+            auto &[position, direction, radians, speed] = enemy.get<motionComponent>(entity);
+            coords[i++] = position;
+        }
+
+        int size = 0;
+        for (int i = 0; i < 100; i++) {
+            if (coords[i].x == 0.0 && coords[i].y == 0.0) {
+                break;
+            }
+            size++;
+        }
+
+        m_overlay.set_light_sources(coords, size);
     }
 
     return s_cooldown;

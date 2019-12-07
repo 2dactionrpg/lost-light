@@ -86,6 +86,7 @@ bool World::init(vec2 screen)
     makeCharacter(registry);
     makeShield(registry);
     makeMenu(registry);
+    makeOverlay(registry);
     makeGround(registry, 999);
     makeLevel(registry);
 
@@ -98,7 +99,7 @@ bool World::init(vec2 screen)
 
     s_cooldown = 0.f;
 
-    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init() && m_cooldown.init();
+    return m_character.init() && m_background.init() && m_shield.init() && m_ground.init(999) && m_menu.init() && m_health.init() && m_cooldown.init() && m_overlay.init();
 }
 
 // Releases all the associated resources
@@ -111,6 +112,7 @@ void World::destroy()
     m_character.destroy();
     m_potion.destroy();
     m_menu.destroy();
+    m_overlay.destroy();
     m_shield.destroy();
     m_wall_manager.destroy(m_walls);
     for (auto &projectile : m_projectiles)
@@ -158,7 +160,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_zombies, m_projectiles);
 
     physicsSystem.sync(registry, elapsed_ms, m_walls);
-    s_cooldown = physicsSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_ground);
+    s_cooldown = physicsSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_ground, m_overlay);
     m_cooldown.load_texture(s_cooldown);
     healthSystem.update(registry, m_enemies, m_zombies);
     if (levelSystem.should_spawn_minion(m_enemies.size()))
@@ -238,6 +240,7 @@ void World::draw()
 
     m_health.draw(projection_2D);
     m_cooldown.draw(projection_2D);
+    m_overlay.draw(projection_2D);
     m_menu.draw(projection_2D);
 
     /////////////////////
