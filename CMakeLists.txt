@@ -58,7 +58,6 @@ set(SOURCE_FILES
     src/system/healthSystem.cpp
     src/system/collisionSystem.cpp
     src/system/menuSystem.cpp    
-    src/system/overlaySystem.cpp
     src/system/soundSystem.cpp
     src/system/levelSystem.cpp
 
@@ -101,7 +100,6 @@ set(SOURCE_FILES
     src/system/collisionSystem.hpp
     src/system/healthSystem.hpp
     src/system/menuSystem.hpp
-    src/system/overlaySystem.hpp
     src/system/soundSystem.hpp
     src/system/levelSystem.hpp
 )

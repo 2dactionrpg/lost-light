@@ -17,7 +17,6 @@
 #include "./system/inputSystem.hpp"
 #include "./system/levelSystem.hpp"
 #include "./system/menuSystem.hpp"
-#include "./system/overlaySystem.hpp"
 #include "./system/physicsSystem.hpp"
 #include "./system/soundSystem.hpp"
 #include "background.hpp"
@@ -121,7 +120,6 @@ private:
     EnemyAISystem enemyAI;
     HealthSystem healthSystem;
     MenuSystem menuSystem;
-    OverlaySystem overlaySystem;
     SoundSystem soundSystem;
     CollisionSystem collisionSystem;
     LevelSystem levelSystem;

@@ -129,8 +129,6 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
     menuSystem.update(registry, m_menu);
-    // vec2 light_source = {0.5, 0.5};
-    // overlaySystem.update(registry, m_overlay);
     int temp_lvl = levelSystem.update(registry, elapsed_ms, &m_enemies, &m_projectiles);
     if (temp_lvl != level)
     {
