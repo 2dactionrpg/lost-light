@@ -5,6 +5,7 @@
 
 class Redzone : public Entity
 {
+    static Texture redzone_texture;
 
 public:
     bool init();
@@ -18,4 +19,5 @@ public:
     vec2 get_bounding_box() const;
 
     vec2 get_position() const;
+
 };

@@ -220,11 +220,11 @@ void World::draw()
 
     // Drawing entities
     m_ground.draw(projection_2D);
+    m_redzone.draw(projection_2D);
     m_wall_manager.draw(m_walls, projection_2D);
     m_character.draw(projection_2D);
     m_shield.draw(projection_2D);
     m_potion.draw(projection_2D);
-    m_redzone.draw(projection_2D);
 
     for (auto &enemy : m_enemies)
         enemy.draw(projection_2D, debug);
