@@ -35,13 +35,13 @@ static const bool zombie_level1_movable_array[] = {true};
 static const vec2 minion_level2_pos_array[] = {{1000.f, 200.f}, {1000.f, 400.f}, {1000.f, 600.f}};
 static const bool minion_level2_movable_array[] = {false, false, false};
 
-static const vec2 zombie_level2_pos_array[] = {{800.f, 400.f}, {600.f, 400.f}, {900.f, 300.f}};
+static const vec2 zombie_level2_pos_array[] = {{800.f, 200.f}, {600.f, 700.f}, {900.f, 300.f}};
 static const bool zombie_level2_movable_array[] = {true, true, true};
 
 static const vec2 minion_level3_pos_array[] = {{200.f, 600.f}, {1000.f, 200.f}, {1000.f, 600.f}};
 static const bool minion_level3_movable_array[] = {true, true, true};
 
-static const vec2 zombie_level3_pos_array[] = {{400.f, 600.f}, {400.f, 750.f}, {900.f, 700.f}, {600.f, 500.f}, {1000.f, 300.f}};
+static const vec2 zombie_level3_pos_array[] = {{400.f, 600.f}, {400.f, 750.f}, {900.f, 700.f}, {600.f, 300.f}, {1000.f, 300.f}};
 static const bool zombie_level3_movable_array[] = {true, true, true, true, true};
 
 static const vec2 boss_level4_pos_array[] = {{1000.f, 400.f}};
