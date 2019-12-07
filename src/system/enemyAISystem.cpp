@@ -287,17 +287,25 @@ void EnemyAISystem::skill_manager(entt::registry &registry, float elapsed_ms, Re
         auto &[position, direction, radians, speed] = enemies.get<motionComponent>(enemy);
         auto &[id, health, enemy_type, is_alive, is_movable, attack_cooldown, attack_frequency, destination, target, es] = enemies.get<enemyComponent>(enemy);
         auto &[cooldown, duration] = enemies.get<skillComponent>(enemy);
-        if (is_alive && cooldown < 0.f && (enemy_type == BOSS))
+
+        if (is_alive && duration <= 0.f && cooldown <= 0.f && (enemy_type == BOSS))
         {
             summon_redzone(registry, m_redzone);
-            cooldown = 4000.f;
-            duration = 1500.f;
+            cooldown = 2000.f;
+            duration = 2000.f;
+        }
+
+        if (cooldown > 0.f)
+        {
+            cooldown -= elapsed_ms;
         }
         else
         {
-            cooldown -= elapsed_ms;
             duration -= elapsed_ms;
         }
+
+        m_redzone.set_cooldown(cooldown);
+        m_redzone.set_duration(duration);
     }
 }
 

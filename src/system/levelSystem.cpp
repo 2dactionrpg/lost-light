@@ -160,6 +160,7 @@ bool LevelSystem::init_level(entt::registry &registry)
     return true;
 }
 
+
 bool LevelSystem::check_all_enemies_are_dead(entt::registry &registry)
 {
     auto level = registry.view<levelComponent>();
@@ -172,7 +173,7 @@ bool LevelSystem::check_all_enemies_are_dead(entt::registry &registry)
     return false;
 }
 
-int LevelSystem::update(entt::registry &registry, float elapsed_ms, Character *m_character, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles)
+int LevelSystem::update(entt::registry &registry, float elapsed_ms, Character *m_character, vector<Enemy> *m_enemies, vector<Zombie> *m_zombies, vector<Projectile> *m_projectiles, Redzone *m_redzone)
 {
     next_enemy_spawn_counter -= elapsed_ms;
 
@@ -216,6 +217,7 @@ int LevelSystem::update(entt::registry &registry, float elapsed_ms, Character *m
             m_enemies->clear();
             m_zombies->clear();
             m_projectiles->clear();
+            m_redzone->set_position({-100.f, -100.f});
             m_character->restart_health();
             lvl_num = 1;
             init_level(registry);

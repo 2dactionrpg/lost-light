@@ -12,7 +12,7 @@ public:
 
     void destroy();
 
-    void draw(const mat3& projection) override;
+    void draw(const mat3 &projection) override;
 
     void set_position(vec2 pos);
 
@@ -20,4 +20,11 @@ public:
 
     vec2 get_position() const;
 
+    void set_cooldown(float m_cooldown);
+
+    void set_duration(float m_duration);
+
+private:
+    float cooldown;
+    float duration;
 };

@@ -5,7 +5,8 @@
 
 Texture Redzone::redzone_texture;
 
-bool Redzone::init() {
+bool Redzone::init()
+{
 
     // Load shared texture
     if (!redzone_texture.is_valid())
@@ -57,12 +58,15 @@ bool Redzone::init() {
         return false;
     physics.scale = {0.1f, 0.1f};
     motion.position = {-100.f, -100.f};
+    cooldown = 0.f;
+    duration = 0.f;
 
     return true;
 }
 
 // Releases all graphics resources
-void Redzone::destroy() {
+void Redzone::destroy()
+{
     glDeleteBuffers(1, &mesh.vbo);
     glDeleteBuffers(1, &mesh.ibo);
     glDeleteBuffers(1, &mesh.vao);
@@ -94,6 +98,7 @@ void Redzone::draw(const mat3 &projection)
     GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
     GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
     GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
+    GLint cooldown_uloc = glGetUniformLocation(effect.program, "cooldown");
 
     // Setting vertices and indices
     glBindVertexArray(mesh.vao);
@@ -117,12 +122,14 @@ void Redzone::draw(const mat3 &projection)
     float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
     glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
+    glUniform1f(cooldown_uloc, cooldown);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
-void Redzone::set_position(vec2 pos) {
+void Redzone::set_position(vec2 pos)
+{
     motion.position = pos;
 }
 
@@ -135,4 +142,14 @@ vec2 Redzone::get_bounding_box() const
 vec2 Redzone::get_position() const
 {
     return motion.position;
+}
+
+void Redzone::set_cooldown(float m_cooldown)
+{
+    cooldown = m_cooldown;
+}
+
+void Redzone::set_duration(float m_duration)
+{
+    duration = m_duration;
 }
