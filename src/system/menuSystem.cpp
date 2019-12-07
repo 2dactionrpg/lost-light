@@ -35,7 +35,6 @@ void MenuSystem::sync(entt::registry &registry, int m_state)
         if (state != m_state)
         {
             state = m_state;
-            old_state = state;
         }
     }
 }
