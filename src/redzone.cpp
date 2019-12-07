@@ -3,17 +3,38 @@
 
 #include <vector>
 
+Texture Redzone::redzone_texture;
+
 bool Redzone::init() {
-    float length = 50.f;
+
+    // Load shared texture
+    if (!redzone_texture.is_valid())
+    {
+        if (!redzone_texture.load_from_file(textures_path("lava.png")))
+        {
+            fprintf(stderr, "Failed to load lava texture!");
+            return false;
+        }
+    }
+
+    // The position corresponds to the center of the texture
+    float wr = redzone_texture.width * 0.5f;
+    float hr = redzone_texture.height * 0.5f;
 
     TexturedVertex vertices[4];
-    vertices[0].position = {-length, -length, 0.01f};
-    vertices[1].position = {-length, length, 0.01f};
-    vertices[2].position = {length, length, 0.01f};
-    vertices[3].position = {length, -length, 0.01f};
+    vertices[0].position = {-wr, +hr, -0.02f};
+    vertices[0].texcoord = {0.f, 1.f};
+    vertices[1].position = {+wr, +hr, -0.02f};
+    vertices[1].texcoord = {1.f, 1.f};
+    vertices[2].position = {+wr, -hr, -0.02f};
+    vertices[2].texcoord = {1.f, 0.f};
+    vertices[3].position = {-wr, -hr, -0.02f};
+    vertices[3].texcoord = {0.f, 0.f};
+
     // Counterclockwise as it's the default opengl front winding direction
     uint16_t indices[] = {0, 3, 1, 1, 3, 2};
 
+    // Clearing errors
     gl_flush_errors();
 
     // Vertex Buffer creation
@@ -28,14 +49,13 @@ bool Redzone::init() {
 
     // Vertex Array (Container for Vertex + Index buffer)
     glGenVertexArrays(1, &mesh.vao);
-
     if (gl_has_errors())
         return false;
 
     // Loading shaders
-    if (!effect.load_from_file(shader_path("coloured.vs.glsl"), shader_path("redzone.fs.glsl")))
+    if (!effect.load_from_file(shader_path("redzone.vs.glsl"), shader_path("redzone.fs.glsl")))
         return false;
-    physics.scale = { 1.f, 1.f };
+    physics.scale = {0.1f, 0.1f};
     motion.position = {-100.f, -100.f};
 
     return true;
@@ -52,7 +72,8 @@ void Redzone::destroy() {
     glDeleteShader(effect.program);
 }
 
-void Redzone::draw(const mat3 &projection) {
+void Redzone::draw(const mat3 &projection)
+{
     // Transformation code, see Rendering and Transformation in the template specification for more info
     // Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
     transform.begin();
@@ -71,7 +92,7 @@ void Redzone::draw(const mat3 &projection) {
 
     // Getting uniform locations for glUniform* calls
     GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
-    GLint color_uloc = glGetUniformLocation(effect.program, "color");
+    GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
     GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 
     // Setting vertices and indices
@@ -81,19 +102,24 @@ void Redzone::draw(const mat3 &projection) {
 
     // Input data location as in the vertex buffer
     GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
+    GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
     glEnableVertexAttribArray(in_position_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) 0);
+    glEnableVertexAttribArray(in_texcoord_loc);
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)0);
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *)sizeof(vec3));
 
+    // Enabling and binding texture to slot 0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, redzone_texture.id);
 
     // Setting uniform values to the currently bound program
-    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *) &transform.out);
-    float color[] = {1.f, 0.f, 0.f};
+    glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float *)&transform.out);
+    float color[] = {1.f, 1.f, 1.f};
     glUniform3fv(color_uloc, 1, color);
-    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *) &projection);
+    glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float *)&projection);
 
     // Drawing!
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-
 }
 
 void Redzone::set_position(vec2 pos) {
@@ -102,7 +128,8 @@ void Redzone::set_position(vec2 pos) {
 
 vec2 Redzone::get_bounding_box() const
 {
-    return {100.f, 100.f};
+    return {std::fabs(physics.scale.x) * redzone_texture.width * 2,
+            std::fabs(physics.scale.y) * redzone_texture.height * 2};
 }
 
 vec2 Redzone::get_position() const

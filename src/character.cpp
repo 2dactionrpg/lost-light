@@ -235,7 +235,7 @@ bool Character::collides_with(const Redzone &redzone)
     float dx = motion.position.x - redzone.get_position().x;
     float dy = motion.position.y - redzone.get_position().y;
     float d_sq = dx * dx + dy * dy;
-    float maxRadius = get_bounding_box().x / 2 + redzone.get_bounding_box().x / 2;
+    float maxRadius = get_bounding_box().x / 2 + redzone.get_bounding_box().x / 2 -10.f;
     if (d_sq < maxRadius * maxRadius)
         return true;
     return false;

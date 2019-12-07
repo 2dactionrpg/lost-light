@@ -1,11 +1,16 @@
 #version 330
 
-uniform vec3 color;
+// From vertex shader
+in vec2 texcoord;
+
+// Application data
+uniform sampler2D sampler0;
+uniform vec3 fcolor;
 
 // Output color
-layout(location = 0) out vec4 out_color;
+layout(location = 0) out vec4 color;
 
 void main()
 {
-    out_color = vec4(color, 0.3);
+    color = vec4(fcolor, 1.f) * texture(sampler0, vec2(texcoord.x, texcoord.y));
 }
