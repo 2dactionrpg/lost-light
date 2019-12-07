@@ -91,6 +91,9 @@ bool debug_mode = false;
 enum soundType
 {
     C_DEAD,
+    C_HIT,
+    Z_KILLED,
+    E_KILLED,
     S_REFLECT,
     MENU_POPUP,
     MENU_CLOSE

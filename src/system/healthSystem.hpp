@@ -15,6 +15,7 @@
 #include "../projectile.hpp"
 #include "../shield.hpp"
 #include "levelSystem.hpp"
+#include "soundSystem.hpp"
 #include <cmath>
 #include <entt/entity/registry.hpp>
 
@@ -24,6 +25,7 @@ class HealthSystem
 {
 private:
     LevelSystem levelSystem;
+    SoundSystem soundSystem;
 
 public:
     void update(entt::registry &registry, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies);

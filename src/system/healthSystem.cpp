@@ -31,7 +31,7 @@ void HealthSystem::update(entt::registry &registry, vector<Enemy> &m_enemies, ve
                     m_zombies.erase(zombie_it);
                     break;
                 }
-                ++enemy_it;
+                ++zombie_it;
             }
         }
     }
@@ -47,11 +47,21 @@ void HealthSystem::damage(entt::registry &registry, int m_id)
         auto &id = enemy.get(entity).id;
         auto &is_alive = enemy.get(entity).is_alive;
         auto &health = enemy.get(entity).health;
+        auto &enemy_type = enemy.get(entity).enemy_type;
         if (id == m_id)
         {
             health--;
             if (health <= 0)
             {
+                switch (enemy_type)
+                {
+                case ZOMBIE:
+                    soundSystem.play_sound(Z_KILLED);
+                    break;
+                default:
+                    soundSystem.play_sound(E_KILLED);
+                    break;
+                }
                 is_alive = false;
             }
         }

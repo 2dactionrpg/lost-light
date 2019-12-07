@@ -4,27 +4,29 @@ bool SoundSystem::init()
 {
     //-------------------------------------------------------------------------
     // Loading music and sounds
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
         fprintf(stderr, "Failed to initialize SDL Audio");
         return false;
     }
 
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+    {
         fprintf(stderr, "Failed to open audio device");
         return false;
     }
 
     m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+    m_character_hit_sound = Mix_LoadWAV(audio_path("character_hit.wav"));
     m_character_dead_sound = Mix_LoadWAV(audio_path("character_dead.wav"));
     m_shield_reflect_sound = Mix_LoadWAV(audio_path("shield_reflect.wav"));
+    m_zombie_killed_sound = Mix_LoadWAV(audio_path("zombie_killed.wav"));
+    m_enemy_killed_sound = Mix_LoadWAV(audio_path("enemy_killed.wav"));
     m_menu_popup_sound = Mix_LoadWAV(audio_path("menu_popup.wav"));
     m_menu_close_sound = Mix_LoadWAV(audio_path("menu_close.wav"));
 
-    if (m_background_music == nullptr
-        || m_menu_popup_sound == nullptr
-        || m_menu_close_sound == nullptr
-        || m_character_dead_sound == nullptr
-        || m_shield_reflect_sound == nullptr) {
+    if (m_background_music == nullptr || m_character_hit_sound == nullptr || m_character_dead_sound == nullptr || m_zombie_killed_sound == nullptr || m_enemy_killed_sound == nullptr || m_menu_popup_sound == nullptr || m_menu_close_sound == nullptr || m_shield_reflect_sound == nullptr)
+    {
         return false;
     }
 
@@ -38,12 +40,22 @@ void SoundSystem::play_background_music()
 
 void SoundSystem::play_sound(int type, int channel, int loops)
 {
-    switch (type) {
+    switch (type)
+    {
     case C_DEAD:
         Mix_PlayChannel(channel, m_character_dead_sound, loops);
         break;
+    case C_HIT:
+        Mix_PlayChannel(channel, m_character_hit_sound, loops);
+        break;
     case S_REFLECT:
         Mix_PlayChannel(channel, m_shield_reflect_sound, loops);
+        break;
+    case Z_KILLED:
+        Mix_PlayChannel(channel, m_zombie_killed_sound, loops);
+        break;
+    case E_KILLED:
+        Mix_PlayChannel(channel, m_enemy_killed_sound, loops);
         break;
     case MENU_POPUP:
         Mix_PlayChannel(channel, m_menu_popup_sound, loops);
@@ -58,8 +70,14 @@ void SoundSystem::destroy()
 {
     if (m_background_music != nullptr)
         Mix_FreeMusic(m_background_music);
+    if (m_character_hit_sound != nullptr)
+        Mix_FreeChunk(m_character_hit_sound);
     if (m_character_dead_sound != nullptr)
         Mix_FreeChunk(m_character_dead_sound);
+    if (m_zombie_killed_sound != nullptr)
+        Mix_FreeChunk(m_zombie_killed_sound);
+    if (m_enemy_killed_sound != nullptr)
+        Mix_FreeChunk(m_enemy_killed_sound);
     if (m_shield_reflect_sound != nullptr)
         Mix_FreeChunk(m_shield_reflect_sound);
     if (m_menu_popup_sound != nullptr)

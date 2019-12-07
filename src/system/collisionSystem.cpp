@@ -27,10 +27,11 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
     {
         if (m_character.collides_with(*zombie_it))
         {
-            soundSystem.play_sound(C_DEAD);
+            soundSystem.play_sound(C_HIT);
             m_character.take_damage();
             if (m_character.get_health() < 1)
             {
+                soundSystem.play_sound(C_DEAD);
                 physicsSystem.set_character_unmovable(registry);
                 menuSystem.sync(registry, STATE_GAMEOVER);
             }
@@ -158,12 +159,13 @@ void CollisionSystem::update(entt::registry &registry, Character &m_character, S
         // check character collision
         if (m_character.collides_with(*projectile_it))
         {
-            soundSystem.play_sound(C_DEAD);
+            soundSystem.play_sound(C_HIT);
             projectile_it = m_projectiles.erase(projectile_it);
             m_character.take_damage();
             hits_character = true;
             if (m_character.get_health() < 1)
             {
+                soundSystem.play_sound(C_DEAD);
                 physicsSystem.set_character_unmovable(registry);
                 menuSystem.sync(registry, STATE_GAMEOVER);
             }
