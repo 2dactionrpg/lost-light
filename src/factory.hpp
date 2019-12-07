@@ -26,4 +26,4 @@ entt::entity makeProjectile(entt::registry &registry, int id, vec2 pos, vec2 dir
 entt::entity makeMenu(entt::registry &registry);
 entt::entity makeLevel(entt::registry &registry);
 entt::entity makeOverlay(entt::registry& registry);
-entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable = false, bool is_mage);
+entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable = false, bool is_mage = false);
