@@ -20,4 +20,7 @@ public:
     void load_texture(int level);
 
     void set_position(vec2 position);
+
+private:
+    int old_state;
 };
