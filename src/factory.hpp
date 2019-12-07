@@ -20,7 +20,7 @@ entt::entity makeCharacter(entt::registry &registry);
 entt::entity makeShield(entt::registry &registry);
 entt::entity makeMinion(entt::registry &registry, int id, vec2 pos, bool is_movable = false, bool alert = false);
 entt::entity makeZombie(entt::registry &registry, int id, vec2 pos, bool is_movable = true, bool alert = false);
-entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable = false, bool is_mage);
+entt::entity makeBoss(entt::registry &registry, int id, vec2 pos, bool is_movable = false, bool is_mage = false);
 entt::entity makePotion(entt::registry &registry, int id);
 entt::entity makeGround(entt::registry &registry, int id);
 entt::entity makeProjectile(entt::registry &registry, int id, vec2 pos, vec2 dir, float rad);
