@@ -158,7 +158,7 @@ bool World::update(float elapsed_ms)
     enemyAI.shoot_manager(registry, elapsed_ms, m_enemies, m_zombies, m_projectiles);
 
     physicsSystem.sync(registry, elapsed_ms, m_walls);
-    s_cooldown = physicsSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_ground);
+    s_cooldown = physicsSystem.update(registry, m_character, m_shield, m_enemies, m_zombies, m_projectiles, m_potion, m_ground, m_walls);
     m_cooldown.load_texture(s_cooldown);
     healthSystem.update(registry, m_enemies, m_zombies);
     if (levelSystem.should_spawn_minion(m_enemies.size()))

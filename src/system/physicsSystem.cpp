@@ -163,7 +163,7 @@ void PhysicsSystem::sync(entt::registry &registry, float ms, vector<Wall> &walls
     }
 }
 
-float PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground)
+float PhysicsSystem::update(entt::registry &registry, Character &m_character, Shield &m_shield, vector<Enemy> &m_enemies, vector<Zombie> &m_zombies, vector<Projectile> &m_projectiles, Potion &m_potion, Ground &m_ground, vector<Wall> &walls)
 {
     // Character Physics Update
     auto character = registry.view<characterComponent, motionComponent, physicsScaleComponent>();
@@ -235,6 +235,8 @@ float PhysicsSystem::update(entt::registry &registry, Character &m_character, Sh
                     m_zombie.set_position(position);
                     m_zombie.set_rotation(radians);
                     m_zombie.set_scale(scale);
+                    m_zombie.update_triangle();
+                    destination = m_zombie.set_line(target, walls);
                     break;
                 }
             }

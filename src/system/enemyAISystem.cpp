@@ -135,8 +135,6 @@ void EnemyAISystem::set_direction(entt::registry &registry)
         {
             // set new destination
             // update direction
-            destination.x = target.x;
-            destination.y = target.y;
             direction = normalize(sub(destination, position));
         }
         else if (enemy_type == BOSS)

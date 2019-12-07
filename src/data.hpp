@@ -41,7 +41,10 @@ static const bool minion_level3_movable_array[] = {true, true, true};
 static const vec2 boss_level4_pos_array[] = {{1000.f, 400.f}};
 static const bool boss_level4_movable_array[] = {true};
 
-static const vec2 wall_level1_pos_array[] = {{-100.f, -100.f}};
+static const vec2 wall_level1_pos_array[] = {{14.f, 10.f},
+                                             {14.f, 9.f},
+                                             {14.f, 8.f}};
+// static const vec2 wall_level1_pos_array[] = {{14.f, 10.f}};
 static const vec2 wall_level2_pos_array[] = {{14.f, 10.f},
                                              {14.f, 9.f},
                                              {14.f, 8.f}};

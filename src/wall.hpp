@@ -3,7 +3,8 @@
 #include "entity.hpp"
 #include "projectile.hpp"
 
-class Wall : public Entity {
+class Wall : public Entity
+{
     // Shared between all walls, no need to load one for each instance
     static Texture wall_texture;
 
@@ -20,7 +21,7 @@ public:
 
     // Renders the wall
     // projection is the 2D orthographic projection matrix
-    void draw(const mat3& projection) override;
+    void draw(const mat3 &projection) override;
 
     vec2 getDirection();
 
@@ -41,7 +42,9 @@ public:
 
     bool m_is_alive;
 
-    bool collides_with(const Projectile& projectile);
+    bool collides_with(const Projectile &projectile);
+
+    bool collides_with_point(float x, float y, float rad);
 
     void wall_offset(bool isBoss, vec2 position, vec2 offset, bool &right_moveable, bool &left_moveable, bool &up_moveable, bool &down_moveable);
 };

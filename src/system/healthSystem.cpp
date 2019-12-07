@@ -31,7 +31,7 @@ void HealthSystem::update(entt::registry &registry, vector<Enemy> &m_enemies, ve
                     m_zombies.erase(zombie_it);
                     break;
                 }
-                ++enemy_it;
+                ++zombie_it;
             }
         }
     }

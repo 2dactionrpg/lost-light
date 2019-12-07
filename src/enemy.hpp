@@ -7,6 +7,7 @@
 #include "path.hpp"
 #include "data.hpp"
 #include "zombie.hpp"
+#include "wall.hpp"
 
 class Projectile;
 

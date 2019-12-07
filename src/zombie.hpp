@@ -35,8 +35,9 @@ public:
 
     void update_triangle();
     bool on_sight(vec2 target);
-    // bool set_line(vec2 target, std::vector<Enemy> &m_enemies);
-    // void unset_line()
+
+    vec2 set_line(vec2 target, std::vector<Wall> &m_walls);
+    void unset_line();
 
     void alert();
     void search();

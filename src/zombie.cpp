@@ -66,7 +66,7 @@ bool Zombie::init(int id)
     motion.radians = 0.f;
     physics.scale = {0.f, 0.f};
 
-    return true;
+    return trig.init(id) && path.init(id);
 }
 
 void Zombie::destroy()
@@ -254,39 +254,26 @@ int Zombie::get_id()
 
 void Zombie::update_triangle()
 {
-    trig.set_position(get_face_position());
+    trig.set_position(get_position());
     trig.set_rotation(motion.radians + M_PI / 2);
     // trig.set_scale(physics.scale);
 }
 bool Zombie::on_sight(vec2 target)
 {
-    // fprintf(stderr, "in on_sight\n");
-    // fprintf(stderr, "%d\n", trig.is_inside(target));
     return trig.is_inside(target);
 }
 
-// bool Zombie::set_line(vec2 target, std::vector<Enemy> &m_enemies)
-// {
-//     has_path = true;
-//     std::vector<Dot> dots = path.form(get_face_position(), get_bounding_box(), target);
-//     for (auto d : dots)
-//     {
-//         for (auto enemy : m_enemies)
-//         {
-//             if (enemy_id != enemy.get_id() && enemy.collides_with_point(d))
-//             {
-//                 path.blocked();
-//                 return false;
-//             }
-//         }
-//     }
-//     return true;
-// }
+vec2 Zombie::set_line(vec2 target, std::vector<Wall> &m_walls)
+{
+    has_path = true;
+    std::vector<Dot> dots = path.form(get_position(), get_bounding_box(), target, m_walls);
+    return dots.begin()->position;
+}
 
-// void Zombie::unset_line()
-// {
-//     has_path = false;
-// }
+void Zombie::unset_line()
+{
+    has_path = false;
+}
 
 void Zombie::alert()
 {
